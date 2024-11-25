@@ -1,0 +1,11 @@
+section {
+  .list {
+    &.photos {
+      max-width: 80%;
+      margin: 0 auto;
+      .photo {
+        position: relative;
+      }
+    }
+  }
+}

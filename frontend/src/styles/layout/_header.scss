@@ -1,0 +1,25 @@
+header {
+  padding: 30px;
+  border-bottom: 1px solid $gray;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  h1 {
+    font-size: 30px;
+  }
+  nav {
+    * {
+      color: black;
+      text-decoration: none;
+    }
+    ul {
+      display: flex;
+      gap: 10px;
+      li {
+        &.on {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
