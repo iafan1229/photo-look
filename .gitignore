@@ -2,10 +2,12 @@
 .env.dev
 
 # dependencies
-/node_modules
+/frontend/node_modules
+/server/node_modules
 /.pnp
 .pnp.js
-
+/frontend/.next
+.DS_Store
 # testing
 /coverage
 

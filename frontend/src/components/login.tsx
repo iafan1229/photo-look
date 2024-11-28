@@ -2,6 +2,7 @@
 
 import React, { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface InputData {
   userName: string;
@@ -13,7 +14,7 @@ const Login = ({
   setUserId,
 }: {
   userId?: string;
-  setUserId: React.Dispatch<SetStateAction<string | undefined>>;
+  setUserId?: React.Dispatch<SetStateAction<string | undefined>>;
 }) => {
   const router = useRouter();
   const [inputData, setInputData] = useState<InputData>({
@@ -35,23 +36,9 @@ const Login = ({
   };
 
   const sendInputData = (data: InputData) => {
-    fetch("/api/v1/search/blog?query=이하영+개발블로그", {
-      // API URL을 Flask 서버에 맞게 조정
-      method: "GET",
-      headers: {
-        "X-Naver-Client-Id": "OAMtf141zpQSdpoWr0Qm",
-        "X-Naver-Client-Secret": "6Vdf3GDwjF",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          setUserId(data?.userId);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    axios.get("/api/getdata").then((res) => {
+      console.log(res.data);
+    });
   };
 
   const handleLogin = () => {
