@@ -11,9 +11,11 @@ export default function PhotoList() {
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
           <Masonry>
             {[1, 2, 5, 3, 4, 1, 2, 3, 4, 5].map((el) => (
-              <div className='photo'>
-                <img src={`/img/${el}.jpg`} alt='' />
-              </div>
+              <>
+                <div className='photo'>
+                  <Image src={`/img/${el}.jpg`} fill alt='' />
+                </div>
+              </>
             ))}
           </Masonry>
         </ResponsiveMasonry>

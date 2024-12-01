@@ -1,21 +1,47 @@
 header {
   padding: 30px;
-  border-bottom: 1px solid $gray;
+  border-bottom: 1px solid $border;
+  background: hsla(255, 93%, 72%, 1);
+
+  background: linear-gradient(
+    90deg,
+    hsla(255, 93%, 72%, 1) 0%,
+    hsla(255, 86%, 63%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    90deg,
+    hsla(255, 93%, 72%, 1) 0%,
+    hsla(255, 86%, 63%, 1) 80%
+  );
+
+  background: -webkit-linear-gradient(
+    90deg,
+    hsla(255, 93%, 72%, 1) 0%,
+    hsla(255, 86%, 63%, 1) 80%
+  );
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  & {
+    color: white;
+  }
   h1 {
     font-size: 30px;
   }
   nav {
     * {
-      color: black;
+      color: white;
       text-decoration: none;
     }
     ul {
       display: flex;
       gap: 10px;
       li {
+        font-size: 18px;
         &.on {
           font-weight: bold;
         }

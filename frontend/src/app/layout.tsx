@@ -1,3 +1,4 @@
+import { ConfigProvider } from "antd";
 import Header from "../Layout/Header";
 import "../styles/main.scss";
 
@@ -14,8 +15,21 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Header />
-        {children}
+        <ConfigProvider
+          theme={{
+            token: {
+              // Seed Token
+              colorPrimary: "#7950f2",
+              borderRadius: 4,
+              colorBorder: "#b197fc",
+              // Alias Token
+              // colorBgContainer: "aliceblue",
+            },
+          }}
+        >
+          <Header />
+          {children}
+        </ConfigProvider>
       </body>
     </html>
   );
