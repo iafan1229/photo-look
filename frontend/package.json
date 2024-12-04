@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "antd": "^5.22.2",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.8",
     "mongodb": "^6.11.0",
     "next": "13.5.6",
