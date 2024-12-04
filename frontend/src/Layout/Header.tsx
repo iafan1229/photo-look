@@ -6,10 +6,14 @@ export default function Header() {
   return (
     <>
       <header>
-        <h1>photo-look</h1>
+        <h1>
+          <Link href='/photo' style={{ color: "white" }}>
+            photo-look
+          </Link>
+        </h1>
         <nav>
           <ul>
-            {["photo", "video", "register", "about"].map((el) => {
+            {["photo", "register", "about"].map((el) => {
               return (
                 <li key={el} className={path.includes(el) ? "on" : ""}>
                   <Link href={"/" + el}>{el.toUpperCase()}</Link>

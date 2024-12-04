@@ -13,3 +13,17 @@
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
+
+@font-face {
+  font-family: "TTBookendBatangR";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/TTBookendBatangR.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@mixin titleFont() {
+  font-family: "SBAggroB", sans-serif;
+}
+@mixin pointFont() {
+  font-family: "TTBookendBatangR";
+}
