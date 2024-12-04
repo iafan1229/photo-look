@@ -148,10 +148,8 @@ const ApplyForm = () => {
     // S3 업로드 호출
     uploadS3(values).then((res) => {
       const data = axios.post("/api/auth/register", {
-        body: {
-          id: "testUser",
-          password: "123456",
-        },
+        name: values.name,
+        password: values.password,
       });
       console.log(data);
     });
