@@ -66,8 +66,6 @@ type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 const ApplyForm = () => {
   const [api, contextHolder] = notification.useNotification();
   const formRef = useRef<HTMLFormElement | null>();
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
 
   const getBase64 = (file: FileType): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -76,15 +74,6 @@ const ApplyForm = () => {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const sendEmail = async (formRef: HTMLFormElement) => {
@@ -169,14 +158,11 @@ const ApplyForm = () => {
 
       // 이메일 전송
       if (formRef.current) {
-        // await sendEmail(formRef.current);
-
+        await sendEmail(formRef.current);
         // S3 업로드
-        console.log(values);
         const uploadedFiles = await uploadS3(values.upload);
-
         // 사용자 등록
-        await registerUser(values, uploadedFiles);
+        if (uploadedFiles) await registerUser(values, uploadedFiles);
       }
     } catch (error) {
       console.error("프로세스 중 에러 발생:", error);
@@ -196,6 +182,7 @@ const ApplyForm = () => {
 
   return (
     <div style={{ padding: "5vw" }}>
+      {contextHolder}
       <Form
         id='myForm'
         name='register-form'
@@ -244,34 +231,6 @@ const ApplyForm = () => {
             </Upload.Dragger>
           </Form.Item>
         </Form.Item>
-        {/* <Form.Item
-          name='upload'
-          label='프로필 사진'
-          getValueFromEvent={normFile}
-          required
-        >
-          <Upload
-            {...props}
-            listType='picture'
-            beforeUpload={() => false}
-            onPreview={handlePreview}
-          >
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-
-          {previewImage && (
-            <Image
-              style={{ maxWidth: 1200 }}
-              wrapperStyle={{ display: "none" }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage(""),
-              }}
-              src={previewImage}
-            />
-          )}
-        </Form.Item> */}
 
         <Form.Item name='date' label='원하는 게시기간' {...rangeConfig}>
           <RangePicker style={{ maxWidth: 600 }} />
