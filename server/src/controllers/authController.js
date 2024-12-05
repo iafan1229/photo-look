@@ -4,7 +4,8 @@ const UserModel = require("../models/User");
 // 회원가입
 const register = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, instagramId, email, upload, date, password, textarea } =
+      req.body;
     console.log(req);
     // // 사용자 중복 확인
     // const existingUser = await UserModel.findOne({ name: username });
@@ -17,8 +18,13 @@ const register = async (req, res) => {
 
     // 사용자 저장
     const saveUser = await new UserModel({
-      name: name,
-      password: password, // 해싱된 비밀번호 저장
+      name,
+      instagramId,
+      email,
+      upload,
+      date,
+      password,
+      textarea,
     }).save();
 
     // 성공적인 응답

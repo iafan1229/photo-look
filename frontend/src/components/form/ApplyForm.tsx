@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import AWS from "aws-sdk";
 import {
@@ -22,10 +23,15 @@ import {
   Switch,
   Upload,
   message,
+  notification,
 } from "antd";
 import { RcFile } from "antd/es/upload";
-import type { GetProp, UploadFile, UploadProps } from "antd";
+const { RangePicker } = DatePicker;
+import moment, { Moment } from "moment";
+
+import type { FormProps, GetProp, UploadFile, UploadProps } from "antd";
 import axios from "axios";
+import TextArea from "antd/es/input/TextArea";
 
 interface UploadedFile {
   uid: string;
@@ -39,6 +45,15 @@ interface UploadedFile {
   error: { status: number; method: string; url: string };
   response: string;
 }
+type FieldType = {
+  name: string;
+  instagramId: string;
+  email: string;
+  upload: UploadedFile[];
+  date?: [Moment, Moment];
+  password: string;
+  textarea?: string;
+};
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -49,8 +64,8 @@ const normFile = (e: any) => {
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const ApplyForm = () => {
-  const { RangePicker } = DatePicker;
-
+  const [api, contextHolder] = notification.useNotification();
+  const formRef = useRef<HTMLFormElement | null>();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
 
@@ -71,88 +86,101 @@ const ApplyForm = () => {
     setPreviewOpen(true);
   };
 
-  const uploadS3 = async (values: { upload: UploadedFile[] }) => {
-    const beforeUpload = (newFile: RcFile, _newFileList: RcFile[]) => {
-      const isJpgOrPng =
-        newFile.type === "image/jpeg" ||
-        newFile.type === "image/jpg" ||
-        newFile.type === "image/gif" ||
-        newFile.type === "image/png";
-      if (!isJpgOrPng) {
-        message.error("You can only upload JPG/PNG file!");
-        return;
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    const sendEmail = async (formRef: HTMLFormElement) => {
+      try {
+        const response = emailjs
+          .sendForm("service_bbuw8qx", "template_jrygo5e", formRef, {
+            publicKey: "kOPf18Wgt8SsZZvM9",
+          })
+          .then(
+            () => {
+              console.log("SUCCESS!");
+            },
+            (error) => {
+              console.log("FAILED...", error.text);
+            }
+          );
+        console.log(response);
+        api.success({ message: "관리자에게 메일을 보냈습니다." });
+        return response;
+      } catch (error: any) {
+        api.error({
+          message: error.response?.data || error.message || "이메일 전송 실패",
+        });
+        throw error;
       }
-      const isLt2M = newFile.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        message.error("Image must smaller than 2MB!");
-        return;
-      }
-      // const is7Count = _newFileList.length <= 7;
-      // if (!is7Count) {
-      //   message.error("Image maximum count is 7");
-      //   return;
-      // }
     };
 
-    const REGION = "ap-northeast-2";
-    const ACCESS_KEY_ID = process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID;
-    const SECRET_ACCESS_KEY = process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY;
-    // 업로드할 파일 가져오기
-
-    // AWS SDK 초기화
-    AWS.config.update({
-      region: REGION,
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY,
-    });
-
-    let tmpFileArray: {
-      name: string;
-      type: string;
-      fileObj: any;
-      id: string;
-    }[] = [];
-
-    // values.upload.forEach((el, i) => {
-    //   tmpFileArray.push({
-    //     name: el.name,
-    //     type: el.type,
-    //     fileObj: el.originFileObj,
-    //     id: el.uid,
-    //   });
-    // });
-
-    // try {
-    //   const results = await Promise.all(
-    //     tmpFileArray.map(
-    //       (file) =>
-    //         new AWS.S3.ManagedUpload({
-    //           params: {
-    //             Bucket: "photolookbucket", // S3 버킷 이름
-    //             Key: `img-upload/${file.id}`, // 업로드 파일 경로
-    //             Body: file.fileObj, // File 객체
-    //             ContentType: file.type, // 파일 MIME 타입
-    //           },
-    //         }).promise() // Promise로 변환
-    //     )
-    //   );
-    //   console.log(results);
-    // } catch (e) {
-    //   console.error(e);
-    // }
-  };
-
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-
-    // S3 업로드 호출
-    uploadS3(values).then((res) => {
-      const data = axios.post("/api/auth/register", {
-        name: values.name,
-        password: values.password,
+    const uploadS3 = async (files: UploadedFile[]) => {
+      console.log(files);
+      AWS.config.update({
+        region: "ap-northeast-2",
+        accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
       });
-      console.log(data);
-    });
+
+      try {
+        const results = await Promise.all(
+          files.map((file) =>
+            new AWS.S3.ManagedUpload({
+              params: {
+                Bucket: "photolookbucket",
+                Key: `img-upload/${file.uid}`,
+                Body: file.originFileObj,
+                ContentType: file.type,
+              },
+            }).promise()
+          )
+        );
+
+        api.success({ message: "이미지를 서버에 저장했습니다." });
+        return results;
+      } catch (error) {
+        api.error({ message: "이미지 업로드 실패" });
+        throw error;
+      }
+    };
+
+    const registerUser = async (values: FieldType, uploadedFiles: any) => {
+      try {
+        const response = await axios.post("/api/auth/register", {
+          name: values.name,
+          instagramId: values.instagramId,
+          email: values.email,
+          upload: uploadedFiles.map((el: any) => el.Location),
+          date: values.date,
+          password: values.password,
+          textarea: values.textarea,
+        });
+
+        api.success({ message: "사용자 등록 완료" });
+        return response.data;
+      } catch (error: any) {
+        api.error({
+          message: error.response?.data || error.message || "사용자 등록 실패",
+        });
+        throw error;
+      }
+    };
+
+    try {
+      formRef.current = document.getElementById("myForm") as HTMLFormElement;
+
+      // 이메일 전송
+      if (formRef.current) {
+        // await sendEmail(formRef.current);
+
+        // S3 업로드
+        console.log(values);
+        const uploadedFiles = await uploadS3(values.upload);
+
+        // 사용자 등록
+        await registerUser(values, uploadedFiles);
+      }
+    } catch (error) {
+      console.error("프로세스 중 에러 발생:", error);
+    }
   };
 
   const props = { multiple: true };
@@ -160,14 +188,16 @@ const ApplyForm = () => {
     rules: [
       {
         type: "array" as const,
-        required: true,
+        required: false,
         message: "Please select time!",
       },
     ],
   };
+
   return (
     <div style={{ padding: "5vw" }}>
       <Form
+        id='myForm'
         name='register-form'
         onFinish={onFinish}
         labelCol={{ span: 4 }}
@@ -186,22 +216,42 @@ const ApplyForm = () => {
           <h1>Application</h1>
         </legend>
         <Form.Item name='name' label='이름' required>
-          <Input style={{ maxWidth: 300 }} />
+          <Input style={{ maxWidth: 600 }} />
         </Form.Item>
-        <Form.Item name='id' label='인스타그램 ID' required>
-          <Input style={{ maxWidth: 300 }} />
+        <Form.Item name='instagramId' label='인스타그램 ID' required>
+          <Input style={{ maxWidth: 600 }} />
         </Form.Item>
-
-        <Form.Item
+        <Form.Item name='email' label='이메일' required>
+          <Input style={{ maxWidth: 600 }} />
+        </Form.Item>
+        <Form.Item label='Dragger'>
+          <Form.Item
+            name='upload'
+            valuePropName='fileList'
+            getValueFromEvent={normFile}
+            style={{ maxWidth: 600 }}
+          >
+            <Upload.Dragger name='files' beforeUpload={() => false} {...props}>
+              <p className='ant-upload-drag-icon'>
+                <InboxOutlined />
+              </p>
+              <p className='ant-upload-text'>
+                클릭, 또는 아이템을 드래그해주세요
+              </p>
+              <p className='ant-upload-hint'>
+                Support for a single or bulk upload.
+              </p>
+            </Upload.Dragger>
+          </Form.Item>
+        </Form.Item>
+        {/* <Form.Item
           name='upload'
           label='프로필 사진'
-          valuePropName='fileList'
           getValueFromEvent={normFile}
           required
         >
           <Upload
             {...props}
-            name='img-upload'
             listType='picture'
             beforeUpload={() => false}
             onPreview={handlePreview}
@@ -221,19 +271,26 @@ const ApplyForm = () => {
               src={previewImage}
             />
           )}
-        </Form.Item>
+        </Form.Item> */}
 
-        <Form.Item name='range-picker' label='원하는 게시기간' {...rangeConfig}>
-          <RangePicker />
+        <Form.Item name='date' label='원하는 게시기간' {...rangeConfig}>
+          <RangePicker style={{ maxWidth: 600 }} />
         </Form.Item>
         <Form.Item name='password' label='확인번호' required>
-          <Input type='password' style={{ maxWidth: 300 }} />
+          <Input type='password' style={{ maxWidth: 600 }} />
+        </Form.Item>
+        <Form.Item name='textarea' label='신청 메시지'>
+          <TextArea
+            style={{ maxWidth: 600 }}
+            value='신청 메시지를 작성해주세요'
+          />
         </Form.Item>
         <Form.Item>
           <Space>
             <Button type='primary' htmlType='submit'>
-              Submit
+              운영자에게 가입이메일 보내기
             </Button>
+
             <Button htmlType='reset'>reset</Button>
           </Space>
         </Form.Item>
