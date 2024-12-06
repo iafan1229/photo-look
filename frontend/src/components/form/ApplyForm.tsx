@@ -28,7 +28,6 @@ import {
 import { RcFile } from "antd/es/upload";
 const { RangePicker } = DatePicker;
 import moment, { Moment } from "moment";
-
 import type { FormProps, GetProp, UploadFile, UploadProps } from "antd";
 import axios from "axios";
 import TextArea from "antd/es/input/TextArea";
@@ -66,15 +65,6 @@ type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 const ApplyForm = () => {
   const [api, contextHolder] = notification.useNotification();
   const formRef = useRef<HTMLFormElement | null>();
-
-  const getBase64 = (file: FileType): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const sendEmail = async (formRef: HTMLFormElement) => {
       try {
@@ -203,15 +193,15 @@ const ApplyForm = () => {
           <h1>Application</h1>
         </legend>
         <Form.Item name='name' label='이름' required>
-          <Input style={{ maxWidth: 600 }} />
+          <Input style={{ maxWidth: 600 }} name='user_name' />
         </Form.Item>
         <Form.Item name='instagramId' label='인스타그램 ID' required>
           <Input style={{ maxWidth: 600 }} />
         </Form.Item>
         <Form.Item name='email' label='이메일' required>
-          <Input style={{ maxWidth: 600 }} />
+          <Input style={{ maxWidth: 600 }} name='user_email' />
         </Form.Item>
-        <Form.Item label='Dragger'>
+        <Form.Item label='모델이미지' required>
           <Form.Item
             name='upload'
             valuePropName='fileList'
@@ -242,6 +232,7 @@ const ApplyForm = () => {
           <TextArea
             style={{ maxWidth: 600 }}
             value='신청 메시지를 작성해주세요'
+            name='message'
           />
         </Form.Item>
         <Form.Item>
