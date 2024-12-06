@@ -12,26 +12,16 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "photolookbucket.s3.ap-northeast-2.amazonaws.com",
+        port: "",
+        pathname: "/img-upload/**",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
-// module.exports = () => {
-//   const nextConfig = {
-//     sassOptions: {
-//       includePaths: [path.join(__dirname, "styles")],
-//     },
-//   };
-
-//   const rewrites = () => {
-//     return [
-//       {
-//         source: "/api/:path*",
-//         destination: "http://localhost:8080/api/:path*",
-//       },
-//     ];
-//   };
-//   return {
-//     option: nextConfig,
-//     rewrites,
-//   };
-// };

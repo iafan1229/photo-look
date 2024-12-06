@@ -1,12 +1,16 @@
 const bcrypt = require("bcrypt");
+import { Response } from "express";
+import { ResponseData, User } from "../../types";
 const UserModel = require("../models/User");
 
 // 회원가입
-const register = async (req, res) => {
+const register = async (
+  { body }: { body: User },
+  res: Response<ResponseData>
+) => {
   try {
-    const { name, instagramId, email, upload, date, password, textarea } =
-      req.body;
-    console.log(req);
+    const { name, instagramId, email, upload, date, password, textarea } = body;
+
     // // 사용자 중복 확인
     // const existingUser = await UserModel.findOne({ name: username });
     // if (existingUser) {
@@ -30,7 +34,7 @@ const register = async (req, res) => {
     // 성공적인 응답
     res.status(201).json({
       message: "User registered successfully",
-      user: {
+      data: {
         name: saveUser.name,
       },
     });

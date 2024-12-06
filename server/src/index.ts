@@ -5,10 +5,11 @@ import cors from "cors";
 const { connectDB } = require("./utils/db");
 const app = express();
 const authController = require("./controllers/authController");
+const mainController = require("./controllers/mainController");
 
 const connectToMongoDB = async () => {
   try {
-    const client = await connectDB(); // DB 연결
+    await connectDB(); // DB 연결
     // const db = client.db(); // DB 인스턴스를 얻는다
     console.log("MongoDB connection successful");
     // 이 후 db 작업을 진행할 수 있습니다.
@@ -26,6 +27,8 @@ app.use(cors());
 
 // Auth routes
 app.use("/api/auth/register", authController.register);
+app.use("/api/main/list", mainController.list);
+app.use("/api/main/list-slider", mainController.slider);
 
 const PORT = 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -60,8 +60,6 @@ const normFile = (e: any) => {
   }
   return e?.fileList;
 };
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-
 const ApplyForm = () => {
   const [api, contextHolder] = notification.useNotification();
   const formRef = useRef<HTMLFormElement | null>();
@@ -80,7 +78,6 @@ const ApplyForm = () => {
               console.log("FAILED...", error.text);
             }
           );
-        console.log(response);
         api.success({ message: "관리자에게 메일을 보냈습니다." });
         return response;
       } catch (error: any) {
@@ -92,7 +89,6 @@ const ApplyForm = () => {
     };
 
     const uploadS3 = async (files: UploadedFile[]) => {
-      console.log(files);
       AWS.config.update({
         region: "ap-northeast-2",
         accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
@@ -148,7 +144,7 @@ const ApplyForm = () => {
 
       // 이메일 전송
       if (formRef.current) {
-        await sendEmail(formRef.current);
+        // await sendEmail(formRef.current);
         // S3 업로드
         const uploadedFiles = await uploadS3(values.upload);
         // 사용자 등록

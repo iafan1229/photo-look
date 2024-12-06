@@ -1,9 +1,29 @@
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
+import { useState, useEffect } from "react";
 import "swiper/css";
+import axios from "axios";
+import { User } from "@/type";
 
 export default function Slider() {
+  const [userData, setUserData] = useState<User[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [listResponse] = await Promise.all([
+          axios.get("/api/main/list"),
+          // axios.get("/api/main/list-slider"),
+        ]);
+
+        console.log("List Data:", listResponse);
+        setUserData(listResponse.data.data);
+        // console.log("Detail Data:", detailResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className='top-list'>
       <Swiper
@@ -13,11 +33,12 @@ export default function Slider() {
         loop
         className='mySwiper'
       >
-        {[1, 2, 3, 4, 5, 4, 3, 2, 1, 5].map((el) => (
-          <SwiperSlide>
-            <img src={`img/${el}.jpg`} />
-          </SwiperSlide>
-        ))}
+        {userData?.length &&
+          userData?.map((el) => (
+            <SwiperSlide>
+              <img src={`${el.upload[0]}`} />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   );
