@@ -28,7 +28,7 @@ export default function Slider() {
     <div className='top-list'>
       <Swiper
         slidesPerView={5}
-        spaceBetween={30}
+        spaceBetween={-15}
         centeredSlides
         loop
         className='mySwiper'

@@ -3,13 +3,52 @@ section {
     &.photos {
       max-width: 80%;
       margin: 0 auto;
-      .photo {
-        position: relative;
-        width: 100%;
-        img {
+      .masonry-wrap {
+        > div {
+          &:nth-of-type(2n) {
+            .photo-wrap {
+              position: relative;
+              display: flex;
+              flex-direction: column-reverse;
+              .text {
+                background-color: rgb(215, 167, 254);
+              }
+            }
+          }
+          &:nth-of-type(2n + 1) {
+            .photo-wrap {
+              .text {
+                background-color: rgb(220, 154, 217);
+              }
+            }
+          }
+        }
+      }
+      .photo-wrap {
+        border-radius: 16px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+        overflow: hidden;
+        .photo {
+          position: relative;
           width: 100%;
-          height: 100%;
-          position: relative !important;
+          img {
+            width: 100%;
+            height: 100%;
+            position: relative !important;
+          }
+        }
+        .text {
+          padding: 20px;
+          .artist {
+            font-weight: bold;
+            font-size: 22px;
+            padding-bottom: 10px;
+          }
+          .des {
+            line-height: 1.2;
+          }
         }
       }
     }

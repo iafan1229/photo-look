@@ -19,6 +19,7 @@ h1 {
 
 section {
   .filter {
+    background-color: rgb(246, 245, 248);
     padding: 10px;
     @include flex;
     gap: 3px;

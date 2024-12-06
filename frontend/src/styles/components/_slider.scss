@@ -1,15 +1,18 @@
 .swiper {
-  background: linear-gradient(
-    90deg,
-    #fbf6fd,
-    #f5eafd,
-    #f1eafa,
-    #e9deff,
-    #e2d7ff,
-    #dccfff
-  );
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  // background: linear-gradient(
+  //   90deg,
+  //   #fbf6fd,
+  //   #f5eafd,
+  //   #f1eafa,
+  //   #e9deff,
+  //   #e2d7ff,
+  //   #dccfff
+  // );
+
+  background-image: linear-gradient(to bottom, #e2d7ff 50%, #fff 50%);
+
+  // box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+  //   rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 
   .swiper-wrapper {
     width: 100%;
@@ -22,7 +25,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
+
       &.swiper-slide-active {
         transform: scale(1.16);
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;

@@ -36,13 +36,22 @@ export default function PhotoList() {
             <ResponsiveMasonry
               columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4 }}
             >
-              <Masonry gutter='20px'>
+              <Masonry gutter='20px' className='masonry-wrap'>
                 {userData.map((el: User) => (
-                  <>
+                  <div className='photo-wrap'>
                     <div className='photo'>
                       <Image src={el?.upload?.[0]} fill alt='' />
                     </div>
-                  </>
+                    <div className='text'>
+                      <div className='artist'>Model Jua</div>
+                      <div className='des'>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Laudantium iusto velit consectetur iste possimus
+                        nisi similique quam quas sequi ipsam ipsum consequuntur
+                        incidunt quae, et tempore veniam culpa voluptatum dolor!
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </Masonry>
             </ResponsiveMasonry>
