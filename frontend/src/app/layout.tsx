@@ -1,6 +1,7 @@
 import { ConfigProvider } from "antd";
 import Header from "../Layout/Header";
 import "../styles/main.scss";
+import Footer from "@/Layout/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -29,6 +30,7 @@ export default function RootLayout({
         >
           <Header />
           {children}
+          <Footer />
         </ConfigProvider>
       </body>
     </html>
