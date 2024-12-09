@@ -29,6 +29,7 @@ app.use(cors());
 app.use("/api/auth/register", authController.register);
 app.use("/api/main/list", mainController.list);
 app.use("/api/main/list-slider", mainController.slider);
+app.use("/api/send-email", mainController.email);
 
 const PORT = 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
