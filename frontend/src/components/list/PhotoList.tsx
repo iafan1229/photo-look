@@ -38,7 +38,7 @@ export default function PhotoList() {
       {userData?.length && (
         <section>
           <div className='title'>
-            <h1>Model Photos</h1>
+            <h1>Albums</h1>
           </div>
           <div className='list photos'>
             <ResponsiveMasonry
@@ -46,15 +46,20 @@ export default function PhotoList() {
             >
               <Masonry gutter='20px' className='masonry-wrap'>
                 {userData.map((el: User) => (
-                  <div className='photo-wrap' onClick={() => handleDetail(el)}>
-                    <div className='photo'>
-                      <Image src={el?.upload?.[0]} fill alt='' />
+                  <>
+                    <div
+                      className='photo-wrap'
+                      onClick={() => handleDetail(el)}
+                    >
+                      <div className='photo'>
+                        <Image src={el?.upload?.[0]} fill alt='' />
+                      </div>
+                      <div className='text'>
+                        <div className='artist'>Jua</div>
+                        <div className='des'>{el?.textarea}</div>
+                      </div>
                     </div>
-                    <div className='text'>
-                      <div className='artist'>Jua</div>
-                      <div className='des'>{el?.textarea}</div>
-                    </div>
-                  </div>
+                  </>
                 ))}
               </Masonry>
             </ResponsiveMasonry>
