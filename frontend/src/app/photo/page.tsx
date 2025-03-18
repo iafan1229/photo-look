@@ -9,7 +9,7 @@ export default function Photo() {
     <>
       <TopList />
       <PhotoList />
-      <EmailForm />
+      {/* <EmailForm /> */}
     </>
   );
 }
