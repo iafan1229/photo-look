@@ -10,7 +10,7 @@ import {
   Spinner,
   Alert,
 } from "react-bootstrap";
-
+import { analyzeImage } from "@/apis/visionApi";
 import { ImageData, AnalyzedImage, ThemeType, StyleType } from "@/type/preview";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ImagePreview from "@/components/preview/ImagePreview";
@@ -78,10 +78,22 @@ const Main: React.FC = () => {
     setError("");
 
     try {
-      // 실제 구현에서는 Google Cloud Vision API를 호출해야 합니다.
-      // 여기서는 시뮬레이션으로 구현합니다.
-      const results = await simulateVisionAPIAnalysis(images);
-      setAnalyzedImages(results);
+      // 각 이미지에 대해 Vision API 분석 수행
+      const analysisPromises = images.map(async (img) => {
+        const analysis = await analyzeImage(img.dataUrl);
+        return {
+          dataUrl: img.dataUrl,
+          name: img.name,
+          analysis: analysis,
+        };
+      });
+
+      const analyzedResults = await Promise.all(analysisPromises);
+
+      // 스토리 구조 생성
+      const storyStructure = generateStoryStructure(analyzedResults);
+
+      setAnalyzedImages(storyStructure);
       setShowMagazine(true);
     } catch (err) {
       if (err instanceof Error) {
@@ -92,59 +104,6 @@ const Main: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Vision API 분석 시뮬레이션 함수
-  const simulateVisionAPIAnalysis = (
-    images: ImageData[]
-  ): Promise<AnalyzedImage[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const themes = ["여행", "가족", "음식", "자연", "도시", "이벤트"];
-        const emotions = ["기쁨", "평온", "놀라움", "감동"];
-        const colors = [
-          "#3498db",
-          "#2ecc71",
-          "#e74c3c",
-          "#f39c12",
-          "#9b59b6",
-          "#1abc9c",
-        ];
-
-        const analyzedImages = images.map((img) => {
-          const randomLabels = [];
-          const numLabels = Math.floor(Math.random() * 5) + 2;
-
-          for (let i = 0; i < numLabels; i++) {
-            randomLabels.push({
-              description: `태그 ${i + 1}`,
-              score: Math.random(),
-            });
-          }
-
-          return {
-            dataUrl: img.dataUrl,
-            name: img.name,
-            analysis: {
-              labels: randomLabels,
-              mainTheme: themes[Math.floor(Math.random() * themes.length)],
-              emotion: emotions[Math.floor(Math.random() * emotions.length)],
-              dominantColors: [
-                colors[Math.floor(Math.random() * colors.length)],
-                colors[Math.floor(Math.random() * colors.length)],
-              ],
-              landmark: Math.random() > 0.8 ? "에펠탑" : null,
-              text: Math.random() > 0.7 ? "이미지에서 추출된 텍스트" : "",
-              faces: Math.random() > 0.5 ? [{ joy: Math.random() > 0.5 }] : [],
-            },
-          };
-        });
-
-        // 스토리 흐름을 생성하기 위해 이미지 순서 재조정
-        const storyStructure = generateStoryStructure(analyzedImages);
-        resolve(storyStructure);
-      }, 2000); // 2초 지연으로 API 호출 시뮬레이션
-    });
   };
 
   // 스토리 구조 생성

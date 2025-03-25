@@ -54,7 +54,6 @@ export default function PhotoList() {
                       <div className='photo'>
                         <Image
                           src={el?.upload?.[0]}
-                          fill
                           alt=''
                           width={500}
                           height={500}

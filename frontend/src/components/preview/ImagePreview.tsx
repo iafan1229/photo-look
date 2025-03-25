@@ -18,7 +18,6 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
               src={image.dataUrl}
               alt={`Preview ${index + 1}`}
               className='img-preview'
-              layout='responsive'
               width={500}
               height={500}
             />

@@ -8,7 +8,7 @@ export default function Photo() {
   return (
     <>
       <TopList />
-      <PhotoList />
+      {/* <PhotoList /> */}
       {/* <EmailForm /> */}
     </>
   );

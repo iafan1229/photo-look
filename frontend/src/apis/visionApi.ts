@@ -2,8 +2,9 @@
 // 실제 구현 시에는 환경 변수로 관리해야 합니다
 
 import { ImageAnalysis } from "@/type/preview";
+import axios from "axios";
 
-// const API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY;
 const API_URL = "https://vision.googleapis.com/v1/images:annotate";
 
 interface VisionAPIResponse {
@@ -46,7 +47,7 @@ export const analyzeImage = async (
 ): Promise<ImageAnalysis> => {
   try {
     // API 키가 없는 경우 에러 처리
-    if (!process.env.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY) {
+    if (!API_KEY) {
       throw new Error("Google Cloud API 키가 설정되지 않았습니다.");
     }
 
@@ -71,22 +72,8 @@ export const analyzeImage = async (
     };
 
     // 실제 API 호출은 주석 처리
-    // const response = await axios.post(`${API_URL}?key=${API_KEY}`, requestBody);
-    // return processApiResponse(response.data.responses[0]);
-
-    // 테스트용 더미 데이터 반환
-    return {
-      labels: [
-        { description: "풍경", score: 0.95 },
-        { description: "자연", score: 0.87 },
-      ],
-      mainTheme: "자연",
-      emotion: "평온",
-      dominantColors: ["#3498db", "#2ecc71"],
-      landmark: null,
-      text: "",
-      faces: [],
-    };
+    const response = await axios.post(`${API_URL}?key=${API_KEY}`, requestBody);
+    return processApiResponse(response.data.responses[0]);
   } catch (error) {
     console.error("Vision API 호출 중 오류:", error);
     throw new Error("이미지 분석 중 오류가 발생했습니다.");
