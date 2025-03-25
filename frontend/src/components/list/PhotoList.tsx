@@ -2,9 +2,9 @@ import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { User } from "@/type";
 import { CloseOutlined, CloseSquareFilled } from "@ant-design/icons";
 import { Image as AntImage } from "antd";
+import { User } from "@/type/user";
 
 export default function PhotoList() {
   const [userData, setUserData] = useState([]);
@@ -52,7 +52,13 @@ export default function PhotoList() {
                       onClick={() => handleDetail(el)}
                     >
                       <div className='photo'>
-                        <Image src={el?.upload?.[0]} fill alt='' />
+                        <Image
+                          src={el?.upload?.[0]}
+                          fill
+                          alt=''
+                          width={500}
+                          height={500}
+                        />
                       </div>
                       <div className='text'>
                         <div className='artist'>Jua</div>
@@ -103,8 +109,8 @@ export default function PhotoList() {
                 </div>
                 <hr />
                 <div className='photo-wrap'>
-                  {detailUserData?.upload.map((img) => (
-                    <div className='photo'>
+                  {detailUserData?.upload.map((img, i) => (
+                    <div className='photo' key={i}>
                       <AntImage src={img} alt='' />
                     </div>
                   ))}
