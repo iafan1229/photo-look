@@ -11,10 +11,14 @@ import {
   Alert,
 } from "react-bootstrap";
 import { analyzeImage } from "@/apis/visionApi";
+import { generateStoryContent } from "@/apis/textGenerationApi";
 import { ImageData, AnalyzedImage, ThemeType, StyleType } from "@/type/preview";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ImagePreview from "@/components/preview/ImagePreview";
 import MagazinePreview from "@/components/preview/MagazinePreview";
+import ModelSettings, {
+  AIModelType,
+} from "@/components/settings/ModelSettings";
 
 const Main: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
@@ -25,6 +29,9 @@ const Main: React.FC = () => {
   const [magazineStyle, setMagazineStyle] = useState<StyleType>("modern");
   const [showMagazine, setShowMagazine] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [generatingContent, setGeneratingContent] = useState<boolean>(false);
+  const [progressMessage, setProgressMessage] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState<AIModelType>("gemini");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -75,7 +82,9 @@ const Main: React.FC = () => {
     }
 
     setLoading(true);
+    setGeneratingContent(true);
     setError("");
+    setProgressMessage("이미지 분석 중...");
 
     try {
       // 각 이미지에 대해 Vision API 분석 수행
@@ -89,9 +98,10 @@ const Main: React.FC = () => {
       });
 
       const analyzedResults = await Promise.all(analysisPromises);
+      setProgressMessage("이미지 분석 완료. 스토리 구조 생성 중...");
 
       // 스토리 구조 생성
-      const storyStructure = generateStoryStructure(analyzedResults);
+      const storyStructure = await generateStoryStructure(analyzedResults);
 
       setAnalyzedImages(storyStructure);
       setShowMagazine(true);
@@ -103,13 +113,68 @@ const Main: React.FC = () => {
       }
     } finally {
       setLoading(false);
+      setGeneratingContent(false);
+      setProgressMessage("");
     }
   };
 
-  // 스토리 구조 생성
-  const generateStoryStructure = (images: AnalyzedImage[]): AnalyzedImage[] => {
-    // 여기서는 간단히 구현. 실제로는 이미지 분석 결과를 바탕으로 스토리라인에 맞게 배치
-    return [...images].sort(() => Math.random() - 0.5);
+  // 스토리 구조 생성 및 텍스트 생성
+  const generateStoryStructure = async (
+    images: AnalyzedImage[]
+  ): Promise<AnalyzedImage[]> => {
+    // 이미지 순서 정렬 (여기서는 간단히 구현)
+    const sortedImages = [...images].sort(() => Math.random() - 0.5);
+
+    // 각 이미지에 대해 선택된 AI 모델을 사용하여 텍스트 생성
+    const imagesWithStory = await Promise.all(
+      sortedImages.map(async (img, index) => {
+        setProgressMessage(
+          `텍스트 생성 중... (${index + 1}/${
+            sortedImages.length
+          }) - ${selectedModel} 모델 사용`
+        );
+
+        // 이미지 라벨 추출 (Vision API 분석 결과에서)
+        const labels =
+          img.analysis && img.analysis.labels
+            ? img.analysis.labels.map((label) => label.description)
+            : ["이미지"];
+
+        // 테마 결정
+        const theme =
+          storyTheme === "auto"
+            ? img.analysis &&
+              img.analysis.labels &&
+              img.analysis.labels.length > 0
+              ? img.analysis.labels[0].description
+              : "일상"
+            : storyTheme;
+
+        try {
+          // 선택된 AI 모델로 텍스트 생성
+          const storyText = await generateStoryContent({
+            imageLabels: labels,
+            theme: theme,
+            imageIndex: index,
+            totalImages: sortedImages.length,
+            model: selectedModel,
+          });
+
+          return {
+            ...img,
+            storyText: storyText,
+          };
+        } catch (error) {
+          console.error("텍스트 생성 중 오류:", error);
+          return {
+            ...img,
+            storyText: "이 이미지에 대한 이야기를 생성하지 못했습니다.",
+          };
+        }
+      })
+    );
+
+    return imagesWithStory;
   };
 
   return (
@@ -117,6 +182,7 @@ const Main: React.FC = () => {
       <h1 className='text-center mb-4'>사진 스토리텔링 매거진 생성기</h1>
 
       {error && <Alert variant='danger'>{error}</Alert>}
+      {progressMessage && <Alert variant='info'>{progressMessage}</Alert>}
 
       <Row className='mb-4'>
         <Col md={6}>
@@ -151,7 +217,7 @@ const Main: React.FC = () => {
                       aria-hidden='true'
                       className='me-2'
                     />
-                    분석 중...
+                    {generatingContent ? progressMessage : "분석 중..."}
                   </>
                 ) : (
                   "사진 분석 및 매거진 생성"
@@ -162,7 +228,7 @@ const Main: React.FC = () => {
         </Col>
 
         <Col md={6}>
-          <Card>
+          <Card className='mb-4'>
             <Card.Header>테마 설정</Card.Header>
             <Card.Body>
               <Form.Group className='mb-3'>
@@ -207,6 +273,12 @@ const Main: React.FC = () => {
               </Form.Group>
             </Card.Body>
           </Card>
+
+          {/* AI 모델 선택 컴포넌트 추가 */}
+          <ModelSettings
+            selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
+          />
         </Col>
       </Row>
 

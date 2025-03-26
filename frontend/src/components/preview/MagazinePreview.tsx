@@ -104,13 +104,13 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 <p className='image-caption'>
                   {generateStoryDescription(index)}
                 </p>
-
+                {/* 
                 {image.analysis.text && (
                   <div className='text-extract mt-3'>
                     <h5>이미지에서 추출된 텍스트:</h5>
                     <p>{image.analysis.text}</p>
                   </div>
-                )}
+                )} */}
 
                 <div className='tags-container'>
                   {image.analysis.labels.map((label, idx) => (
