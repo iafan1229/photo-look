@@ -11,15 +11,14 @@ AI 큐레이션 사진 매거진 서비스
 Frontend - Next.js 
 
 
-Backend - Node.js / Flask (Python)
+Backend - Node.js 
 
+Data Crawling - Python (Flask)
 
 Styling - SCSS
 
-
 DB - MongoDB, AWS S3
 
+AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으로 자연스러운 텍스트 생성)
 
 Cloud - AWS EC2
-
-AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으로 자연스러운 텍스트 생성)
