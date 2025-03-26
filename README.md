@@ -22,4 +22,4 @@ DB - MongoDB, AWS S3
 
 Cloud - AWS EC2
 
-AI - Google Vision AI (이미지 라벨링) / OpenAi GPT모델 (라벨링 바탕으로 자연스러운 텍스트 생성)
+AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으로 자연스러운 텍스트 생성)
