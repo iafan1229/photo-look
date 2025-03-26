@@ -47,14 +47,7 @@ export const generateGeminiApi = async ({
     );
 
     // Gemini 응답 구조에서 텍스트 추출
-    if (
-      response.data &&
-      response.data.candidates &&
-      response.data.candidates[0] &&
-      response.data.candidates[0].content &&
-      response.data.candidates[0].content.parts &&
-      response.data.candidates[0].content.parts[0]
-    ) {
+    if (response?.data?.candidates?.[0]?.content?.parts?.[0]) {
       return response.data.candidates[0].content.parts[0].text;
     }
 
