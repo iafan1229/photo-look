@@ -11,7 +11,7 @@ AI 큐레이션 사진 매거진 서비스
 Frontend - Next.js 
 
 
-Backend - Node.js
+Backend - Node.js / Flask (Python)
 
 
 Styling - SCSS
