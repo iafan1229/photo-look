@@ -42,9 +42,7 @@ interface VisionAPIResponse {
   [key: string]: any;
 }
 
-export const analyzeImage = async (
-  imageData: string
-): Promise<ImageAnalysis> => {
+export const visionAPI = async (imageData: string): Promise<ImageAnalysis> => {
   try {
     // API 키가 없는 경우 에러 처리
     if (!API_KEY) {

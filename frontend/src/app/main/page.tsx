@@ -10,19 +10,27 @@ import {
   Spinner,
   Alert,
 } from "react-bootstrap";
-import { analyzeImage } from "@/apis/visionApi";
-import { generateStoryContent } from "@/apis/textGenerationApi";
-import { ImageData, AnalyzedImage, ThemeType, StyleType } from "@/type/preview";
+import { visionAPI } from "@/apis/visionApi";
+import {
+  ImageData,
+  ThemeType,
+  StyleType,
+  visionAnalyzedImage,
+  geminiAnalyzedImage,
+} from "@/type/preview";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ImagePreview from "@/components/preview/ImagePreview";
 import MagazinePreview from "@/components/preview/MagazinePreview";
 import ModelSettings, {
   AIModelType,
 } from "@/components/settings/ModelSettings";
+import { generateGeminiApi } from "@/apis/geminiApi";
 
 const Main: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
-  const [analyzedImages, setAnalyzedImages] = useState<AnalyzedImage[]>([]);
+  const [analyzedImages, setAnalyzedImages] = useState<geminiAnalyzedImage[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [magazineTitle, setMagazineTitle] = useState<string>("");
   const [storyTheme, setStoryTheme] = useState<ThemeType>("auto");
@@ -89,7 +97,7 @@ const Main: React.FC = () => {
     try {
       // 각 이미지에 대해 Vision API 분석 수행
       const analysisPromises = images.map(async (img) => {
-        const analysis = await analyzeImage(img.dataUrl);
+        const analysis = await visionAPI(img.dataUrl);
         return {
           dataUrl: img.dataUrl,
           name: img.name,
@@ -97,12 +105,15 @@ const Main: React.FC = () => {
         };
       });
 
-      const analyzedResults = await Promise.all(analysisPromises);
+      const visionAnalyzedResults = await Promise.all(analysisPromises);
+      console.log(visionAnalyzedResults);
       setProgressMessage("이미지 분석 완료. 스토리 구조 생성 중...");
 
       // 스토리 구조 생성
-      const storyStructure = await generateStoryStructure(analyzedResults);
-
+      const storyStructure = await generateStoryStructure(
+        visionAnalyzedResults
+      );
+      console.log(storyStructure);
       setAnalyzedImages(storyStructure);
       setShowMagazine(true);
     } catch (err) {
@@ -120,8 +131,8 @@ const Main: React.FC = () => {
 
   // 스토리 구조 생성 및 텍스트 생성
   const generateStoryStructure = async (
-    images: AnalyzedImage[]
-  ): Promise<AnalyzedImage[]> => {
+    images: visionAnalyzedImage[]
+  ): Promise<geminiAnalyzedImage[]> => {
     // 이미지 순서 정렬 (여기서는 간단히 구현)
     const sortedImages = [...images].sort(() => Math.random() - 0.5);
 
@@ -152,12 +163,11 @@ const Main: React.FC = () => {
 
         try {
           // 선택된 AI 모델로 텍스트 생성
-          const storyText = await generateStoryContent({
+          const storyText = await generateGeminiApi({
             imageLabels: labels,
             theme: theme,
             imageIndex: index,
             totalImages: sortedImages.length,
-            model: selectedModel,
           });
 
           return {

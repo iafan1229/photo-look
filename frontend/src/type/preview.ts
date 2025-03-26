@@ -34,7 +34,13 @@ export interface ImageAnalysis {
   faces: Face[];
 }
 
-export interface AnalyzedImage {
+export interface visionAnalyzedImage {
+  dataUrl: string;
+  name: string;
+  analysis: ImageAnalysis;
+}
+export interface geminiAnalyzedImage {
+  storyText: string;
   dataUrl: string;
   name: string;
   analysis: ImageAnalysis;
@@ -42,7 +48,7 @@ export interface AnalyzedImage {
 
 export interface MagazinePreviewProps {
   title: string;
-  images: AnalyzedImage[];
+  images: geminiAnalyzedImage[];
   theme: ThemeType;
   style: StyleType;
 }

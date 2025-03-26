@@ -36,20 +36,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   const generateStoryDescription = (imageIndex: number): string => {
     if (images.length <= imageIndex) return "";
 
-    const imageAnalysis = images[imageIndex].analysis;
-
-    const randomDescriptions = [
-      `이 사진은 ${imageAnalysis.mainTheme} 테마와 함께 ${imageAnalysis.emotion}의 감정을 담고 있습니다.`,
-      `이 순간은 ${imageAnalysis.emotion}을(를) 느끼게 해주는 특별한 장면입니다.`,
-      `${imageAnalysis.mainTheme}의 느낌이 잘 담겨 있는 사진입니다.`,
-      `이 사진에서 ${
-        imageAnalysis.landmark ? imageAnalysis.landmark + "의 모습과 함께 " : ""
-      }특별한 순간이 담겨 있습니다.`,
-    ];
-
-    return randomDescriptions[
-      Math.floor(Math.random() * randomDescriptions.length)
-    ];
+    return images[imageIndex].storyText;
   };
 
   return (
