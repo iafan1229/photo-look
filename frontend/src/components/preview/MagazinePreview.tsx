@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Card } from "react-bootstrap";
 import Image from "next/image";
 import { MagazinePreviewProps, ThemeType } from "@/type/preview";
+import { Row } from "antd";
+import InstagramVerification from "../InstagramVerification";
 
 const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   title,
@@ -113,9 +115,11 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
       </div>
 
       <div className='text-center mt-4 mb-5'>
-        <Button variant='success' onClick={downloadPDF}>
-          매거진 PDF로 다운로드
-        </Button>
+        <Row>
+          <Button variant='success' onClick={downloadPDF}>
+            매거진 PDF로 다운로드
+          </Button>
+        </Row>
       </div>
     </div>
   );
