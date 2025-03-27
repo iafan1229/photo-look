@@ -4,6 +4,7 @@ import Image from "next/image";
 import { MagazinePreviewProps, ThemeType } from "@/type/preview";
 import { Row } from "antd";
 import InstagramVerification from "../InstagramVerification";
+import { useInstagramVerification } from "@/hooks/useInstagramVerification";
 
 const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   title,
@@ -11,6 +12,29 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   theme,
   style,
 }) => {
+  const {
+    handleVerificationSuccess,
+    isLoading: verificationLoading,
+    contextHolder,
+  } = useInstagramVerification();
+
+  const onInstagramVerificationSuccess = async (instagramId: string) => {
+    const success = await handleVerificationSuccess({
+      images,
+      instagramId,
+      magazineTitle: title,
+      analyzedImages: images,
+      storyTheme: theme,
+      magazineStyle: style,
+    });
+
+    if (success) {
+      // 성공 후 추가 작업 (예: 다음 단계로 이동)
+      alert("s3및 mongoDB 저장 성공");
+      // setShowMagazine(true);
+    }
+  };
+
   const downloadPDF = () => {
     const element = document.getElementById("magazine-container");
     if (!element) return;
@@ -66,60 +90,59 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
 
         {/* 내용 페이지들 */}
         {images.map((image, index) => (
-          <Card
-            key={index}
-            className={`magazine-page content-page ${style} mb-4`}
-          >
-            <Card.Body>
-              <div className='page-content'>
-                <h3 className='page-title'>
-                  {index === 0
-                    ? "스토리의 시작"
-                    : index === images.length - 1
-                    ? "스토리의 마무리"
-                    : `순간 ${index}`}
-                </h3>
+          <>
+            <Card
+              key={index}
+              className={`magazine-page content-page ${style} mb-4`}
+            >
+              <Card.Body>
+                <div className='page-content'>
+                  <h3 className='page-title'>
+                    {index === 0
+                      ? "스토리의 시작"
+                      : index === images.length - 1
+                      ? "스토리의 마무리"
+                      : `순간 ${index}`}
+                  </h3>
 
-                <div className='image-container'>
-                  <Image
-                    src={image.dataUrl}
-                    alt={`Story image ${index + 1}`}
-                    className='story-image'
-                    width={500}
-                    height={500}
-                  />
-                </div>
-
-                <p className='image-caption'>
-                  {generateStoryDescription(index)}
-                </p>
-                {/* 
-                {image.analysis.text && (
-                  <div className='text-extract mt-3'>
-                    <h5>이미지에서 추출된 텍스트:</h5>
-                    <p>{image.analysis.text}</p>
+                  <div className='image-container'>
+                    <Image
+                      src={image.dataUrl}
+                      alt={`Story image ${index + 1}`}
+                      className='story-image'
+                      width={500}
+                      height={500}
+                    />
                   </div>
-                )} */}
 
-                <div className='tags-container'>
-                  {image.analysis.labels.map((label, idx) => (
-                    <span key={idx} className='tag'>
-                      {label.description}
-                    </span>
-                  ))}
+                  <p className='image-caption'>
+                    {generateStoryDescription(index)}
+                  </p>
+                  <div className='tags-container'>
+                    {image.analysis.labels.map((label, idx) => (
+                      <span key={idx} className='tag'>
+                        {label.description}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Card.Body>
-          </Card>
+              </Card.Body>
+            </Card>
+            <div className='text-center mt-4 mb-5'>
+              <Row>
+                <Button variant='success' onClick={downloadPDF}>
+                  매거진 PDF로 다운로드
+                </Button>
+              </Row>
+              <Row>
+                <InstagramVerification
+                  onVerificationSuccess={onInstagramVerificationSuccess}
+                  disabled={verificationLoading || images.length === 0}
+                />
+              </Row>
+            </div>
+          </>
         ))}
-      </div>
-
-      <div className='text-center mt-4 mb-5'>
-        <Row>
-          <Button variant='success' onClick={downloadPDF}>
-            매거진 PDF로 다운로드
-          </Button>
-        </Row>
       </div>
     </div>
   );

@@ -114,7 +114,7 @@ const Main: React.FC = () => {
       const storyStructure = await generateStoryStructure(
         visionAnalyzedResults
       );
-      console.log(storyStructure);
+
       setAnalyzedImages(storyStructure);
       setShowMagazine(true);
     } catch (err) {
@@ -301,9 +301,6 @@ const Main: React.FC = () => {
           style={magazineStyle}
         />
       )}
-      <Row>
-        <InstagramVerification />
-      </Row>
     </Container>
   );
 };
