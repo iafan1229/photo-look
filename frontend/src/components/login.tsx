@@ -36,9 +36,31 @@ const Login = ({
   };
 
   const sendInputData = (data: InputData) => {
-    axios.get("/api/getdata").then((res) => {
-      console.log(res.data);
-    });
+    fetch("/api/login", {
+      // API URL을 Flask 서버에 맞게 조정
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          // setUserId(data?.userId);
+          const getContent = async () => {
+            const response = axios.get(
+              `/api/getContent?userId=${data?.userId}`
+            );
+            console.log(response);
+          };
+          const data3 = getContent();
+          console.log(data3);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleLogin = () => {

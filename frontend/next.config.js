@@ -10,6 +10,10 @@ const nextConfig = {
         source: "/api/:path*",
         destination: "http://localhost:8080/api/:path*",
       },
+      {
+        source: "/front/api/:path*",
+        destination: "http://localhost:5000/api/:path*",
+      },
     ];
   },
   images: {
