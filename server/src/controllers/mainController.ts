@@ -20,7 +20,7 @@ const list = async (_: never, res: Response<ResponseData>) => {
       return data;
     });
 
-    res.status(201).json({ data: getList });
+    res.status(201).json({ data: getList, message: "success" });
   } catch (err) {
     console.log(err);
   }

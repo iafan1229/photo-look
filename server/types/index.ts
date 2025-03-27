@@ -1,14 +1,32 @@
 export interface ResponseData {
-  message?: string;
+  message: string;
   data?: any;
 }
 
-export interface User {
+export interface AnalyzedImage {
+  dataUrl: string;
   name: string;
+  analysis?: {
+    labels: {
+      description: string;
+    }[];
+  };
+  storyText?: string;
+}
+
+export interface Magazine {
+  title: string;
+  theme: string;
+  style: string;
+  analyzedImages: AnalyzedImage[];
+  createdAt: Date;
+}
+
+export interface User {
   instagramId: string;
-  email: string;
-  upload: string[];
-  date: string[];
-  password: string;
-  textarea: string;
+  imageUrls: string[];
+  magazineTitle: string;
+  analyzedImages: AnalyzedImage[];
+  storyTheme: string;
+  magazineStyle: string;
 }

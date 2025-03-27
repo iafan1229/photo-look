@@ -106,7 +106,8 @@ const InstagramVerification: React.FC<InstagramVerificationProps> = ({
 
       <div className='verification-notes' style={{ marginTop: "1rem" }}>
         <small className='text-muted'>
-          * 인증이 확인되지 않는 경우, 잠시 후 다시 시도해주세요.
+          * 인증이 확인되지 않는 경우, 잠시 후 다시 시도해주세요.저장 버튼
+          누를시에 s3에 이미지 저장 후 - mongoDB에 앨범데이터 저장
           <br />* 인증에 문제가 있을 경우 고객센터로 문의해주세요.
         </small>
       </div>
