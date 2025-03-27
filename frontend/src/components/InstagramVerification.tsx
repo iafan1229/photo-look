@@ -4,48 +4,16 @@ import Head from "next/head";
 
 export default function InstagramVerification() {
   const [instagramId, setInstagramId] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [randomText, setRandomText] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [verifiedUserId, setVerifiedUserId] = useState("");
 
-  // 랜덤 코드 생성 함수
-  const generateRandomCode = () => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const length = 8;
-
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-
-    return result;
-  };
-
   // 인증 시작 핸들러
-  const handleStartVerification = () => {
+  const handleStartVerification = async () => {
     if (instagramId.trim() === "") {
       alert("인스타그램 아이디를 입력해주세요.");
-      return;
-    }
-
-    // 랜덤 코드 생성
-    const newRandomCode = generateRandomCode();
-    setRandomText(newRandomCode);
-    setIsVerifying(true);
-    setErrorMessage("");
-  };
-
-  // 인증 코드 확인 핸들러
-  const handleVerifyCode = async () => {
-    if (!randomText.trim()) {
-      alert("인증 코드가 생성되지 않았습니다.");
       return;
     }
 
@@ -53,10 +21,9 @@ export default function InstagramVerification() {
     setErrorMessage("");
 
     try {
-      // API 엔드포인트로 GET 요청 (쿼리 파라미터 사용)
       const response = await fetch(
         `/front/api/verify-comment?verification_code=${encodeURIComponent(
-          randomText
+          instagramId
         )}`,
         {
           method: "GET",
@@ -74,7 +41,7 @@ export default function InstagramVerification() {
         alert("인증이 완료되었습니다!");
       } else {
         setErrorMessage(
-          data.message || "인증에 실패했습니다. 댓글을 확인해주세요."
+          data.message || "인증에 실패했습니다. 아이디를 확인해주세요."
         );
       }
     } catch (error) {
@@ -90,31 +57,60 @@ export default function InstagramVerification() {
   // 인증 정보 리셋 핸들러
   const handleReset = () => {
     setInstagramId("");
-    setVerificationCode("");
-    setRandomText("");
-    setIsVerifying(false);
     setIsVerified(false);
     setVerifiedUserId("");
     setErrorMessage("");
   };
 
-  // 가상의 인스타그램 계정 정보 - 실제 서비스에서는 환경 변수로 관리하는 것이 좋습니다
+  // 가상의 인스타그램 계정 정보
   const officialAccount = "daily_9230";
-  const verificationPostUrl = `https://www.instagram.com/p/DHp8515SJec/`;
+  const verificationPostUrl = "https://www.instagram.com/p/DHp8515SJec/";
 
   return (
-    <>
-      <div className='container d-flex align-items-center justify-content-center min-vh-100 py-5'>
-        <div
-          className='card shadow-sm'
-          style={{ maxWidth: "500px", width: "100%" }}
-        >
-          <div className='card-body p-4'>
-            <h1 className='card-title text-center mb-4 fw-bold'>
-              인스타그램 계정 인증
-            </h1>
+    <div className='container d-flex align-items-center justify-content-center min-vh-100 py-5'>
+      <div
+        className='card shadow-sm'
+        style={{ maxWidth: "500px", width: "100%" }}
+      >
+        <div className='card-body p-4'>
+          <h1 className='card-title text-center mb-4 fw-bold'>
+            인스타그램 계정 인증
+          </h1>
 
-            {!isVerifying && !isVerified && (
+          {!isVerified && (
+            <>
+              <div className='alert alert-warning mb-4'>
+                <h5 className='fw-semibold'>인증 방법</h5>
+                <ol className='mb-0'>
+                  <li className='mb-2'>
+                    <a
+                      href={`https://www.instagram.com/${officialAccount}`}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-decoration-none'
+                    >
+                      @{officialAccount}
+                    </a>{" "}
+                    계정을 팔로우해주세요.
+                  </li>
+                  <li className='mb-2'>
+                    <a
+                      href={verificationPostUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-decoration-none'
+                    >
+                      이 게시물
+                    </a>
+                    에 본인의 인스타그램 계정으로 댓글을 작성해주세요.
+                  </li>
+                  <li>
+                    댓글 작성 후 아래에 본인의 인스타그램 아이디를 입력하고
+                    인증하기 버튼을 클릭해주세요.
+                  </li>
+                </ol>
+              </div>
+
               <div className='mb-4'>
                 <label htmlFor='instagram-id' className='form-label'>
                   인스타그램 아이디
@@ -131,61 +127,6 @@ export default function InstagramVerification() {
                   <button
                     className='btn btn-primary'
                     onClick={handleStartVerification}
-                  >
-                    인증 시작
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {isVerifying && !isVerified && (
-              <div>
-                <div className='alert alert-warning mb-4'>
-                  <h5 className='fw-semibold'>인증 방법</h5>
-                  <ol className='mb-0'>
-                    <li className='mb-2'>
-                      <a
-                        href={`https://www.instagram.com/${officialAccount}`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='text-decoration-none'
-                      >
-                        @{officialAccount}
-                      </a>{" "}
-                      계정을 팔로우해주세요.
-                    </li>
-                    <li className='mb-2'>
-                      <a
-                        href={verificationPostUrl}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='text-decoration-none'
-                      >
-                        이 게시물
-                      </a>
-                      에 아래 코드를 댓글로 작성해주세요.
-                    </li>
-                    <li>댓글 작성 후 아래 확인 버튼을 클릭해주세요.</li>
-                  </ol>
-                </div>
-
-                <div className='card bg-light mb-4'>
-                  <div className='card-body text-center'>
-                    <p className='card-text text-muted mb-1'>인증 코드:</p>
-                    <p className='card-text fw-bold fs-5 font-monospace user-select-all'>
-                      {randomText}
-                    </p>
-                  </div>
-                </div>
-
-                <div className='pt-3 border-top'>
-                  <p className='text-muted mb-3'>
-                    댓글을 작성하셨나요? 아래 확인 버튼을 클릭하여 인증을
-                    완료해주세요.
-                  </p>
-                  <button
-                    className='btn btn-success w-100'
-                    onClick={handleVerifyCode}
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -198,63 +139,42 @@ export default function InstagramVerification() {
                         확인 중...
                       </>
                     ) : (
-                      "댓글 확인하기"
+                      "인증하기"
                     )}
                   </button>
-
-                  {errorMessage && (
-                    <div className='alert alert-danger mt-3 mb-3'>
-                      {errorMessage}
-                    </div>
-                  )}
-
-                  <button
-                    className='btn btn-link text-decoration-none w-100 text-muted mt-2'
-                    onClick={handleReset}
-                    disabled={isLoading}
-                  >
-                    다시 시작
-                  </button>
                 </div>
+                {errorMessage && (
+                  <div className='alert alert-danger mt-3'>{errorMessage}</div>
+                )}
               </div>
-            )}
+            </>
+          )}
 
-            {isVerified && (
-              <div>
-                <div className='alert alert-success mb-4'>
-                  <h5 className='fw-semibold'>인증이 완료되었습니다!</h5>
-                  {verifiedUserId ? (
-                    <p className='mb-0'>
-                      인스타그램 계정 <strong>{verifiedUserId}</strong>가
-                      성공적으로 인증되었습니다.
-                    </p>
-                  ) : (
-                    <p className='mb-0'>
-                      인스타그램 계정이 성공적으로 인증되었습니다.
-                    </p>
-                  )}
-                </div>
-                <button
-                  className='btn btn-secondary w-100'
-                  onClick={handleReset}
-                >
-                  다시 인증하기
-                </button>
+          {isVerified && (
+            <div>
+              <div className='alert alert-success mb-4'>
+                <h5 className='fw-semibold'>인증이 완료되었습니다!</h5>
+                <p className='mb-0'>
+                  인스타그램 계정 <strong>{verifiedUserId}</strong>가 성공적으로
+                  인증되었습니다.
+                </p>
               </div>
-            )}
-
-            <div className='mt-4 small text-muted'>
-              <p className='mb-1'>
-                * 인증 코드 댓글이 확인되지 않는 경우, 잠시 후 다시
-                시도해주세요.
-              </p>
-              <p className='mb-0'>
-                * 인증에 문제가 있을 경우 고객센터로 문의해주세요.
-              </p>
+              <button className='btn btn-secondary w-100' onClick={handleReset}>
+                다시 인증하기
+              </button>
             </div>
+          )}
+
+          <div className='mt-4 small text-muted'>
+            <p className='mb-1'>
+              * 인증이 확인되지 않는 경우, 잠시 후 다시 시도해주세요.
+            </p>
+            <p className='mb-0'>
+              * 인증에 문제가 있을 경우 고객센터로 문의해주세요.
+            </p>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

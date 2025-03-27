@@ -12,7 +12,7 @@ def start_driver():
     global driver
     if driver is None:
         options = Options()
-        # options.add_argument("--headless")  # 헤드리스 모드
+        options.add_argument("--headless")  # 헤드리스 모드
         service = Service(executable_path=ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service,options=options)
         driver.set_window_size(800, 600)
