@@ -2,8 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useEffect } from "react";
 import "swiper/css";
 import axios from "axios";
-import { User } from "@/type";
-
+import { User } from "@/type/user";
 export default function Slider() {
   const [userData, setUserData] = useState<User[]>([]);
   useEffect(() => {
