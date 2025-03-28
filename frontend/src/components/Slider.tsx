@@ -35,7 +35,7 @@ export default function Slider() {
         {userData?.length &&
           userData?.map((el) => (
             <SwiperSlide>
-              <img src={`${el.upload[0]}`} />
+              <img src={`${el?.imageUrls[0]}`} />
             </SwiperSlide>
           ))}
       </Swiper>
