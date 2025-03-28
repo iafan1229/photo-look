@@ -42,3 +42,4 @@ next-env.d.ts
 # flask
 /frontend/flask/venv
 app.log
+/frontend/.env

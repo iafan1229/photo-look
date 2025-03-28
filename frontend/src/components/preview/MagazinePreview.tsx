@@ -19,6 +19,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   } = useInstagramVerification();
 
   const onInstagramVerificationSuccess = async (instagramId: string) => {
+    console.log(instagramId);
     const success = await handleVerificationSuccess({
       images,
       instagramId,
@@ -128,22 +129,26 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 </div>
               </Card.Body>
             </Card>
-            <div className='text-center mt-4 mb-5'>
-              <Row>
-                <Button variant='success' onClick={downloadPDF}>
-                  매거진 PDF로 다운로드
-                </Button>
-              </Row>
-              <Row>
-                <InstagramVerification
-                  onVerificationSuccess={onInstagramVerificationSuccess}
-                  disabled={verificationLoading || images.length === 0}
-                />
-              </Row>
-            </div>
           </>
         ))}
       </div>
+      {images.length > 0 && (
+        <>
+          <div className='text-center mt-4 mb-5'>
+            <Row>
+              <Button variant='success' onClick={downloadPDF}>
+                매거진 PDF로 다운로드
+              </Button>
+            </Row>
+            <Row>
+              <InstagramVerification
+                onVerificationSuccess={onInstagramVerificationSuccess}
+                disabled={verificationLoading || images.length === 0}
+              />
+            </Row>
+          </div>
+        </>
+      )}
     </div>
   );
 };
