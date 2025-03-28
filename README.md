@@ -21,4 +21,4 @@ DB - MongoDB, AWS S3
 
 AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으로 자연스러운 텍스트 생성)
 
-Cloud - AWS EC2
+Cloud - AWS ECS (Docker, ECR, ECS on Fargate)
