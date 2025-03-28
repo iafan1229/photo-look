@@ -20,7 +20,6 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   } = useInstagramVerification();
 
   const onInstagramVerificationSuccess = async (instagramId: string) => {
-    console.log(instagramId);
     const success = await handleVerificationSuccess({
       images,
       instagramId,
@@ -30,10 +29,14 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
       magazineStyle: style,
     });
 
-    if (success) {
-      // 성공 후 추가 작업 (예: 다음 단계로 이동)
-      alert("s3및 mongoDB 저장 성공");
-      // setShowMagazine(true);
+    try {
+      if (success) {
+        // 성공 후 추가 작업 (예: 다음 단계로 이동)
+        alert("s3및 mongoDB 저장 성공");
+        // setShowMagazine(true);
+      }
+    } catch (err: any) {
+      alert(err?.message);
     }
   };
 
