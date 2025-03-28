@@ -89,6 +89,10 @@ const Main: React.FC = () => {
       setError("최소 한 장 이상의 사진을 업로드해주세요.");
       return;
     }
+    if (!magazineTitle) {
+      setError("매거진 제목을 입력해주세요.");
+      return;
+    }
 
     setLoading(true);
     setGeneratingContent(true);

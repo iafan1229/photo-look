@@ -25,13 +25,13 @@ const register = async (
       });
     }
 
-    // 이미 존재하는 사용자인지 확인
-    const existingUser = await UserModel.findOne({ instagramId });
-    if (existingUser) {
-      return res.status(400).json({
-        message: "이미 등록된 인스타그램 아이디입니다.",
-      });
-    }
+    // // 이미 존재하는 사용자인지 확인
+    // const existingUser = await UserModel.findOne({ instagramId });
+    // if (existingUser) {
+    //   return res.status(400).json({
+    //     message: "이미 등록된 인스타그램 아이디입니다.",
+    //   });
+    // }
 
     // 사용자 저장
     const saveUser = await new UserModel({

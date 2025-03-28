@@ -1,9 +1,25 @@
 export interface User {
-  name: string;
+  createdAt: string;
+  imageUrls: string[];
   instagramId: string;
-  email: string;
-  upload: string[];
-  date: string[];
-  password: string;
-  textarea: string;
+  title: string;
+  theme: string;
+  style: string;
+  magazine: {
+    title: string;
+    theme: string;
+    style: string;
+    analyzedImages: {
+      analysis: {
+        labels: {
+          description: string;
+          _id: string;
+        }[];
+      };
+      name: string;
+      storyText: string;
+      _id: string;
+    }[];
+  };
+  updatedAt: string;
 }

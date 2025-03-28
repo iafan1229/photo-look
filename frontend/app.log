@@ -1,6 +1,6 @@
-2025-03-28 14:16:00,603 - werkzeug - WARNING -  * Debugger is active!
-2025-03-28 14:16:00,632 - werkzeug - INFO -  * Debugger PIN: 701-832-252
-2025-03-28 14:20:39,708 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:20:39] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
-2025-03-28 14:26:33,314 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:26:33] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
-2025-03-28 14:33:50,064 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:33:50] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
-2025-03-28 14:52:31,397 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:52:31] "[33mGET /api/verify-comment?verification_code=good.look.77 HTTP/1.1[0m" 404 -
+2025-03-28 15:42:21,997 - werkzeug - WARNING -  * Debugger is active!
+2025-03-28 15:42:22,002 - werkzeug - INFO -  * Debugger PIN: 701-832-252
+2025-03-28 15:45:04,951 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 15:45:04] "[33mGET /api/verify-comment?verification_code=good.look.77 HTTP/1.1[0m" 404 -
+2025-03-28 15:45:43,671 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 15:45:43] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
+2025-03-28 15:45:43,898 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 15:45:43] "[35m[1mGET /api/verify-comment?verification_code=good.look.77 HTTP/1.1[0m" 500 -
+2025-03-28 15:46:21,647 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 15:46:21] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
