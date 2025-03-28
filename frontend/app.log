@@ -1,2 +1,6 @@
-2025-03-28 14:10:48,099 - werkzeug - WARNING -  * Debugger is active!
-2025-03-28 14:10:48,105 - werkzeug - INFO -  * Debugger PIN: 701-832-252
+2025-03-28 14:16:00,603 - werkzeug - WARNING -  * Debugger is active!
+2025-03-28 14:16:00,632 - werkzeug - INFO -  * Debugger PIN: 701-832-252
+2025-03-28 14:20:39,708 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:20:39] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
+2025-03-28 14:26:33,314 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:26:33] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
+2025-03-28 14:33:50,064 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:33:50] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
+2025-03-28 14:52:31,397 - werkzeug - INFO - 127.0.0.1 - - [28/Mar/2025 14:52:31] "[33mGET /api/verify-comment?verification_code=good.look.77 HTTP/1.1[0m" 404 -

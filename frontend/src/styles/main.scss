@@ -44,3 +44,10 @@ section {
     flex-direction: column;
   }
 }
+.image-wrap {
+  position: relative;
+  width: 100%;
+  img {
+    object-fit: cover;
+  }
+}

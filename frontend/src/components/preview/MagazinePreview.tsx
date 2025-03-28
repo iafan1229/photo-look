@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import Image from "next/image";
 import { MagazinePreviewProps, ThemeType } from "@/type/preview";
@@ -12,6 +12,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   theme,
   style,
 }) => {
+  const [showVerification, setShowVerification] = useState(false);
   const {
     handleVerificationSuccess,
     isLoading: verificationLoading,
@@ -134,20 +135,38 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
       </div>
       {images.length > 0 && (
         <>
-          <div className='text-center mt-4 mb-5'>
-            <Row>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              gap: 30,
+            }}
+          >
+            <div>
               <Button variant='success' onClick={downloadPDF}>
                 매거진 PDF로 다운로드
               </Button>
-            </Row>
-            <Row>
-              <InstagramVerification
-                onVerificationSuccess={onInstagramVerificationSuccess}
+            </div>
+            <div>
+              <Button
+                variant='primary'
+                onClick={() => setShowVerification(!showVerification)}
                 disabled={verificationLoading || images.length === 0}
-              />
-            </Row>
+              >
+                홈페이지에 저장하기
+              </Button>
+            </div>
           </div>
         </>
+      )}
+      {showVerification && (
+        <div className='verification-dropdown' style={{ paddingTop: 30 }}>
+          <InstagramVerification
+            onVerificationSuccess={onInstagramVerificationSuccess}
+            disabled={verificationLoading || images.length === 0}
+          />
+        </div>
       )}
     </div>
   );

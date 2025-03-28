@@ -16,7 +16,7 @@ const MagazineSchema = new mongooseModule.Schema({
   },
   analyzedImages: [
     {
-      dataUrl: String,
+      // dataUrl: String,
       name: String,
       analysis: {
         labels: [

@@ -4,7 +4,7 @@ export interface ResponseData {
 }
 
 export interface AnalyzedImage {
-  dataUrl: string;
+  // dataUrl: string;
   name: string;
   analysis?: {
     labels: {

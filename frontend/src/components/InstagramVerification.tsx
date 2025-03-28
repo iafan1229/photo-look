@@ -49,7 +49,16 @@ const InstagramVerification: React.FC<InstagramVerificationProps> = ({
   };
 
   return (
-    <div className='instagram-verification-container'>
+    <div
+      className='instagram-verification-container'
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <h2>인스타그램 계정 인증</h2>
 
       <div className='verification-instructions'>
@@ -85,7 +94,7 @@ const InstagramVerification: React.FC<InstagramVerificationProps> = ({
           validateStatus={error ? "error" : ""}
           help={error}
         >
-          <Space>
+          <div>
             <Input
               value={instagramId}
               onChange={(e) => setInstagramId(e.target.value)}
@@ -93,6 +102,7 @@ const InstagramVerification: React.FC<InstagramVerificationProps> = ({
               disabled={isVerifying || disabled}
             />
             <Button
+              style={{ marginTop: 10 }}
               type='primary'
               onClick={handleVerification}
               loading={isVerifying}
@@ -100,15 +110,13 @@ const InstagramVerification: React.FC<InstagramVerificationProps> = ({
             >
               인증하기
             </Button>
-          </Space>
+          </div>
         </Form.Item>
       </Form>
 
       <div className='verification-notes' style={{ marginTop: "1rem" }}>
         <small className='text-muted'>
-          * 인증이 확인되지 않는 경우, 잠시 후 다시 시도해주세요.저장 버튼
-          누를시에 s3에 이미지 저장 후 - mongoDB에 앨범데이터 저장
-          <br />* 인증에 문제가 있을 경우 고객센터로 문의해주세요.
+          인증하기 버튼을 누른 후 10초정도 기다려주세요
         </small>
       </div>
     </div>

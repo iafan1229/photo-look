@@ -77,7 +77,11 @@ export const useInstagramVerification = () => {
         instagramId: data.instagramId,
         imageUrls: data.imageUrls,
         magazineTitle: data.magazineTitle,
-        analyzedImages: data.analyzedImages,
+        analyzedImages: data.analyzedImages.map((el) => ({
+          name: el.name,
+          analysis: el.analysis,
+          storyText: el.storyText,
+        })),
         storyTheme: data.storyTheme,
         magazineStyle: data.magazineStyle,
       });
