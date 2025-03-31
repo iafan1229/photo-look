@@ -31,7 +31,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     try {
       if (success) {
         // 성공 후 추가 작업 (예: 다음 단계로 이동)
-        alert("s3및 mongoDB 저장 성공");
+        alert("사진을 홈페이지에 저장 성공했습니다.");
         // setShowMagazine(true);
       }
     } catch (err: any) {

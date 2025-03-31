@@ -13,7 +13,7 @@ export default function Header() {
         </h1>
         <nav>
           <ul>
-            {["photo", "register", "about"].map((el) => {
+            {["about", "photo", "register"].map((el) => {
               return (
                 <li key={el} className={path.includes(el) ? "on" : ""}>
                   <Link href={"/" + el}>{el.toUpperCase()}</Link>
