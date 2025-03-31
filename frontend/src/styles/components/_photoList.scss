@@ -73,13 +73,9 @@ $album-note-yellow: #fffbe0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  overflow-y: auto;
-  &.preview {
-    position: relative;
-    background-color: white;
-  }
+
   .close-button {
+    margin-top: 10px;
     position: fixed;
     top: 20px;
     right: 20px;
@@ -92,16 +88,19 @@ $album-note-yellow: #fffbe0;
 
   // 앨범 컨테이너
   .album-container {
+    max-height: 90vh;
+    overflow-y: auto;
     background-color: $album-bg-color;
     padding: 30px;
+    margin: 10px;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     max-width: 900px;
-    max-height: 95vh;
     margin: 0 auto;
     position: relative;
-    overflow-y: auto;
-
+    &::-webkit-scrollbar {
+      display: none;
+    }
     // 앨범 표지
     .album-cover {
       background-color: $album-dark-brown;
@@ -179,6 +178,7 @@ $album-note-yellow: #fffbe0;
         position: relative;
 
         .photo-container {
+          padding-top: 10px;
           margin-bottom: 12px;
           overflow: hidden;
           position: relative;
@@ -191,32 +191,25 @@ $album-note-yellow: #fffbe0;
         }
 
         .photo-title {
-          text-align: center;
           font-size: 14px;
           font-family: cursive, sans-serif;
-          position: absolute;
-          bottom: 12px;
-          width: calc(100% - 30px);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
         }
 
         .photo-description {
-          position: absolute;
-          bottom: -25px;
-          left: 10px;
           background: rgb(255, 251, 224);
           padding: 5px 10px;
           font-size: 12px;
           box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px;
-          max-width: calc(100% - 20px);
-          z-index: 1;
+          width: 100%;
+          display: flex;
+          align-items: flex-end;
+
+          overflow: hidden;
         }
 
         .photo-tags {
           position: absolute;
-          top: -15px;
+          top: 5px;
           right: 10px;
           display: flex;
           gap: 5px;
@@ -238,53 +231,53 @@ $album-note-yellow: #fffbe0;
   }
 
   // 앨범 푸터
-  .album-footer {
-    color: $album-cream;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 700px;
-    text-align: center;
-    padding: 15px;
+  .album-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
 
-    .album-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 10px;
-      margin-top: 30px;
-
-      button {
-        background-color: $album-dark-brown;
-        border: transparent;
-        color: white;
-        font-weight: bold;
-      }
+    button {
+      background-color: $album-dark-brown;
+      border: transparent;
+      color: white;
+      font-weight: bold;
     }
   }
-}
-
-// 모바일 반응형
-@media (max-width: 768px) {
-  .photo-detail {
+  &.preview {
+    position: relative;
+    background-color: white;
+    max-height: none;
+    height: auto;
     .album-container {
-      padding: 15px;
+      max-height: none;
+      height: auto;
+    }
+  }
 
-      .album-pages {
-        gap: 30px;
+  // 모바일 반응형
+  @media (max-width: 768px) {
+    .photo-detail {
+      .album-container {
+        padding: 15px;
 
-        .polaroid {
-          width: 100%;
-          max-width: none;
+        .album-pages {
+          gap: 30px;
+
+          .polaroid {
+            width: 100%;
+            max-width: none;
+          }
         }
       }
-    }
 
-    .album-footer {
-      .album-buttons {
-        flex-direction: column;
+      .album-footer {
+        .album-buttons {
+          flex-direction: column;
 
-        button {
-          margin-bottom: 10px;
+          button {
+            margin-bottom: 10px;
+          }
         }
       }
     }
