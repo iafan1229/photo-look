@@ -2,26 +2,23 @@ import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CloseOutlined, CloseSquareFilled } from "@ant-design/icons";
-import { Image as AntImage, Card, Button, Row } from "antd";
+import { Button } from "antd";
 import { User } from "@/type/user";
 import { ThemeType } from "@/type/preview";
+import Icon, { CloseOutlined } from "@ant-design/icons";
 
 export default function PhotoList() {
   const [userData, setUserData] = useState<User[]>();
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailUserData, setDetailUserData] = useState<User | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [listResponse] = await Promise.all([
-          axios.get("/api/main/list"),
-          // axios.get("/api/main/list-slider"),
-        ]);
+        const [listResponse] = await Promise.all([axios.get("/api/main/list")]);
 
         console.log("List Data:", listResponse);
         setUserData(listResponse.data.data);
-        // console.log("Detail Data:", detailResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -35,7 +32,7 @@ export default function PhotoList() {
     setDetailUserData(el);
   };
 
-  // 테마 설명 매핑 (MagazinePreview에서 가져옴)
+  // 테마 설명 매핑
   const themeDescriptions: Record<ThemeType, string> = {
     travel: "특별한 여행 순간을 담은",
     family: "소중한 가족과의 시간을 담은",
@@ -46,12 +43,11 @@ export default function PhotoList() {
     auto: "특별한 순간을 담은",
   };
 
-  // PDF 다운로드 기능 (MagazinePreview에서 가져옴)
+  // PDF 다운로드 기능
   const downloadPDF = () => {
-    const element = document.getElementById("photo-detail-container");
+    const element = document.getElementById("photo-detail-album");
     if (!element) return;
 
-    // 실제 구현에서는 html2pdf 라이브러리 사용
     console.log("PDF 다운로드 기능 (실제 구현 필요)");
     alert(
       "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
@@ -71,24 +67,23 @@ export default function PhotoList() {
             >
               <Masonry gutter='20px' className='masonry-wrap'>
                 {userData.map((el: User) => (
-                  <>
-                    <div
-                      className='photo-wrap'
-                      onClick={() => handleDetail(el)}
-                    >
-                      <div className='photo'>
-                        <Image
-                          src={el?.imageUrls?.[0]}
-                          alt=''
-                          width={500}
-                          height={500}
-                        />
-                      </div>
-                      <div className='text'>
-                        <div className='des'>{el?.title}</div>
-                      </div>
+                  <div
+                    key={Math.random().toString()}
+                    className='photo-wrap'
+                    onClick={() => handleDetail(el)}
+                  >
+                    <div className='photo'>
+                      <Image
+                        src={el?.imageUrls?.[0]}
+                        alt=''
+                        width={500}
+                        height={500}
+                      />
                     </div>
-                  </>
+                    <div className='text'>
+                      <div className='des'>{el?.title}</div>
+                    </div>
+                  </div>
                 ))}
               </Masonry>
             </ResponsiveMasonry>
@@ -98,157 +93,94 @@ export default function PhotoList() {
 
       {detailOpen && (
         <div className='photo-detail'>
-          <h2 className='text-center mb-4'>매거진 미리보기</h2>
+          <div className='close-button' onClick={() => setDetailOpen(false)}>
+            <CloseOutlined />
+          </div>
 
-          <div
-            id='photo-detail-container'
-            className={`magazine-container ${detailUserData?.style || ""}`}
-          >
-            {/* 내용 페이지들 */}
-            <Card
-              className={`magazine-page content-page ${
-                detailUserData?.style || ""
-              } mb-4`}
-              style={{
-                maxHeight: "90vh",
-                overflowY: "auto",
-                background: "white",
-              }}
-            >
-              {/* 표지 페이지 */}
-              <div
-                className={`magazine-page cover-page ${
-                  detailUserData?.style || ""
-                }`}
-              >
-                <h1 className='magazine-title'>
-                  {detailUserData?.title || "나의 스토리"}
-                </h1>
-                <p className='magazine-subtitle'>
+          <div id='photo-detail-album' className='album-container'>
+            {/* 앨범 표지 */}
+            <div className='album-cover'>
+              <div className='album-cover-inner'>
+                <h1>{detailUserData?.title || "나의 앨범"}</h1>
+
+                <div className='album-subtitle'>
                   {detailUserData?.theme
                     ? themeDescriptions[detailUserData.theme as ThemeType]
-                    : themeDescriptions.auto}{" "}
-                  스토리
-                </p>
+                    : themeDescriptions.auto}
+                  이야기
+                </div>
 
-                <div
-                  className='creator-info'
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.8)",
-                    padding: "10px 15px",
-                    borderRadius: "8px",
-                    margin: "10px 0",
-                    fontSize: "14px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                  >
-                    <span style={{ fontWeight: "bold" }}>인스타그램:</span>
-                    <span>@{detailUserData?.instagramId || "unknown"}</span>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                  >
-                    <span style={{ fontWeight: "bold" }}>작성일:</span>
-                    <span>
-                      {detailUserData?.createdAt
-                        ? new Date(detailUserData.createdAt).toLocaleDateString(
-                            "ko-KR"
-                          )
-                        : "날짜 정보 없음"}
-                    </span>
+                <div className='album-info'>
+                  <div>@{detailUserData?.instagramId || ""}</div>
+                  <div>
+                    {detailUserData?.createdAt
+                      ? new Date(detailUserData.createdAt).toLocaleDateString(
+                          "ko-KR"
+                        )
+                      : "날짜 정보 없음"}
                   </div>
                 </div>
 
                 {detailUserData?.imageUrls &&
                   detailUserData.imageUrls.length > 0 && (
-                    <div className='cover-image-container'>
+                    <div className='cover-photo-container'>
                       <Image
                         src={detailUserData.imageUrls[0]}
                         alt='Cover'
-                        className='cover-image'
                         width={500}
                         height={500}
                       />
                     </div>
                   )}
               </div>
+            </div>
 
-              {detailUserData?.imageUrls.map((image, index) => (
-                <>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      width: "100%",
-                      gap: 20,
-                      marginTop: 20,
-                      marginBottom: 20,
-                    }}
-                  ></div>
-                  <div>
-                    <div className='page-content'>
-                      <h3 className='page-title'>
-                        {index === 0
-                          ? "스토리의 시작"
-                          : index === detailUserData.imageUrls.length - 1
-                          ? "스토리의 마무리"
-                          : `순간 ${index}`}
-                      </h3>
+            {/* 앨범 내용 - 폴라로이드 형태의 사진들 */}
+            <div className='album-pages'>
+              {detailUserData?.imageUrls?.map((image, index) => (
+                <div key={index} className='polaroid'>
+                  <div className='photo-container'>
+                    <Image
+                      src={image}
+                      alt={`Album image ${index + 1}`}
+                      width={500}
+                      height={500}
+                    />
+                  </div>
 
-                      <div className='image-container'>
-                        <Image
-                          src={image}
-                          alt={`Story image ${index + 1}`}
-                          className='story-image'
-                          width={500}
-                          height={500}
-                        />
-                      </div>
+                  <div className='photo-title'>
+                    {index === 0
+                      ? "스토리의 시작"
+                      : index === detailUserData.imageUrls.length - 1
+                      ? "스토리의 마무리"
+                      : `순간 ${index}`}
+                  </div>
 
-                      <p className='image-caption'>
-                        {detailUserData.title || ""}
-                      </p>
-                      <div className='tags-container'>
-                        {detailUserData.magazine?.analyzedImages?.[
-                          index
-                        ]?.analysis?.labels?.map((label: any, idx: number) => (
+                  <div className='photo-description'>
+                    {detailUserData.title || ""}
+                  </div>
+
+                  {detailUserData.magazine?.analyzedImages?.[index]?.analysis
+                    ?.labels?.length > 0 && (
+                    <div className='photo-tags'>
+                      {detailUserData.magazine.analyzedImages[
+                        index
+                      ].analysis.labels
+                        .slice(0, 2)
+                        .map((label: any, idx: number) => (
                           <span key={idx} className='tag'>
                             {label.description}
                           </span>
                         ))}
-                      </div>
                     </div>
-                  </div>
-                </>
+                  )}
+                </div>
               ))}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 15,
-                }}
-              >
-                <Button
-                  type='primary'
-                  onClick={downloadPDF}
-                  style={{ minWidth: "180px" }}
-                >
-                  매거진 PDF로 다운로드
+            </div>
+            <div className='album-footer'>
+              <div className='album-buttons'>
+                <Button type='primary' onClick={downloadPDF}>
+                  앨범 PDF로 다운로드
                 </Button>
                 <Button
                   type='default'
@@ -256,12 +188,12 @@ export default function PhotoList() {
                     setDetailOpen(false);
                     setDetailUserData(null);
                   }}
-                  style={{ minWidth: "100px" }}
+                  className='close-button'
                 >
-                  닫기
+                  <CloseOutlined style={{ color: "white" }} />
                 </Button>
               </div>
-            </Card>
+            </div>
           </div>
         </div>
       )}
