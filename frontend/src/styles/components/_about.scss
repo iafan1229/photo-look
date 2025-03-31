@@ -1,18 +1,6 @@
 // About Page Styles with modern design
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-// Variables
-$primary-color: #3a86ff;
-$secondary-color: #ff006e;
-$dark-color: #1a1a2e;
-$light-color: #f8f9fa;
-$accent-color: #8338ec;
-$text-color: #2d2d2d;
-$text-light: #6c757d;
-$border-radius: 12px;
-$box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-$transition: all 0.3s ease;
-
 // Mixins
 @mixin flex-center {
   display: flex;

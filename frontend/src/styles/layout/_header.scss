@@ -1,5 +1,6 @@
 header {
-  padding: 30px;
+  padding: 10px;
+  padding-right: 30px;
   border-bottom: 1px solid $border;
   background: hsla(255, 93%, 72%, 1);
 
@@ -25,7 +26,7 @@ header {
 
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   & {
     color: white;
   }

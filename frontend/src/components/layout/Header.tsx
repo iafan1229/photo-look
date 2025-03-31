@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+
 export default function Header() {
   const path = usePathname();
   return (
@@ -8,7 +10,14 @@ export default function Header() {
       <header>
         <h1>
           <Link href='/photo' style={{ color: "white" }}>
-            photo-look
+            <div className='header-logo'>
+              <Image
+                src='/img/photo-look-logo-dark-bg.svg'
+                alt='Photo Look 로고'
+                width={300}
+                height={100}
+              />
+            </div>
           </Link>
         </h1>
         <nav>

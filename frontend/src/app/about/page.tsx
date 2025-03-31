@@ -116,7 +116,7 @@ const AboutPage = () => {
       {/* 핵심 가치 섹션 */}
       <section className='values-section'>
         <div className='container'>
-          <h2 className='section-title'>우리의 핵심 가치</h2>
+          <h2 className='section-title'>핵심 가치</h2>
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={12} md={8}>
               <Card className='value-card'>
