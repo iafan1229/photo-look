@@ -81,7 +81,7 @@ export default function PhotoList() {
                       />
                     </div>
                     <div className='text'>
-                      <div className='des'>{el?.title}</div>
+                      <div className='des'>{el?.magazine?.title}</div>
                     </div>
                   </div>
                 ))}
@@ -106,19 +106,8 @@ export default function PhotoList() {
                 <div className='album-subtitle'>
                   {detailUserData?.theme
                     ? themeDescriptions[detailUserData.theme as ThemeType]
-                    : themeDescriptions.auto}
+                    : themeDescriptions.auto}{" "}
                   이야기
-                </div>
-
-                <div className='album-info'>
-                  <div>@{detailUserData?.instagramId || ""}</div>
-                  <div>
-                    {detailUserData?.createdAt
-                      ? new Date(detailUserData.createdAt).toLocaleDateString(
-                          "ko-KR"
-                        )
-                      : "날짜 정보 없음"}
-                  </div>
                 </div>
 
                 {detailUserData?.imageUrls &&
@@ -156,9 +145,14 @@ export default function PhotoList() {
                       : `순간 ${index}`}
                   </div>
 
-                  <div className='photo-description'>
-                    {detailUserData.title || ""}
-                  </div>
+                  {detailUserData?.magazine?.analyzedImages?.length > 0 && (
+                    <div className='photo-description'>
+                      {
+                        detailUserData?.magazine?.analyzedImages?.[index]
+                          ?.storyText
+                      }
+                    </div>
+                  )}
 
                   {detailUserData.magazine?.analyzedImages?.[index]?.analysis
                     ?.labels?.length > 0 && (
@@ -177,23 +171,12 @@ export default function PhotoList() {
                 </div>
               ))}
             </div>
-            <div className='album-footer'>
-              <div className='album-buttons'>
-                <Button type='primary' onClick={downloadPDF}>
-                  앨범 PDF로 다운로드
-                </Button>
-                <Button
-                  type='default'
-                  onClick={() => {
-                    setDetailOpen(false);
-                    setDetailUserData(null);
-                  }}
-                  className='close-button'
-                >
-                  <CloseOutlined style={{ color: "white" }} />
-                </Button>
-              </div>
-            </div>
+          </div>
+
+          <div className='album-footer'>
+            <Button type='primary' onClick={downloadPDF}>
+              앨범 PDF로 다운로드
+            </Button>
           </div>
         </div>
       )}

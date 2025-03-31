@@ -193,7 +193,7 @@ const Main: React.FC = () => {
   };
 
   return (
-    <Container className='py-5'>
+    <Container className='mt-4'>
       <h1 className='text-center mb-4'>사진 스토리텔링 매거진 생성기</h1>
 
       {error && <Alert variant='danger'>{error}</Alert>}
