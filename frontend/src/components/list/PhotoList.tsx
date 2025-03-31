@@ -2,7 +2,7 @@ import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "antd";
+import { Button, Card } from "antd";
 import { User } from "@/type/user";
 import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
@@ -97,9 +97,28 @@ export default function PhotoList() {
             <CloseOutlined />
           </div>
 
-          <div id='photo-detail-album' className='album-container'>
+          <Card
+            id='photo-detail-album'
+            className='album-container'
+            bordered={false}
+            style={{
+              backgroundColor: "#f2efe4",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
+              borderRadius: "10px",
+            }}
+          >
             {/* 앨범 표지 */}
-            <div className='album-cover'>
+            <Card
+              className='album-cover'
+              bordered={false}
+              style={{
+                backgroundColor: "#35281E",
+                backgroundImage:
+                  'url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png")',
+                marginBottom: "30px",
+                boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
+              }}
+            >
               <div className='album-cover-inner'>
                 <h1>{detailUserData?.title || "나의 앨범"}</h1>
 
@@ -122,12 +141,21 @@ export default function PhotoList() {
                     </div>
                   )}
               </div>
-            </div>
+            </Card>
 
             {/* 앨범 내용 - 폴라로이드 형태의 사진들 */}
             <div className='album-pages'>
               {detailUserData?.imageUrls?.map((image, index) => (
-                <div key={index} className='polaroid'>
+                <Card
+                  key={index}
+                  className='polaroid'
+                  bordered={false}
+                  style={{
+                    padding: 0,
+                    backgroundColor: "white",
+                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
+                  }}
+                >
                   <div className='photo-container'>
                     <Image
                       src={image}
@@ -145,14 +173,16 @@ export default function PhotoList() {
                       : `순간 ${index}`}
                   </div>
 
-                  {detailUserData?.magazine?.analyzedImages?.length > 0 && (
-                    <div className='photo-description'>
-                      {
-                        detailUserData?.magazine?.analyzedImages?.[index]
-                          ?.storyText
-                      }
-                    </div>
-                  )}
+                  {detailUserData?.magazine?.analyzedImages?.length > 0 &&
+                    detailUserData?.magazine?.analyzedImages?.[index]
+                      ?.storyText && (
+                      <div className='photo-description'>
+                        {
+                          detailUserData.magazine.analyzedImages[index]
+                            .storyText
+                        }
+                      </div>
+                    )}
 
                   {detailUserData.magazine?.analyzedImages?.[index]?.analysis
                     ?.labels?.length > 0 && (
@@ -168,13 +198,22 @@ export default function PhotoList() {
                         ))}
                     </div>
                   )}
-                </div>
+                </Card>
               ))}
             </div>
-          </div>
+          </Card>
 
-          <div className='album-footer'>
-            <Button type='primary' onClick={downloadPDF}>
+          <div className='album-buttons'>
+            <Button
+              type='primary'
+              onClick={downloadPDF}
+              style={{
+                backgroundColor: "#D9BC8C",
+                borderColor: "#B29B72",
+                color: "#35281E",
+                fontWeight: "bold",
+              }}
+            >
               앨범 PDF로 다운로드
             </Button>
           </div>
