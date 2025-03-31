@@ -2,7 +2,7 @@ import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card } from "antd";
+import { Button, Card, Divider } from "antd";
 import { User } from "@/type/user";
 import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
@@ -121,7 +121,14 @@ export default function PhotoList() {
             >
               <div className='album-cover-inner'>
                 <h1>{detailUserData?.title || "나의 앨범"}</h1>
-
+                <p>
+                  {new Date(
+                    detailUserData?.createdAt || Date.now()
+                  ).toLocaleDateString()}
+                  일에 생성된 앨범
+                </p>
+                <p>Instagram : @{detailUserData?.instagramId}</p>
+                <Divider />
                 <div className='album-subtitle'>
                   {detailUserData?.theme
                     ? themeDescriptions[detailUserData.theme as ThemeType]
