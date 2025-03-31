@@ -13,7 +13,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
     <Row className='image-preview-container'>
       {images.map(
         (image: { dataUrl: string | StaticImport }, index: number) => (
-          <Col key={index}>
+          <div key={index}>
             <div className='image-wrap'>
               <Image
                 src={image.dataUrl}
@@ -23,7 +23,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
                 height={300}
               />
             </div>
-          </Col>
+          </div>
         )
       )}
     </Row>
