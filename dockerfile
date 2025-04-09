@@ -1,5 +1,5 @@
 # 백엔드 빌드 스테이지
-FROM node:18 AS backend-builder
+FROM node:21.6 AS backend-builder
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install
@@ -8,15 +8,16 @@ COPY server ./
 RUN npm run build || echo "Build script not found, please add 'build': 'tsc' to scripts"
 
 # 프론트엔드 빌드 스테이지
-FROM node:18 AS frontend-builder
+FROM node:21.6 AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend ./
-RUN npm run build
+# 빌드 실패 시 디버깅 정보 출력
+RUN npm run build || (cat /root/.npm/_logs/*-debug.log && exit 1)
 
 # 실행 스테이지
-FROM node:18-alpine
+FROM node:21.6-alpine
 WORKDIR /app
 
 # 백엔드 설정

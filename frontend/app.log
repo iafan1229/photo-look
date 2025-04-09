@@ -1,4 +1,2 @@
-2025-04-08 18:07:02,787 - werkzeug - WARNING -  * Debugger is active!
-2025-04-08 18:07:02,792 - werkzeug - INFO -  * Debugger PIN: 587-033-155
-2025-04-08 18:08:37,662 - werkzeug - INFO - 127.0.0.1 - - [08/Apr/2025 18:08:37] "[33mGET /api/verify-comment?verification_code=photo.look.77 HTTP/1.1[0m" 404 -
-2025-04-08 18:08:59,266 - werkzeug - INFO - 127.0.0.1 - - [08/Apr/2025 18:08:59] "GET /api/verify-comment?verification_code=good.look.77 HTTP/1.1" 200 -
+2025-04-09 09:14:20,053 - werkzeug - WARNING -  * Debugger is active!
+2025-04-09 09:14:20,058 - werkzeug - INFO -  * Debugger PIN: 587-033-155

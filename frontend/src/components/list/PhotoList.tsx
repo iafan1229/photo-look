@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Masonry from "react-responsive-masonry";
+import ResponsiveMasonry from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Divider } from "antd";
@@ -45,13 +46,12 @@ export default function PhotoList() {
 
   // PDF 다운로드 기능
   const downloadPDF = () => {
-    const element = document.getElementById("photo-detail-album");
-    if (!element) return;
-
-    console.log("PDF 다운로드 기능 (실제 구현 필요)");
-    alert(
-      "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
-    );
+    // const element = document.getElementById("photo-detail-album");
+    // if (!element) return;
+    // console.log("PDF 다운로드 기능 (실제 구현 필요)");
+    // alert(
+    //   "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
+    // );
   };
 
   return (
@@ -62,10 +62,11 @@ export default function PhotoList() {
             <h1>Albums</h1>
           </div>
           <div className='list photos'>
-            <ResponsiveMasonry
-              columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4 }}
-            >
-              <Masonry gutter='20px' className='masonry-wrap'>
+            <div>
+              <div
+                className='masonry-wrap'
+                style={{ display: "flex", flexWrap: "wrap", gap: 30 }}
+              >
                 {userData.map((el: User) => (
                   <div
                     key={Math.random().toString()}
@@ -85,8 +86,8 @@ export default function PhotoList() {
                     </div>
                   </div>
                 ))}
-              </Masonry>
-            </ResponsiveMasonry>
+              </div>
+            </div>
           </div>
         </section>
       )}
