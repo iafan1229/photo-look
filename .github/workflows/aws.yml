@@ -11,7 +11,7 @@ env:
   ECS_SERVICE: photo-look-ecs
   ECS_CLUSTER: photo-look-cluster
   ECS_TASK_DEFINITION: ././task-definition.json
-  CONTAINER_NAME: photo-look-container
+  CONTAINER_NAME: photo-look-task
 
 jobs:
   deploy:
