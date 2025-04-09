@@ -32,3 +32,8 @@ app.use("/api/main/list-slider", mainController.slider);
 
 const PORT = 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// Express.js 서버인 경우
+app.get("/health", (req, res) => {
+  // 필요에 따라 DB 연결 등 추가 확인 가능
+  res.status(200).json({ status: "healthy" });
+});
