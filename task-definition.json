@@ -1,5 +1,5 @@
 {
-  "family": "photo-look-task",
+  "family": "photo-look-taskDefinition",
   "executionRoleArn": "arn:aws:iam::908027376519:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "containerDefinitions": [
