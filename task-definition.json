@@ -4,7 +4,7 @@
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "app-container",
+      "name": "photo-look-container",
       "image": "908027376519.dkr.ecr.ap-northeast-2.amazonaws.com/photo-look-registry",
       "essential": true,
       "portMappings": [
