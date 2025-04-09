@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main # 또는 master, 메인 브랜치 이름에 맞게 조정
-
+      - ",/"
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REPOSITORY: photo-look-registry
   ECS_SERVICE: photo-look-ecs
   ECS_CLUSTER: photo-look-cluster
-  ECS_TASK_DEFINITION: photo-look-task
+  ECS_TASK_DEFINITION: ././task-definition.json
   CONTAINER_NAME: photo-look-container
 
 jobs:
