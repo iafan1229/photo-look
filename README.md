@@ -27,6 +27,3 @@ CI/CD - Github Actions
 Cloud - AWS ECS (Docker, ECR, ECS on Fargate)
 
 
-
-
-
