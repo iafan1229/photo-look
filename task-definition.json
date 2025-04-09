@@ -1,10 +1,10 @@
 {
-  "family": "photo-look-taskDefinition",
+  "family": "photo-look-task",
   "executionRoleArn": "arn:aws:iam::908027376519:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "photo-look-task",
+      "name": "container",
       "image": "908027376519.dkr.ecr.ap-northeast-2.amazonaws.com/photo-look-registry",
       "essential": true,
       "portMappings": [
