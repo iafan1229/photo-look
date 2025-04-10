@@ -145,7 +145,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: server/backend-task-definition.json
-          container-name: backend-containe
+          container-name: backend-container
           image: ${{ steps.build-server.outputs.server_image }}
 
       - name: Deploy server to Amazon ECS
