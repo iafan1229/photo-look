@@ -83,6 +83,13 @@ jobs:
           task-definition: frontend/frontend-task-definition.json
           container-name: frontend-container
           image: ${{ steps.build-frontend.outputs.frontend_image }}
+          environment-variables: |
+            NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY }}
+            NEXT_PUBLIC_GEMINI_API_KEY=${{ secrets.NEXT_PUBLIC_GEMINI_API_KEY }}
+            NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN=${{ secrets.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN }}
+            NEXT_PUBLIC_S3_ACCESS_KEY_ID=${{ secrets.NEXT_PUBLIC_S3_ACCESS_KEY_ID }}
+            NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=${{ secrets.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY }}
+            HOST=0.0.0.0
 
       - name: Deploy frontend to Amazon ECS
         if: steps.check-frontend.outputs.skip != 'true'
@@ -147,6 +154,8 @@ jobs:
           task-definition: server/backend-task-definition.json
           container-name: backend-container
           image: ${{ steps.build-server.outputs.server_image }}
+          environment-variables: |
+            DB_PASS=${{ secrets.DB_PASS }}
 
       - name: Deploy server to Amazon ECS
         if: steps.check-server.outputs.skip != 'true'

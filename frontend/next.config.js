@@ -4,6 +4,10 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
   },
+  server: {
+    host: "0.0.0.0",
+    port: 3000,
+  },
   rewrites: () => {
     return [
       {
