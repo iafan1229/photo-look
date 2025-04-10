@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 import { Response } from "express";
-import { ResponseData, User } from "../../types";
+import { ResponseData, User } from "../types/index";
 const UserModel = require("../models/User");
 
 // 회원가입

@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ResponseData, User } from "../../types";
+import { ResponseData, User } from "../types";
 const nodemailer = require("nodemailer");
 const UserModel = require("../models/User");
 
