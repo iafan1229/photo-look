@@ -7,6 +7,7 @@ import { Button, Card, Divider } from "antd";
 import { User } from "@/type/user";
 import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
+import { calc } from "antd/es/theme/internal";
 
 export default function PhotoList() {
   const [userData, setUserData] = useState<User[]>();
@@ -72,6 +73,7 @@ export default function PhotoList() {
                     key={Math.random().toString()}
                     className='photo-wrap'
                     onClick={() => handleDetail(el)}
+                    style={{ flexBasis: "calc(100%/3 - 30px)" }}
                   >
                     <div className='photo'>
                       <Image
