@@ -1,28 +1,23 @@
 {
-  "family": "photo-look-task",
+  "family": "photo-look-backend-task",
   "executionRoleArn": "arn:aws:iam::908027376519:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "container",
-      "image": "908027376519.dkr.ecr.ap-northeast-2.amazonaws.com/photo-look-registry",
+      "name": "backend-container",
+      "image": "908027376519.dkr.ecr.ap-northeast-2.amazonaws.com/photo-look-backend:latest",
       "essential": true,
       "portMappings": [
         {
           "containerPort": 8080,
           "hostPort": 8080,
           "protocol": "tcp"
-        },
-        {
-          "containerPort": 3000,
-          "hostPort": 3000,
-          "protocol": "tcp"
         }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/photo-look-task",
+          "awslogs-group": "/ecs/photo-look-backend-task",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
