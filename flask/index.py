@@ -1,16 +1,6 @@
 from routes import create_app
-
-
-app = create_app()
-
-
-if __name__ == '__main__':
-    app.debug = True
-    app.run()
-
 import logging
 from logging.config import dictConfig
-
 
 logging_config = {
     'version': 1,
@@ -41,5 +31,10 @@ logging_config = {
 }
 
 dictConfig(logging_config)
-
 logger = logging.getLogger(__name__)
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)
