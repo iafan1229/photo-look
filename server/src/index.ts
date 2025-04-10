@@ -31,7 +31,10 @@ app.use("/api/main/list", mainController.list);
 app.use("/api/main/list-slider", mainController.slider);
 
 const PORT = 8080;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+const HOST = "0.0.0.0"; // 모든 네트워크 인터페이스에 바인딩
+app.listen(PORT, HOST, () =>
+  console.log(`Server is running on ${HOST}:${PORT}`)
+);
 // Express.js 서버인 경우
 app.get("/api/health", (req, res) => {
   // 필요에 따라 DB 연결 등 추가 확인 가능
