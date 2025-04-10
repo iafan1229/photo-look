@@ -45,7 +45,7 @@ jobs:
         id: frontend-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: frontend-task-definition.json
+          task-definition: frontend/frontend-task-definition.json
           container-name: frontend-container
           image: ${{ steps.build-frontend.outputs.frontend_image }}
 
@@ -73,7 +73,7 @@ jobs:
         id: server-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: backend-task-definition.json
+          task-definition: server/backend-task-definition.json
           container-name: backend-container
           image: ${{ steps.build-server.outputs.server_image }}
 
@@ -101,7 +101,7 @@ jobs:
         id: flask-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: flask-task-definition.json
+          task-definition: flask/flask-task-definition.json
           container-name: flask-container
           image: ${{ steps.build-flask.outputs.flask_image }}
 
