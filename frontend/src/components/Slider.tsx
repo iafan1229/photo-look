@@ -25,7 +25,7 @@ export default function Slider() {
   }, []);
   return (
     <div className='top-list'>
-      <Swiper slidesPerView={5} loop className='mySwiper'>
+      <Swiper spaceBetween={20} slidesPerView={5} loop className='mySwiper'>
         {userData?.length &&
           userData?.map((el) => (
             <SwiperSlide>
