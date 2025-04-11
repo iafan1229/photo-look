@@ -9,7 +9,7 @@ from driver import start_driver, stop_driver
 
 verify_comment = Blueprint('verify_comment', __name__)
 
-@verify_comment.route('/api/verify-comment', methods=['GET'])
+@verify_comment.route('/front/api/verify-comment', methods=['GET'])
 def verify_instagram_comment():
     """
     인스타그램 게시물의 모든 댓글을 확인하고 특정 조건에 맞는 사용자 아이디를 반환하는 API

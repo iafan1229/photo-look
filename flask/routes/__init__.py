@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})  # 여기에 CORS 설정 추가
+    CORS(app, resources={r"/front/api/*": {"origins": "*"}})  # 여기에 CORS 설정 추가
 
 
     # 라우트 등록
