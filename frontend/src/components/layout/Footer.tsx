@@ -25,7 +25,6 @@ const Footer = () => {
           <Col xs={24} sm={12} md={8} lg={8}>
             <div></div>
             <div className='footer-section'>
-              <h3>사이트맵</h3>
               <ul className='footer-links'>
                 <li>
                   <Link href='/'>홈</Link>

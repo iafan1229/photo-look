@@ -16,7 +16,7 @@ const nextConfig = {
       },
       {
         source: "/front/api/:path*",
-        destination: "http://localhost:5000/api/:path*",
+        destination: "http://localhost:5000/front/api/:path*",
       },
     ];
   },
@@ -29,6 +29,8 @@ const nextConfig = {
         pathname: "/img-upload/**",
       },
     ],
+    loader: "custom",
+    loaderFile: "./my-image-loader.ts",
   },
 };
 

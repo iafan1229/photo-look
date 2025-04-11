@@ -8,29 +8,31 @@ export default function Header() {
   return (
     <>
       <header>
-        <h1>
-          <Link href='/photo' style={{ color: "white" }}>
-            <div className='header-logo'>
-              <Image
-                src='/img/photo-look-logo-dark-bg.svg'
-                alt='Photo Look 로고'
-                width={300}
-                height={100}
-              />
-            </div>
-          </Link>
-        </h1>
-        <nav>
-          <ul>
-            {["about", "photo", "register"].map((el) => {
-              return (
-                <li key={el} className={path.includes(el) ? "on" : ""}>
-                  <Link href={"/" + el}>{el.toUpperCase()}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <div>
+          <h1>
+            <Link href='/photo' style={{ color: "white" }}>
+              <div className='header-logo'>
+                <Image
+                  src='/img/photo-look-logo.svg'
+                  alt='Photo Look 로고'
+                  width={300}
+                  height={100}
+                />
+              </div>
+            </Link>
+          </h1>
+          <nav>
+            <ul>
+              {["photo", "about", "register"].map((el) => {
+                return (
+                  <li key={el} className={path.includes(el) ? "on" : ""}>
+                    <Link href={"/" + el}>{el.toUpperCase()}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
       </header>
     </>
   );

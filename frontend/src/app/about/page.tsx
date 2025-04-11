@@ -182,40 +182,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* 기술 스택 섹션 */}
-      <section className='vision-section'>
-        <div className='container'>
-          <Row gutter={[40, 40]} align='middle'>
-            <Col xs={24} md={12}>
-              <h2 className='section-title text-left'>기술 스택</h2>
-              <div className='vision-content'>
-                <p> Frontend - Next.js</p>
-                <p>Backend - Node.js</p>
-                <p>Data Crawling - Python (Flask)</p>
-                <p>Styling - SCSS</p>
-                <p>DataBase - MongoDB, AWS S3</p>
-                <p>
-                  AI - Google Vision AI (이미지 라벨링) <br />
-                  Google Gemini (라벨링 바탕으로 자연스러운 텍스트 생성)
-                </p>
-                <p>CI/CD - Github Actions</p>
-                <p>Cloud - AWS ECS (Docker, ECR, ECS on Fargate)</p>
-              </div>
-            </Col>
-            <Col xs={24} md={12}>
-              <div className='vision-image'>
-                <Image
-                  src='/img/code.jpg'
-                  alt='비전 이미지'
-                  fill
-                  className='rounded-image'
-                />
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </section>
-
       {/* CTA 섹션 */}
       <section className='cta-section'>
         <div className='container'>

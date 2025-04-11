@@ -15,12 +15,13 @@
 }
 
 @font-face {
-  font-family: "TTBookendBatangR";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/TTBookendBatangR.woff2")
+  font-family: "NanumHumanTTFBold";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2501-1@1.1/NanumHumanTTFBold.woff2")
     format("woff2");
-  font-weight: 400;
+  font-weight: 700;
   font-style: normal;
 }
+
 @mixin titleFont() {
   font-family: "SBAggroB", sans-serif;
 }
