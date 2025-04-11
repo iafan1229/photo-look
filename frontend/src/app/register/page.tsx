@@ -18,7 +18,6 @@ import {
   visionAnalyzedImage,
   geminiAnalyzedImage,
 } from "@/type/preview";
-import "bootstrap/dist/css/bootstrap.min.css";
 import ImagePreview from "@/components/preview/ImagePreview";
 import MagazinePreview from "@/components/preview/MagazinePreview";
 import ModelSettings, {

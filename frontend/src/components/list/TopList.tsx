@@ -27,7 +27,7 @@ export default function TopList() {
   };
   return (
     <>
-      <section>
+      <section className='filter-section'>
         <div className='filter'>
           <Select
             className='select-filter'

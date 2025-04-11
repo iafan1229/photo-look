@@ -22,7 +22,7 @@ export default function RootLayout({
               // Seed Token
               colorPrimary: "#7950f2",
               borderRadius: 4,
-              colorBorder: "#b197fc",
+              colorBorder: "white",
               // Alias Token
               // colorBgContainer: "aliceblue",
             },

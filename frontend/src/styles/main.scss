@@ -20,18 +20,24 @@ h1 {
 }
 
 section {
-  .filter {
-    background-color: rgb(246, 245, 248);
-    padding: 10px;
-    @include flex;
-    gap: 3px;
-    > p {
-      font-size: 13px;
-    }
-    > .select-filter {
-      max-width: 20%;
+  &.filter-section {
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+    margin-left: 30px;
+    margin-right: 30px;
+    .filter {
+      padding: 10px;
+      max-width: 1200px;
+      > p {
+        font-size: 13px;
+      }
+      > .select-filter {
+        max-width: 20%;
+      }
     }
   }
+
   .title {
     padding: 30px 10px;
     h1 {
