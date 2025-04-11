@@ -1,11 +1,39 @@
 FROM python:3.11-slim
 
+# 필요한 패키지 설치
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    unzip \
+    xvfb \
+    libxi6 \
+    libgconf-2-4 \
+    default-jdk \
+    libglib2.0-0 \
+    libnss3 \
+    libgdk-pixbuf2.0-0 \
+    libgtk-3-0 \
+    libxss1 \
+    libasound2
+
+# Chrome 설치
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable
+
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+# Chrome 드라이버 자동 설치를 위한 환경 변수 설정
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    DISPLAY=:99 \
+    SELENIUM_DRIVER_EXECUTABLE_PATH=/usr/bin/chromedriver
 
 EXPOSE 5000
 
