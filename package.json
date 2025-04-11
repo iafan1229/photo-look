@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run server\" \"npm run client\" \"npm run flask\"",
     "server": "cd server && npm start",
     "client": "cd frontend && npm run dev",
-    "flask": "cd flask && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 index.py"
+    "flask": "cd flask && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 app.py"
   },
   "author": "",
   "license": "ISC",
