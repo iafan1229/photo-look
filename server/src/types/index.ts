@@ -1,6 +1,8 @@
+// server/src/types/index.ts
 export interface ResponseData {
   message: string;
   data?: any;
+  status?: string;
 }
 
 export interface AnalyzedImage {
@@ -22,8 +24,16 @@ export interface Magazine {
   createdAt: Date;
 }
 
-export interface User {
-  instagramId: string;
+export interface PersonalInfo {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  snsId?: string;
+}
+
+export interface User extends PersonalInfo {
+  status?: string;
+  rejectionReason?: string;
   imageUrls: string[];
   magazineTitle: string;
   analyzedImages: AnalyzedImage[];

@@ -1,4 +1,5 @@
-const mongooseModule = require("mongoose"); // 몽구스를 가져온다.
+// server/src/models/User.ts
+const mongooseModule = require("mongoose");
 
 // 매거진 스키마 정의
 const MagazineSchema = new mongooseModule.Schema({
@@ -34,13 +35,32 @@ const MagazineSchema = new mongooseModule.Schema({
   },
 });
 
-// 사용자 스키마 정의
+// 사용자 스키마 정의 - 인스타그램 ID 대신 개인정보 필드 추가
 const UserSchema = new mongooseModule.Schema(
   {
-    instagramId: {
+    // 개인정보 필드 추가
+    name: {
       type: String,
       required: true,
-      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    snsId: {
+      type: String, // 선택 사항
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    rejectionReason: {
+      type: String, // 거절 사유
     },
     imageUrls: {
       type: [String],
@@ -56,6 +76,6 @@ const UserSchema = new mongooseModule.Schema(
   }
 );
 
-const User = mongooseModule.model("User", UserSchema); // 스키마를 모델로 감싸준다.
+const User = mongooseModule.model("User", UserSchema);
 
-module.exports = User; // 다른 곳에서도 사용할 수 있도록 export 해준다.
+module.exports = User;
