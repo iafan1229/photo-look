@@ -12,9 +12,7 @@ Frontend - Next.js
 
 Backend - Node.js
 
-Data Crawling - Python (Flask)
-
-Styling - SCSS
+Styling - SCSS, antd
 
 DataBase - MongoDB, AWS S3
 
@@ -22,4 +20,4 @@ AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으
 
 CI/CD - Github Actions
 
-Cloud - AWS ECS (EC2 + NginX)
+Cloud - AWS EC2 + NginX
