@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\" \"npm run flask\"",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm start",
-    "client": "cd frontend && npm run dev",
-    "flask": "cd flask && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 app.py"
+    "client": "cd frontend && npm run dev"
   },
   "author": "",
   "license": "ISC",
