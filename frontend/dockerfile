@@ -1,4 +1,3 @@
-cat > frontend/Dockerfile << 'EOL'
 FROM node:21.6-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
