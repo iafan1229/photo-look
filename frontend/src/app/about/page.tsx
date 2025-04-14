@@ -64,55 +64,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* 우리의 이야기 섹션 */}
-      <section className='our-story-section'>
-        <div className='container'>
-          <h2 className='section-title'>우리의 이야기</h2>
-          <div className='story-content'>
-            <p>
-              Photo Look은 2025년, 소중한 추억을 더 의미 있게 간직하고 싶다는
-              생각에서 시작되었습니다. 우리는 이 시대의 사진 과잉 현상 속에서
-              정작 의미 있는 사진들이 디지털 저장소에 묻혀 버리는 것을
-              보았습니다.
-            </p>
-            <p>
-              인공지능 기술의 발전으로 이미지 인식과 스토리텔링이 가능해진 지금,
-              우리는 이 기술을 활용하여 사용자의 소중한 추억을 스토리가 있는
-              앨범으로 만들어주는 서비스를 개발했습니다.
-            </p>
-            <p>
-              Photo Look은 단순한 이미지 저장소가 아닌, 당신의 이야기를 담아내는
-              디지털 앨범입니다. 우리는 기술을 통해 추억의 가치를 높이고, 소중한
-              순간들을 더 오래, 더 의미 있게 간직할 수 있도록 돕고 있습니다.
-            </p>
-          </div>
-
-          <div className='timeline-container'>
-            <h3>Photo Look 의 history</h3>
-            <Timeline
-              mode='alternate'
-              items={[
-                {
-                  children: "초기 아이디어 구상 및 크롤링 개발",
-                  color: "green",
-                  label: "2024년 11월",
-                },
-                {
-                  children: "기획 변경 및 풀스택 개발",
-                  color: "red",
-                  label: "2025년 3월",
-                },
-                {
-                  children: "프로토타입 제작",
-                  color: "blue",
-                  label: "2025년 3월",
-                },
-              ]}
-            />
-          </div>
-        </div>
-      </section>
-
       {/* 핵심 가치 섹션 */}
       <section className='values-section'>
         <div className='container'>

@@ -8,11 +8,9 @@ AI 큐레이션 사진 매거진 서비스
 
 ## [기술 스택]
 
+Frontend - Next.js
 
-Frontend - Next.js 
-
-
-Backend - Node.js 
+Backend - Node.js
 
 Data Crawling - Python (Flask)
 
@@ -24,4 +22,4 @@ AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으
 
 CI/CD - Github Actions
 
-Cloud - AWS ECS (Docker, ECR, ECS on Fargate)
+Cloud - AWS ECS (EC2 + NginX)
