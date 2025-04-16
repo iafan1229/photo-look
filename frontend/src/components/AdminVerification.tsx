@@ -1,0 +1,230 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "@/styles/components/admin.scss";
+import { User } from "@/type/user";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+export default function AdminVerification({
+  token,
+  action,
+}: {
+  token: string;
+  action: string;
+}) {
+  const [userData, setUserData] = useState<User>();
+  const [loading, setLoading] = useState(false);
+  const [showReasonInput, setShowReasonInput] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [result, setResult] = useState({
+    show: false,
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    try {
+      // 토큰 디코딩
+      const decodedData = JSON.parse(atob(token));
+      const { userData, timestamp } = decodedData;
+
+      // 토큰 유효성 검증 (24시간)
+      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+        setResult({
+          show: true,
+          success: false,
+          message: "토큰이 만료되었습니다. 새로운 요청을 생성해주세요.",
+        });
+        return;
+      }
+
+      setUserData(userData);
+
+      // 액션 파라미터가 있으면 자동 실행
+      if (action === "reject") {
+        setShowReasonInput(true);
+      }
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      setResult({
+        show: true,
+        success: false,
+        message: "토큰 처리 중 오류가 발생했습니다.",
+      });
+    }
+  }, [token, action]);
+
+  const handleApprove = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.put(`${API_URL}/api/verification/approve`, {
+        token,
+      });
+
+      if (response.data.status === "success") {
+        setResult({
+          show: true,
+          success: true,
+          message: "매거진이 성공적으로 승인되었습니다.",
+        });
+
+        // 3초 후 창 닫기
+        setTimeout(() => {
+          window.close();
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error approving magazine:", error);
+      setResult({
+        show: true,
+        success: false,
+        message: "매거진 승인 중 오류가 발생했습니다.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    if (!showReasonInput) {
+      setShowReasonInput(true);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.put(`${API_URL}/api/verification/reject`, {
+        token,
+        reason: rejectionReason || "관리자에 의해 거절되었습니다.",
+      });
+
+      if (response.data.status === "success") {
+        setResult({
+          show: true,
+          success: true,
+          message: "매거진이 거절되었습니다.",
+        });
+
+        // 3초 후 창 닫기
+        setTimeout(() => {
+          window.close();
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error rejecting magazine:", error);
+      setResult({
+        show: true,
+        success: false,
+        message: "매거진 거절 중 오류가 발생했습니다.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (result.show) {
+    return (
+      <div className={styles.container}>
+        <div
+          className={result.success ? styles.successResult : styles.errorResult}
+        >
+          {result.message}
+        </div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>로딩 중...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>매거진 등록 검증</h1>
+      </div>
+
+      {loading ? (
+        <div className={styles.loading}>처리 중입니다...</div>
+      ) : (
+        <div className={styles.content}>
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>매거진 제목:</span>
+            <span>{userData.magazine.title}</span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>사용자 이름:</span>
+            <span>{userData.personalInfo.name}</span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>이메일:</span>
+            <span>{userData.personalInfo.email}</span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>연락처:</span>
+            <span>{userData.personalInfo.phoneNumber}</span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>SNS:</span>
+            <span>{userData.personalInfo.snsId || "미입력"}</span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>요청 날짜:</span>
+            <span>
+              {new Date(userData.magazine.createdAt).toLocaleString("ko-KR")}
+            </span>
+          </div>
+
+          <div className={styles.infoGroup}>
+            <span className={styles.infoLabel}>이미지:</span>
+            <div className={styles.imageGallery}>
+              {userData.imageUrls.map((url, index) => (
+                <div key={index} className={styles.imageItem}>
+                  <img src={url} alt='Magazine Image' />
+                  <a href={url} target='_blank' rel='noopener noreferrer'>
+                    원본 보기
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {showReasonInput && (
+            <textarea
+              className={styles.reasonInput}
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder='거절 사유를 입력하세요...'
+            />
+          )}
+
+          <div className={styles.buttonGroup}>
+            <button
+              className={`${styles.button} ${styles.approveBtn}`}
+              onClick={handleApprove}
+            >
+              승인하기
+            </button>
+            <button
+              className={`${styles.button} ${styles.rejectBtn}`}
+              onClick={handleReject}
+            >
+              거절하기
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

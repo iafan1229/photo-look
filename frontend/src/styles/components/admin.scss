@@ -1,0 +1,135 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.infoGroup {
+  margin-bottom: 10px;
+}
+
+.infoLabel {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.imageGallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.imageItem {
+  width: 200px;
+  margin-bottom: 10px;
+
+  img {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  a {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #4caf50;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.reasonInput {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 80px;
+  font-family: Arial, sans-serif;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.approveBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.rejectBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.loading {
+  text-align: center;
+  margin: 20px 0;
+  color: #666;
+}
+
+.successResult,
+.errorResult {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.successResult {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.errorResult {
+  background-color: #ffebee;
+  color: #c62828;
+}

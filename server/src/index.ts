@@ -38,8 +38,9 @@ app.post(
   "/api/upload-to-s3-and-notify",
   verificationController.uploadToS3AndNotify
 );
-app.get("/api/verification/approve", verificationController.approveMagazine);
-app.post("/api/verification/reject", verificationController.rejectMagazine);
+app.put("/api/verification/approve", verificationController.approveMagazine);
+app.put("/api/verification/reject", verificationController.rejectMagazine);
+
 app.get("/api/verification/reject", (_: Request, res: Response) => {
   // GET 요청으로 거절 페이지에 접근했을 때 거절 사유를 입력할 수 있는 폼 제공
   res.setHeader("Content-Type", "text/html; charset=utf-8");
