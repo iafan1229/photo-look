@@ -4,10 +4,10 @@ import ResponsiveMasonry from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Divider } from "antd";
-import { User } from "@/type/user";
 import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
 import { calc } from "antd/es/theme/internal";
+import { UserData as User } from "@/type/user";
 
 export default function PhotoList() {
   const [userData, setUserData] = useState<User[]>();
@@ -123,18 +123,20 @@ export default function PhotoList() {
               }}
             >
               <div className='album-cover-inner'>
-                <h1>{detailUserData?.title || "나의 앨범"}</h1>
+                <h1>{detailUserData?.magazine.title || "나의 앨범"}</h1>
                 <p>
                   {new Date(
-                    detailUserData?.createdAt || Date.now()
+                    detailUserData?.magazine.createdAt || Date.now()
                   ).toLocaleDateString()}
                   일에 생성된 앨범
                 </p>
-                <p>Instagram : @{detailUserData?.instagramId}</p>
+                <p>Instagram : @{detailUserData?.personalInfo.snsId}</p>
                 <Divider />
                 <div className='album-subtitle'>
-                  {detailUserData?.theme
-                    ? themeDescriptions[detailUserData.theme as ThemeType]
+                  {detailUserData?.magazine.theme
+                    ? themeDescriptions[
+                        detailUserData?.magazine.theme as ThemeType
+                      ]
                     : themeDescriptions.auto}{" "}
                   이야기
                 </div>
