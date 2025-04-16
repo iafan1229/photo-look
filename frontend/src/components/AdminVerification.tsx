@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "@/styles/components/admin.scss";
-import { User } from "@/type/user";
+import { UserData } from "@/type/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
@@ -14,7 +14,7 @@ export default function AdminVerification({
   token: string;
   action: string;
 }) {
-  const [userData, setUserData] = useState<User>();
+  const [userData, setUserData] = useState<UserData>();
   const [loading, setLoading] = useState(false);
   const [showReasonInput, setShowReasonInput] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
@@ -126,10 +126,8 @@ export default function AdminVerification({
 
   if (result.show) {
     return (
-      <div className={styles.container}>
-        <div
-          className={result.success ? styles.successResult : styles.errorResult}
-        >
+      <div className='container'>
+        <div className={result.success ? "successResult" : "errorResult"}>
           {result.message}
         </div>
       </div>
@@ -138,59 +136,59 @@ export default function AdminVerification({
 
   if (!userData) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>로딩 중...</div>
+      <div className='container'>
+        <div className='loading'>로딩 중...</div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className='container'>
+      <div className='header'>
         <h1>매거진 등록 검증</h1>
       </div>
 
       {loading ? (
-        <div className={styles.loading}>처리 중입니다...</div>
+        <div className='loading'>처리 중입니다...</div>
       ) : (
-        <div className={styles.content}>
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>매거진 제목:</span>
+        <div className='content'>
+          <div className='infoGroup'>
+            <span className='infoLabel'>매거진 제목:</span>
             <span>{userData.magazine.title}</span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>사용자 이름:</span>
+          <div className='infoGroup'>
+            <span className='infoLabel'>사용자 이름:</span>
             <span>{userData.personalInfo.name}</span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>이메일:</span>
+          <div className='infoGroup'>
+            <span className='infoLabel'>이메일:</span>
             <span>{userData.personalInfo.email}</span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>연락처:</span>
+          <div className='infoGroup'>
+            <span className='infoLabel'>연락처:</span>
             <span>{userData.personalInfo.phoneNumber}</span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>SNS:</span>
+          <div className='infoGroup'>
+            <span className='infoLabel'>SNS:</span>
             <span>{userData.personalInfo.snsId || "미입력"}</span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>요청 날짜:</span>
+          <div className='infoGroup'>
+            <span className='infoLabel'>요청 날짜:</span>
             <span>
               {new Date(userData.magazine.createdAt).toLocaleString("ko-KR")}
             </span>
           </div>
 
-          <div className={styles.infoGroup}>
-            <span className={styles.infoLabel}>이미지:</span>
-            <div className={styles.imageGallery}>
-              {userData.imageUrls.map((url, index) => (
-                <div key={index} className={styles.imageItem}>
+          <div className='infoGroup'>
+            <span className='infoLabel'>이미지:</span>
+            <div className='imageGallery'>
+              {userData.imageUrls.map((url: string, index: number) => (
+                <div key={index} className='imageItem'>
                   <img src={url} alt='Magazine Image' />
                   <a href={url} target='_blank' rel='noopener noreferrer'>
                     원본 보기
@@ -202,24 +200,18 @@ export default function AdminVerification({
 
           {showReasonInput && (
             <textarea
-              className={styles.reasonInput}
+              className='reasonInput'
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder='거절 사유를 입력하세요...'
             />
           )}
 
-          <div className={styles.buttonGroup}>
-            <button
-              className={`${styles.button} ${styles.approveBtn}`}
-              onClick={handleApprove}
-            >
+          <div className='buttonGroup'>
+            <button className='button approveBtn' onClick={handleApprove}>
               승인하기
             </button>
-            <button
-              className={`${styles.button} ${styles.rejectBtn}`}
-              onClick={handleReject}
-            >
+            <button className='button rejectBtn' onClick={handleReject}>
               거절하기
             </button>
           </div>

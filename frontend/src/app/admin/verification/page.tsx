@@ -1,6 +1,10 @@
-import VerificationClient from "./page-client";
+import AdminVerification from "@/components/AdminVerification";
 
-export default function VerificationPage({ searchParams }) {
+export default function VerificationPage({
+  searchParams,
+}: {
+  searchParams: { token: string; action: string };
+}) {
   const { token, action } = searchParams;
 
   // 토큰이 없으면 오류 메시지 표시
@@ -13,5 +17,5 @@ export default function VerificationPage({ searchParams }) {
     );
   }
 
-  return <VerificationClient token={token} action={action} />;
+  return <AdminVerification token={token} action={action} />;
 }

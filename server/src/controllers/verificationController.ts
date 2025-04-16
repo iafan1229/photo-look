@@ -129,18 +129,18 @@ const uploadToS3AndNotify = async (
           .join("")}
       </div>
       <div style="margin-top: 30px;">
-        <a href="${
-          process.env.SITE_URL || "http://localhost:8080"
-        }/api/verification/approve?token=${approvalToken}" 
-           style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-right: 10px;">
-           등록 승인하기
-        </a>
-        <a href="${
-          process.env.SITE_URL || "http://localhost:8080"
-        }/api/verification/reject?token=${approvalToken}" 
-           style="background-color: #f44336; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
-           등록 거절하기
-        </a>
+      <a href="${
+        process.env.SITE_URL
+      }/admin/verification?action=approval&token=${approvalToken}" 
+        style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-right: 10px;">
+        등록 승인하기
+      </a>
+      <a href="${
+        process.env.SITE_URL
+      }/admin/verification?action=reject&token=${approvalToken}" 
+        style="background-color: #f44336; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+        등록 거절하기
+      </a>
       </div>
       <p style="margin-top: 20px; font-size: 12px; color: #777;">
         이 이메일은 자동 발송되었습니다. 궁금한 점이 있으시면 관리자에게 문의하세요.

@@ -135,7 +135,7 @@ const PersonalInfoVerification: React.FC<PersonalInfoVerificationProps> = ({
         </Form.Item>
 
         <Form.Item
-          label='SNS 아이디 (선택사항)'
+          label='인스타그램 아이디 (선택사항)'
           validateStatus={error ? "error" : ""}
         >
           <Input
