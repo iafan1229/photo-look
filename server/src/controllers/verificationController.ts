@@ -1,6 +1,7 @@
 // server/src/controllers/verificationController.ts
 import { Request, Response } from "express";
 import { ResponseData, User, PersonalInfo } from "../types";
+import { Base64 } from "js-base64";
 const nodemailer = require("nodemailer");
 const UserModel = require("../models/User");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
@@ -95,12 +96,12 @@ const uploadToS3AndNotify = async (
     };
 
     // 모든 정보를 포함한 승인 토큰 생성
-    const approvalToken = Buffer.from(
+    const approvalToken = Base64.encode(
       JSON.stringify({
         userData: userData,
         timestamp: Date.now(),
       })
-    ).toString("base64");
+    );
 
     // 관리자에게 보낼 이메일 HTML 생성
     const emailHtml = `
