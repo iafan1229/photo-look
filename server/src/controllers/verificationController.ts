@@ -59,7 +59,7 @@ const uploadToS3AndNotify = async (
         Key: `magazine-images/${fileName}`,
         Body: buffer,
         ContentType: `image/${fileExtension}`,
-        ACL: "public-read",
+        // ACL: "public-read" 제거 - PutObjectAcl 권한 오류 방지
       };
 
       const command = new PutObjectCommand(uploadParams);
@@ -72,13 +72,14 @@ const uploadToS3AndNotify = async (
       uploadedImageUrls.push(imageUrl);
     }
 
-    // MongoDB에 임시 저장 (상태: pending)
-    const user = await new UserModel({
-      name: personalInfo.name,
-      email: personalInfo.email,
-      phoneNumber: personalInfo.phoneNumber,
-      snsId: personalInfo.snsId || "",
-      status: "pending",
+    // MongoDB에 저장하지 않고 모든 정보를 토큰에 담기
+    const userData = {
+      personalInfo: {
+        name: personalInfo.name,
+        email: personalInfo.email,
+        phoneNumber: personalInfo.phoneNumber,
+        snsId: personalInfo.snsId || "",
+      },
       imageUrls: uploadedImageUrls,
       magazine: {
         title: magazineTitle,
@@ -89,14 +90,14 @@ const uploadToS3AndNotify = async (
           analysis: img.analysis || { labels: [] },
           storyText: img.storyText || "",
         })),
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       },
-    }).save();
+    };
 
-    // 관리자 승인을 위한 암호화된 토큰 생성
+    // 모든 정보를 포함한 승인 토큰 생성
     const approvalToken = Buffer.from(
       JSON.stringify({
-        userId: user._id.toString(),
+        userData: userData,
         timestamp: Date.now(),
       })
     ).toString("base64");
@@ -185,34 +186,36 @@ const approveMagazine = async (req: Request, res: Response) => {
     const decodedData = JSON.parse(
       Buffer.from(token, "base64").toString("utf-8")
     );
-    const { userId, timestamp } = decodedData;
+    const { userData, timestamp } = decodedData;
 
     // 토큰 유효성 검증 (24시간)
     if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
       return res.status(400).send("<h1>토큰이 만료되었습니다.</h1>");
     }
 
-    // MongoDB에서 사용자 찾기 및 상태 업데이트
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return res.status(404).send("<h1>사용자를 찾을 수 없습니다.</h1>");
-    }
-
-    user.status = "approved";
-    await user.save();
+    // 이제 승인되었으므로 MongoDB에 저장
+    const user = await new UserModel({
+      name: userData.personalInfo.name,
+      email: userData.personalInfo.email,
+      phoneNumber: userData.personalInfo.phoneNumber,
+      snsId: userData.personalInfo.snsId,
+      status: "approved", // 바로 승인된 상태로 저장
+      imageUrls: userData.imageUrls,
+      magazine: userData.magazine,
+      approvedAt: new Date(),
+    }).save();
 
     // 사용자에게 승인 알림 이메일 전송
-    if (user.email) {
+    if (userData.personalInfo.email) {
       const userMailOptions = {
         from: `"매거진 등록 시스템" <${
           process.env.EMAIL_USER || "home124@naver.com"
         }>`,
-        to: user.email,
-        subject: `[매거진 등록 완료] "${user.magazine.title}" 등록이 승인되었습니다`,
+        to: userData.personalInfo.email,
+        subject: `[매거진 등록 완료] "${userData.magazine.title}" 등록이 승인되었습니다`,
         html: `
-          <h2>${user.name}님, 매거진 등록이 완료되었습니다!</h2>
-          <p>요청하신 "${user.magazine.title}" 매거진이 성공적으로 홈페이지에 등록되었습니다.</p>
+          <h2>${userData.personalInfo.name}님, 매거진 등록이 완료되었습니다!</h2>
+          <p>요청하신 "${userData.magazine.title}" 매거진이 성공적으로 홈페이지에 등록되었습니다.</p>
           <p>홈페이지에서 확인하실 수 있습니다.</p>
           <p>감사합니다.</p>
         `,
@@ -268,11 +271,13 @@ const approveMagazine = async (req: Request, res: Response) => {
       <body>
         <div class="success">매거진 등록 승인 완료!</div>
         <div class="info"><strong>매거진 제목:</strong> ${
-          user.magazine.title
+          userData.magazine.title
         }</div>
-        <div class="info"><strong>사용자:</strong> ${user.name}</div>
+        <div class="info"><strong>사용자:</strong> ${
+          userData.personalInfo.name
+        }</div>
         <div class="info"><strong>등록된 이미지:</strong> ${
-          user.imageUrls.length
+          userData.imageUrls.length
         }개</div>
         <div class="info"><strong>승인 일시:</strong> ${new Date().toLocaleString(
           "ko-KR"
@@ -341,37 +346,44 @@ const rejectMagazine = async (req: Request, res: Response) => {
     const decodedData = JSON.parse(
       Buffer.from(token, "base64").toString("utf-8")
     );
-    const { userId, timestamp } = decodedData;
+    const { userData, timestamp } = decodedData;
 
     // 토큰 유효성 검증 (24시간)
     if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
       return res.status(400).send("<h1>토큰이 만료되었습니다.</h1>");
     }
 
-    // MongoDB에서 사용자 찾기 및 상태 업데이트
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return res.status(404).send("<h1>사용자를 찾을 수 없습니다.</h1>");
-    }
-
-    user.status = "rejected";
-    user.rejectionReason = reason || "관리자에 의해 거절되었습니다.";
-    await user.save();
+    // 거절된 경우 MongoDB에 저장하지 않음
+    // 선택적으로 거절 기록을 남기고 싶다면 아래 주석을 해제
+    /*
+    const rejectedUser = await new UserModel({
+      name: userData.personalInfo.name,
+      email: userData.personalInfo.email,
+      phoneNumber: userData.personalInfo.phoneNumber,
+      snsId: userData.personalInfo.snsId,
+      status: "rejected",
+      rejectionReason: reason || "관리자에 의해 거절되었습니다.",
+      imageUrls: userData.imageUrls,
+      magazine: userData.magazine,
+      rejectedAt: new Date(),
+    }).save();
+    */
 
     // 사용자에게 거절 알림 이메일 전송
-    if (user.email) {
+    if (userData.personalInfo.email) {
+      const rejectionReason = reason || "관리자에 의해 거절되었습니다.";
+
       const userMailOptions = {
         from: `"매거진 등록 시스템" <${
           process.env.EMAIL_USER || "home124@naver.com"
         }>`,
-        to: user.email,
-        subject: `[매거진 등록 거절] "${user.magazine.title}" 등록이 거절되었습니다`,
+        to: userData.personalInfo.email,
+        subject: `[매거진 등록 거절] "${userData.magazine.title}" 등록이 거절되었습니다`,
         html: `
-          <h2>${user.name}님, 매거진 등록이 거절되었습니다.</h2>
-          <p>요청하신 "${user.magazine.title}" 매거진 등록이 다음의 이유로 거절되었습니다:</p>
+          <h2>${userData.personalInfo.name}님, 매거진 등록이 거절되었습니다.</h2>
+          <p>요청하신 "${userData.magazine.title}" 매거진 등록이 다음의 이유로 거절되었습니다:</p>
           <p style="background-color: #f8f8f8; padding: 10px; border-left: 4px solid #f44336;">
-            ${user.rejectionReason}
+            ${rejectionReason}
           </p>
           <p>문의사항이 있으시면 관리자에게 연락해주세요.</p>
         `,
@@ -427,11 +439,13 @@ const rejectMagazine = async (req: Request, res: Response) => {
       <body>
         <div class="rejected">매거진 등록 거절 완료</div>
         <div class="info"><strong>매거진 제목:</strong> ${
-          user.magazine.title
+          userData.magazine.title
         }</div>
-        <div class="info"><strong>사용자:</strong> ${user.name}</div>
+        <div class="info"><strong>사용자:</strong> ${
+          userData.personalInfo.name
+        }</div>
         <div class="info"><strong>거절 사유:</strong> ${
-          user.rejectionReason
+          reason || "관리자에 의해 거절되었습니다."
         }</div>
         <div class="info"><strong>거절 일시:</strong> ${new Date().toLocaleString(
           "ko-KR"

@@ -129,7 +129,7 @@ const PersonalInfoVerification: React.FC<PersonalInfoVerificationProps> = ({
             name='phoneNumber'
             value={personalInfo.phoneNumber}
             onChange={handleChange}
-            placeholder='휴대폰 번호 입력 (예: 010-1234-5678)'
+            placeholder='휴대폰 번호 입력 (예: 01012345678)'
             disabled={isSubmitting || disabled}
           />
         </Form.Item>
