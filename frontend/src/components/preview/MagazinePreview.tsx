@@ -1,9 +1,12 @@
+// frontend/src/components/preview/MagazinePreview.tsx
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import Image from "next/image";
 import { MagazinePreviewProps, ThemeType } from "@/type/preview";
-import InstagramVerification from "../InstagramVerification";
-import { useInstagramVerification } from "@/hooks/useInstagramVerification";
+import PersonalInfoVerification, {
+  PersonalInfo,
+} from "../PersonalInfoVerification";
+import { usePersonalInfoVerification } from "@/hooks/usePersonalInfoVerification";
 
 const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   title,
@@ -16,12 +19,14 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     handleVerificationSuccess,
     isLoading: verificationLoading,
     contextHolder,
-  } = useInstagramVerification();
+  } = usePersonalInfoVerification();
 
-  const onInstagramVerificationSuccess = async (instagramId: string) => {
+  const onPersonalInfoVerificationSuccess = async (
+    personalInfo: PersonalInfo
+  ) => {
     const success = await handleVerificationSuccess({
       images,
-      instagramId,
+      personalInfo,
       magazineTitle: title,
       analyzedImages: images,
       storyTheme: theme,
@@ -31,8 +36,10 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     try {
       if (success) {
         // 성공 후 추가 작업 (예: 다음 단계로 이동)
-        alert("사진을 홈페이지에 저장 성공했습니다.");
-        // setShowMagazine(true);
+        alert(
+          "인증 요청이 성공적으로 전송되었습니다. 관리자 확인 후 이미지가 등록됩니다."
+        );
+        setShowVerification(false);
       }
     } catch (err: any) {
       alert(err?.message);
@@ -69,6 +76,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
 
   return (
     <div className='photo-detail preview'>
+      {contextHolder} {/* 알림 표시용 */}
       <div id='album-container' className='album-container'>
         {/* 앨범 표지 */}
         <div className='album-cover'>
@@ -119,20 +127,21 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 </div>
               )}
 
-              {image.analysis.labels.length > 0 && (
-                <div className='photo-tags'>
-                  {image.analysis.labels.slice(0, 2).map((label, idx) => (
-                    <span key={idx} className='tag'>
-                      {label.description}
-                    </span>
-                  ))}
-                </div>
-              )}
+              {image.analysis &&
+                image.analysis.labels &&
+                image.analysis.labels.length > 0 && (
+                  <div className='photo-tags'>
+                    {image.analysis.labels.slice(0, 2).map((label, idx) => (
+                      <span key={idx} className='tag'>
+                        {label.description}
+                      </span>
+                    ))}
+                  </div>
+                )}
             </div>
           ))}
         </div>
       </div>
-
       {images.length > 0 && (
         <>
           <div className='album-footer'>
@@ -145,15 +154,15 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 onClick={() => setShowVerification(!showVerification)}
                 disabled={verificationLoading || images.length === 0}
               >
-                홈페이지에 저장하기
+                홈페이지에 등록 신청하기
               </Button>
             </div>
           </div>
 
           {showVerification && (
             <div className='verification-dropdown'>
-              <InstagramVerification
-                onVerificationSuccess={onInstagramVerificationSuccess}
+              <PersonalInfoVerification
+                onVerificationSuccess={onPersonalInfoVerificationSuccess}
                 disabled={verificationLoading || images.length === 0}
               />
             </div>

@@ -10,20 +10,13 @@ const register = async (
 ) => {
   try {
     const {
-      instagramId,
+      snsId,
       imageUrls,
       magazineTitle,
       storyTheme,
       magazineStyle,
       analyzedImages,
     } = body;
-
-    // 필수 필드 검증
-    if (!instagramId) {
-      return res.status(400).json({
-        message: "필수 입력값이 누락되었습니다.",
-      });
-    }
 
     // // 이미 존재하는 사용자인지 확인
     // const existingUser = await UserModel.findOne({ instagramId });
@@ -35,7 +28,7 @@ const register = async (
 
     // 사용자 저장
     const saveUser = await new UserModel({
-      instagramId,
+      snsId,
       imageUrls: imageUrls,
       magazine: {
         title: magazineTitle,
@@ -49,11 +42,7 @@ const register = async (
     // 성공적인 응답
     res.status(201).json({
       message: "매거진이 성공적으로 발행되었습니다.",
-      data: {
-        instagramId: saveUser.instagramId,
-        magazineTitle: saveUser.magazine.title,
-        imageCount: saveUser.magazine.analyzedImages.length,
-      },
+      data: {},
     });
   } catch (error) {
     console.error("매거진 발행 중 오류 발생:", error);

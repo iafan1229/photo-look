@@ -24,7 +24,6 @@ import ModelSettings, {
   AIModelType,
 } from "@/components/settings/ModelSettings";
 import { generateGeminiApi } from "@/apis/geminiApi";
-import InstagramVerification from "@/components/InstagramVerification";
 
 const Main: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
