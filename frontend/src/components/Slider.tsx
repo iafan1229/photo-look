@@ -2,9 +2,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useEffect } from "react";
 import "swiper/css";
 import axios from "axios";
-import { User } from "@/type/user";
+import { UserData } from "@/type/user";
 export default function Slider() {
-  const [userData, setUserData] = useState<User[]>([]);
+  const [userData, setUserData] = useState<UserData[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,11 +27,13 @@ export default function Slider() {
     <div className='top-list'>
       <Swiper spaceBetween={20} slidesPerView={5} loop className='mySwiper'>
         {userData?.length &&
-          userData?.map((el) => (
-            <SwiperSlide>
-              <img src={`${el?.imageUrls[0]}`} />
-            </SwiperSlide>
-          ))}
+          userData
+            ?.filter((el) => el.status === "approved")
+            .map((el) => (
+              <SwiperSlide>
+                <img src={`${el?.imageUrls[0]}`} />
+              </SwiperSlide>
+            ))}
       </Swiper>
     </div>
   );

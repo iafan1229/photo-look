@@ -38,8 +38,11 @@ app.post(
   "/api/upload-to-s3-and-notify",
   verificationController.uploadToS3AndNotify
 );
-app.put("/api/verification/approve", verificationController.approveMagazine);
-app.put("/api/verification/reject", verificationController.rejectMagazine);
+app.post("/api/verification/approve", verificationController.approveMagazine);
+app.post("/api/verification/reject", verificationController.rejectMagazine);
+
+// 사용자 데이터 조회 라우트
+app.get("/api/verification/details", verificationController.getUserDetails);
 
 app.get("/api/verification/reject", (_: Request, res: Response) => {
   // GET 요청으로 거절 페이지에 접근했을 때 거절 사유를 입력할 수 있는 폼 제공

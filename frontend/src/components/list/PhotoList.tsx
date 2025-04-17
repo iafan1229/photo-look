@@ -68,26 +68,28 @@ export default function PhotoList() {
                 className='masonry-wrap'
                 style={{ display: "flex", flexWrap: "wrap", gap: 30 }}
               >
-                {userData.map((el: User) => (
-                  <div
-                    key={Math.random().toString()}
-                    className='photo-wrap'
-                    onClick={() => handleDetail(el)}
-                    style={{ flexBasis: "calc(100%/3 - 30px)" }}
-                  >
-                    <div className='photo'>
-                      <Image
-                        src={el?.imageUrls?.[0]}
-                        alt=''
-                        width={500}
-                        height={500}
-                      />
+                {userData
+                  ?.filter((el) => el.status === "approved")
+                  .map((el: User) => (
+                    <div
+                      key={Math.random().toString()}
+                      className='photo-wrap'
+                      onClick={() => handleDetail(el)}
+                      style={{ flexBasis: "calc(100%/3 - 30px)" }}
+                    >
+                      <div className='photo'>
+                        <Image
+                          src={el?.imageUrls?.[0]}
+                          alt=''
+                          width={500}
+                          height={500}
+                        />
+                      </div>
+                      <div className='text'>
+                        <div className='des'>{el?.magazine?.title}</div>
+                      </div>
                     </div>
-                    <div className='text'>
-                      <div className='des'>{el?.magazine?.title}</div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
@@ -130,7 +132,7 @@ export default function PhotoList() {
                   ).toLocaleDateString()}
                   일에 생성된 앨범
                 </p>
-                <p>Instagram : @{detailUserData?.personalInfo.snsId}</p>
+                <p>Instagram : @{detailUserData?.personalInfo?.snsId}</p>
                 <Divider />
                 <div className='album-subtitle'>
                   {detailUserData?.magazine.theme
