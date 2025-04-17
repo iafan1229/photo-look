@@ -2,10 +2,37 @@
 import { Base64 } from "js-base64";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import pako from "pako";
 import "@/styles/components/admin.scss";
 import { UserData } from "@/type/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+// 압축 해제 함수
+const decompressData = (compressedBase64: string): any => {
+  try {
+    // Base64 디코딩
+    const binaryString = Base64.decode(compressedBase64);
+
+    // 바이너리 문자열을 Uint8Array로 변환
+    const charArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      charArray[i] = binaryString.charCodeAt(i);
+    }
+
+    // 압축 해제
+    const decompressed = pako.inflate(charArray);
+
+    // Uint8Array를 문자열로 변환
+    const jsonString = new TextDecoder().decode(decompressed);
+
+    // JSON 파싱
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("압축 해제 오류:", error);
+    throw error;
+  }
+};
 
 export default function AdminVerification({
   token,
@@ -28,11 +55,12 @@ export default function AdminVerification({
     try {
       // 토큰 디코딩
       const jsonStr = Base64.decode(token);
-      const decodedData = JSON.parse(jsonStr);
+
+      const decodedData = decompressData(token);
       const { userData, timestamp } = decodedData;
 
       // 토큰 유효성 검증 (24시간)
-      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+      if (Date.now() - timestamp > 30 * 24 * 60 * 60 * 1000) {
         setResult({
           show: true,
           success: false,
