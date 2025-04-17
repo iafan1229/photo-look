@@ -1,5 +1,5 @@
 "use client";
-
+import { Base64 } from "js-base64";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "@/styles/components/admin.scss";
@@ -27,7 +27,8 @@ export default function AdminVerification({
   useEffect(() => {
     try {
       // 토큰 디코딩
-      const decodedData = JSON.parse(atob(token));
+      const jsonStr = Base64.decode(token);
+      const decodedData = JSON.parse(jsonStr);
       const { userData, timestamp } = decodedData;
 
       // 토큰 유효성 검증 (24시간)
