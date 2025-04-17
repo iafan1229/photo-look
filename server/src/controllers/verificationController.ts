@@ -1,7 +1,8 @@
 // server/src/controllers/verificationController.ts
 import { Request, Response } from "express";
-import { ResponseData, User, PersonalInfo } from "../types";
+import { ResponseData, User, PersonalInfo, AnalyzedImage } from "../types";
 import { Base64 } from "js-base64";
+import pako from "pako";
 const nodemailer = require("nodemailer");
 const UserModel = require("../models/User");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
@@ -27,9 +28,30 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// JSON 데이터 압축 함수
+const compressData = (data: any): string => {
+  try {
+    // 데이터를 JSON 문자열로 변환
+    const jsonString = JSON.stringify(data);
+
+    // 문자열을 Uint8Array로 변환
+    const uint8Array = new TextEncoder().encode(jsonString);
+
+    // 데이터 압축
+    const compressed = pako.deflate(uint8Array);
+
+    // 압축된 바이너리 데이터를 Base64로 인코딩
+    // Buffer.from은 Node.js 환경에서 동작
+    return Base64.encode(Buffer.from(compressed).toString("binary"));
+  } catch (error) {
+    console.error("압축 오류:", error);
+    throw error;
+  }
+};
+
 // S3에 이미지 업로드 및 이메일 발송 핸들러
 const uploadToS3AndNotify = async (
-  req: Request,
+  req: Request<User>,
   res: Response<ResponseData>
 ) => {
   try {
@@ -88,21 +110,24 @@ const uploadToS3AndNotify = async (
         style: magazineStyle,
         analyzedImages: images.map((img: any) => ({
           name: img.name || "",
-          analysis: img.analysis || { labels: [] },
+          analysis: img.analysis?.labels?.map((el: { description: any }) => {
+            return {
+              description: el.description,
+            };
+          }) || {
+            labels: [],
+          },
           storyText: img.storyText || "",
         })),
         createdAt: new Date().toISOString(),
       },
     };
 
-    // 모든 정보를 포함한 승인 토큰 생성
-    const approvalToken = Base64.encode(
-      JSON.stringify({
-        userData: userData,
-        timestamp: Date.now(),
-      })
-    );
-
+    // 데이터 압축 및 토큰 생성
+    const approvalToken = compressData({
+      userData: userData,
+      timestamp: Date.now(),
+    });
     // 관리자에게 보낼 이메일 HTML 생성
     const emailHtml = `
       <h2>새로운 매거진 등록 요청</h2>
@@ -190,7 +215,7 @@ const approveMagazine = async (req: Request, res: Response) => {
     const { userData, timestamp } = decodedData;
 
     // 토큰 유효성 검증 (24시간)
-    if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+    if (Date.now() - timestamp > 30 * 24 * 60 * 60 * 1000) {
       return res.status(400).send("<h1>토큰이 만료되었습니다.</h1>");
     }
 
@@ -350,7 +375,7 @@ const rejectMagazine = async (req: Request, res: Response) => {
     const { userData, timestamp } = decodedData;
 
     // 토큰 유효성 검증 (24시간)
-    if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+    if (Date.now() - timestamp > 30 * 24 * 60 * 60 * 1000) {
       return res.status(400).send("<h1>토큰이 만료되었습니다.</h1>");
     }
 
