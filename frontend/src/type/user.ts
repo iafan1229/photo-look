@@ -31,24 +31,12 @@ interface PersonalInfo {
   snsId: string;
 }
 
-// 토큰에 포함되는 사용자 데이터 인터페이스
+// admin 사용자 데이터 인터페이스
 interface UserData {
   personalInfo: PersonalInfo;
   imageUrls: string[];
   magazine: Magazine;
+  status: string;
 }
 
-// 토큰 페이로드 인터페이스
-interface TokenPayload {
-  userData: UserData;
-  timestamp: number;
-}
-
-export type {
-  AnalysisLabel,
-  AnalyzedImage,
-  Magazine,
-  PersonalInfo,
-  UserData,
-  TokenPayload,
-};
+export type { AnalysisLabel, AnalyzedImage, Magazine, PersonalInfo, UserData };

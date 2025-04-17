@@ -203,7 +203,7 @@ export default function AdminVerification({
 
           <div className='infoGroup'>
             <span className='infoLabel'>SNS:</span>
-            <span>{userData.personalInfo.snsId || "미입력"}</span>
+            <span>{userData.personalInfo?.snsId || "미입력"}</span>
           </div>
 
           <div className='infoGroup'>
