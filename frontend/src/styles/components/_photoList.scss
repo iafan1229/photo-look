@@ -67,14 +67,13 @@ section {
   object-fit: contain;
 }
 
-// 앨범 스타일 변수
-$album-bg-color: #f2efe4;
-$album-dark-brown: #35281e;
-$album-gold: #b29b72;
-$album-light-gold: #d9bc8c;
-$album-cream: #e8d0a9;
-$album-note-yellow: #fffbe0;
-
+// 포토카드 스타일 변수 - 그레이 & 화이트 톤
+$album-bg-color: #f9f9f9; // 밝은 회색빛 배경
+$album-dark-brown: #3c3c3c; // 다크 그레이 (기존의 다크 브라운 대체)
+$album-gold: #b0b0b0; // 중간 톤의 그레이 (기존 골드 대체)
+$album-light-gold: #d0d0d0; // 밝은 그레이 (기존 라이트 골드 대체)
+$album-cream: #e8e8e8; // 매우 밝은 그레이 (기존 크림 대체)
+$album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대체)
 // 포토 디테일 모달
 .photo-detail {
   position: fixed;
@@ -101,11 +100,12 @@ $album-note-yellow: #fffbe0;
     z-index: 1010;
   }
 
-  // 앨범 컨테이너
+  // 포토카드 컨테이너
   .album-container {
+    font-family: "Ownglyph_corncorn-Rg";
     max-height: 90vh;
     overflow-y: auto;
-    background-color: $album-bg-color;
+    background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
     padding: 30px;
     margin: 10px;
     border-radius: 10px;
@@ -116,37 +116,37 @@ $album-note-yellow: #fffbe0;
     &::-webkit-scrollbar {
       display: none;
     }
-    // 앨범 표지
+    // 포토카드 표지
     .album-cover {
-      background-color: $album-dark-brown;
       padding: 20px;
       border-radius: 5px;
       margin-bottom: 30px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      background-image: url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png");
       position: relative;
-      color: $album-cream;
-
+      background-color: white;
       .album-cover-inner {
-        border: 2px solid $album-gold;
-        border-radius: 3px;
         padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
 
+        .date {
+          text-align: left;
+        }
         h1 {
           font-size: 28px;
           margin-bottom: 10px;
-          font-family: serif;
           text-align: center;
         }
 
+        h1.index {
+          font-family: "SBAggroB", sans-serif;
+        }
         .album-subtitle {
           margin-bottom: 15px;
           text-align: center;
           font-size: 16px;
-          color: $album-light-gold;
+          color: black;
         }
 
         .album-info {
@@ -156,25 +156,38 @@ $album-note-yellow: #fffbe0;
           font-size: 14px;
         }
 
-        .cover-photo-container {
-          padding: 10px;
-          background-color: #fff;
-          width: 80%;
-          max-width: 300px;
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        .cover-photo-wrapper {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          gap: 10px;
+          padding: 30px;
+          background-image: linear-gradient(120deg, #fdfbfb 0%, #f3f3f4 100%);
+          .cover-photo-container {
+            padding: 10px;
+            background-color: #fff;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 10px 0 15px;
 
-          margin: 10px 0 15px;
-
-          img {
-            width: 100%;
-            height: auto;
-            display: block;
+            img {
+              width: 100%;
+              height: auto;
+              display: block;
+            }
+          }
+          .cover-photo-title {
+            height: 100%;
+            font-family: "Ownglyph_corncorn-Rg";
+            line-height: 1.5;
           }
         }
       }
     }
 
-    // 앨범 페이지 내용
+    // 포토카드 페이지 내용
     .album-pages {
       display: flex;
       flex-wrap: wrap;
@@ -184,9 +197,11 @@ $album-note-yellow: #fffbe0;
 
       .polaroid {
         background-color: white;
-        padding: 15px 15px 40px 15px;
+        box-shadow: "0 4px 10px rgba(0, 0, 0, 0.15)";
+        padding: 20px;
+        border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        max-width: 350px;
+        max-width: 300px;
         display: flex;
         flex-direction: column;
         position: relative;
@@ -194,6 +209,7 @@ $album-note-yellow: #fffbe0;
         .photo-container {
           padding-top: 10px;
           margin-bottom: 12px;
+          height: 300px;
           overflow: hidden;
           position: relative;
           img {
@@ -205,18 +221,23 @@ $album-note-yellow: #fffbe0;
         }
 
         .photo-title {
-          font-size: 14px;
-          font-family: cursive, sans-serif;
+          font-size: 16px;
+          font-family: "CookieRun-Regular";
+          line-height: 1.5;
+          padding-bottom: 5px;
         }
 
         .photo-description {
-          background: rgb(255, 251, 224);
+          background-color: #fbfcdb;
+          // background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
           padding: 5px 10px;
           font-size: 12px;
           box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px;
           display: flex;
           align-items: flex-end;
           overflow: hidden;
+          font-family: "Ownglyph_corncorn-Rg";
+          line-height: 1.5;
         }
 
         .photo-tags {
@@ -239,7 +260,7 @@ $album-note-yellow: #fffbe0;
     }
   }
 
-  // 앨범 푸터
+  // 포토카드 푸터
   .album-buttons {
     display: flex;
     justify-content: center;

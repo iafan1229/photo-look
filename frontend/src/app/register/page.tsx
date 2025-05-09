@@ -109,7 +109,7 @@ const Main: React.FC = () => {
       });
 
       const visionAnalyzedResults = await Promise.all(analysisPromises);
-      console.log(visionAnalyzedResults);
+
       setProgressMessage("이미지 분석 완료. 스토리 구조 생성 중...");
 
       // 스토리 구조 생성

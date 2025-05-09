@@ -7,6 +7,7 @@ import PersonalInfoVerification, {
   PersonalInfo,
 } from "../PersonalInfoVerification";
 import { usePersonalInfoVerification } from "@/hooks/usePersonalInfoVerification";
+import { extractTitleAndContent } from "@/util/common";
 
 const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   title,
@@ -78,10 +79,10 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     <div className='photo-detail preview'>
       {contextHolder} {/* 알림 표시용 */}
       <div id='album-container' className='album-container'>
-        {/* 앨범 표지 */}
+        {/* 포토카드 표지 */}
         <div className='album-cover'>
           <div className='album-cover-inner'>
-            <h1>{title || "나의 앨범"}</h1>
+            <h1>{title || "나의 포토카드"}</h1>
 
             <div className='album-subtitle'>
               {themeDescriptions[theme]} 이야기
@@ -100,7 +101,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
           </div>
         </div>
 
-        {/* 앨범 내용 - 폴라로이드 형태의 사진들 */}
+        {/* 포토카드 내용 - 폴라로이드 형태의 사진들 */}
         <div className='album-pages'>
           {images.map((image, index) => (
             <div key={index} className='polaroid'>
@@ -114,16 +115,15 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
               </div>
 
               <div className='photo-title'>
-                {index === 0
-                  ? "스토리의 시작"
-                  : index === images.length - 1
-                  ? "스토리의 마무리"
-                  : `순간 ${index}`}
+                {extractTitleAndContent(generateStoryDescription(index)).title}
               </div>
 
               {generateStoryDescription(index) && (
                 <div className='photo-description'>
-                  {generateStoryDescription(index)}
+                  {
+                    extractTitleAndContent(generateStoryDescription(index))
+                      .content
+                  }
                 </div>
               )}
 
@@ -147,7 +147,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
           <div className='album-footer'>
             <div className='album-buttons'>
               <Button variant='light' onClick={downloadPDF}>
-                앨범 PDF로 다운로드
+                포토카드 PDF로 다운로드
               </Button>
               <Button
                 variant='light'

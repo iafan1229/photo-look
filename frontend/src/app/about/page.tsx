@@ -23,9 +23,9 @@ const AboutPage = () => {
               <h2 className='intro-subtitle'>사진 기반 AI 스토리텔링 서비스</h2>
               <p className='intro-text'>
                 Photo Look은 사용자가 업로드한 사진들을 인공지능으로 분석하여
-                스토리텔링이 있는 디지털 앨범으로 자동 변환해주는 서비스입니다.
-                소중한 추억을 단순한 사진 모음이 아닌, 감성적인 이야기가 담긴
-                앨범으로 만들어 보세요.
+                스토리텔링이 있는 디지털 포토카드로 자동 변환해주는
+                서비스입니다. 소중한 추억을 단순한 사진 모음이 아닌, 감성적인
+                이야기가 담긴 포토카드로 만들어 보세요.
               </p>
               <Link href='/register'>
                 <Button
@@ -43,7 +43,7 @@ const AboutPage = () => {
                 <div className='image-stack__item image-stack__item--top'>
                   <Image
                     src='/img/album1.jpg'
-                    alt='앨범 이미지'
+                    alt='포토카드 이미지'
                     width={350}
                     height={250}
                     className='rounded-image'
@@ -52,7 +52,7 @@ const AboutPage = () => {
                 <div className='image-stack__item image-stack__item--bottom'>
                   <Image
                     src='/img/album2.jpg'
-                    alt='앨범 이미지'
+                    alt='포토카드 이미지'
                     width={350}
                     height={250}
                     className='rounded-image'
@@ -74,8 +74,10 @@ const AboutPage = () => {
                 <div className='value-icon'>
                   <HeartOutlined />
                 </div>
-                <h3>감성을 담다</h3>
-                <p>단순한 사진이 아닌, 이야기와 감정이 담긴 앨범을 만듭니다.</p>
+                <h3>감성을 담습니다</h3>
+                <p>
+                  단순한 사진이 아닌, 이야기와 감정이 담긴 포토카드를 만듭니다.
+                </p>
               </Card>
             </Col>
             <Col xs={24} sm={12} md={8}>
@@ -83,10 +85,10 @@ const AboutPage = () => {
                 <div className='value-icon'>
                   <RocketOutlined />
                 </div>
-                <h3>혁신을 추구하다</h3>
+                <h3>혁신을 추구합니다</h3>
                 <p>
-                  최신 AI 기술을 활용하여 사용자 경험을 끊임없이 개선합니다.
-                  디지털 시대의 새로운 추억 보관 방식을 제시합니다.
+                  최신 AI 기술을 활용하여 사용자 경험을 개선합니다. 디지털
+                  시대의 새로운 추억 보관 방식을 제시합니다.
                 </p>
               </Card>
             </Col>
@@ -141,11 +143,11 @@ const AboutPage = () => {
           <div className='cta-buttons'>
             <Link href='/register'>
               <Button type='primary' size='large'>
-                앨범 만들기
+                포토카드 만들기
               </Button>
             </Link>
             <Link href='/photo'>
-              <Button size='large'>다른 앨범 둘러보기</Button>
+              <Button size='large'>다른 포토카드 둘러보기</Button>
             </Link>
           </div>
         </div>
