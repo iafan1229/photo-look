@@ -36,15 +36,6 @@ export default function PhotoList() {
   };
 
   // 테마 설명 매핑
-  const themeDescriptions: Record<ThemeType, string> = {
-    travel: "특별한 여행 순간을 담은",
-    family: "소중한 가족과의 시간을 담은",
-    food: "맛있는 순간을 담은",
-    nature: "아름다운 자연을 담은",
-    city: "도시의 매력을 담은",
-    event: "특별한 이벤트를 담은",
-    auto: "특별한 순간을 담은",
-  };
 
   // PDF 다운로드 기능
   const downloadPDF = () => {
@@ -103,74 +94,69 @@ export default function PhotoList() {
             <CloseOutlined />
           </div>
 
-          <Card
+          <div
             id='photo-detail-album'
             className='album-container'
-            bordered={false}
             style={{
               backgroundColor: "#f2efe4",
               boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
               borderRadius: "10px",
             }}
           >
-            {/* 앨범 표지 */}
-            <Card
+            {/* 포토카드 표지 */}
+            <div
               className='album-cover'
-              bordered={false}
               style={{
-                backgroundColor: "#35281E",
-                backgroundImage:
-                  'url("https://www.transparenttextures.com/patterns/subtle-dark-vertical.png")',
                 marginBottom: "30px",
                 boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
               }}
             >
               <div className='album-cover-inner'>
-                <h1>{detailUserData?.magazine.title || "나의 앨범"}</h1>
-                <p>
-                  {new Date(
-                    detailUserData?.magazine.createdAt || Date.now()
-                  ).toLocaleDateString()}
-                  일에 생성된 앨범
-                </p>
-                <p>Instagram : @{detailUserData?.personalInfo?.snsId}</p>
-                <Divider />
-                <div className='album-subtitle'>
-                  {detailUserData?.magazine.theme
-                    ? themeDescriptions[
-                        detailUserData?.magazine.theme as ThemeType
-                      ]
-                    : themeDescriptions.auto}{" "}
-                  이야기
-                </div>
+                <h1>{detailUserData?.magazine.title || "나의 포토카드"}</h1>
+                <div className='date'>
+                  <p>
+                    {new Date(
+                      detailUserData?.magazine.createdAt || Date.now()
+                    ).toLocaleDateString()}
+                    일에 생성된 포토카드 입니다
+                  </p>
 
+                  <p>
+                    Instagram :{" "}
+                    {detailUserData?.personalInfo?.snsId
+                      ? "@" + detailUserData?.personalInfo?.snsId
+                      : "미입력"}
+                  </p>
+                </div>
+                <Divider style={{ height: 3 }} />
+                <h1>목차</h1>
                 {detailUserData?.imageUrls &&
                   detailUserData.imageUrls.length > 0 && (
-                    <div className='cover-photo-container'>
-                      <Image
-                        src={detailUserData.imageUrls[0]}
-                        alt='Cover'
-                        width={500}
-                        height={500}
-                      />
+                    <div className='cover-photo-wrapper'>
+                      <div className='cover-photo-container'>
+                        <div>
+                          <Image
+                            src={detailUserData.imageUrls[0]}
+                            alt='Cover'
+                            width={500}
+                            height={500}
+                          />
+                        </div>
+                      </div>
+                      <div className='cover-photo-title'>
+                        {detailUserData.magazine.analyzedImages.map((el) => (
+                          <p>- {extractTitleAndContent(el.storyText).title}</p>
+                        ))}
+                      </div>
                     </div>
                   )}
               </div>
-            </Card>
+            </div>
 
-            {/* 앨범 내용 - 폴라로이드 형태의 사진들 */}
+            {/* 포토카드 내용 - 폴라로이드 형태의 사진들 */}
             <div className='album-pages'>
               {detailUserData?.imageUrls?.map((image, index) => (
-                <Card
-                  key={index}
-                  className='polaroid'
-                  bordered={false}
-                  style={{
-                    padding: 0,
-                    backgroundColor: "white",
-                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
-                  }}
-                >
+                <div key={index} className='polaroid'>
                   <div className='photo-container'>
                     <Image
                       src={image}
@@ -215,10 +201,10 @@ export default function PhotoList() {
                         ))}
                     </div>
                   )}
-                </Card>
+                </div>
               ))}
             </div>
-          </Card>
+          </div>
 
           <div className='album-buttons'>
             <Button
@@ -231,7 +217,7 @@ export default function PhotoList() {
                 fontWeight: "bold",
               }}
             >
-              앨범 PDF로 다운로드
+              포토카드 PDF로 다운로드
             </Button>
           </div>
         </div>

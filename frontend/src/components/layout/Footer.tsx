@@ -30,10 +30,10 @@ const Footer = () => {
                   <Link href='/'>홈</Link>
                 </li>
                 <li>
-                  <Link href='/register'>앨범 만들기</Link>
+                  <Link href='/register'>포토카드 만들기</Link>
                 </li>
                 <li>
-                  <Link href='/photo'>앨범 구경하기</Link>
+                  <Link href='/photo'>포토카드 구경하기</Link>
                 </li>
                 {/* <li>
                   <Link href='/guide'>이용 가이드</Link>

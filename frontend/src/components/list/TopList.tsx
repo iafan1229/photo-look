@@ -53,7 +53,7 @@ export default function TopList() {
           <strong>당신의 소중한 순간</strong>을{" "}
           <span className='highlight'>AI 스토리텔링</span>으로 더욱 특별하게
           만들어드립니다. 사진을 업로드하면 자동으로 분석하여{" "}
-          <span className='highlight'>스토리가 있는 앨범</span>으로
+          <span className='highlight'>스토리가 있는 포토카드</span>로
           제작해드립니다.
         </p>
         <div>
