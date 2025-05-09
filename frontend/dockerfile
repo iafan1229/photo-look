@@ -1,16 +1,23 @@
 FROM node:21.6-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci --no-audit --no-fund
 COPY . ./
+# Next.js 프로덕션 빌드
 RUN npm run build
 
 FROM node:21.6-alpine
 WORKDIR /app
+# 빌드 결과물만 복사
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/next.config.js ./
+
+# 필요하다면 uploads 디렉토리 생성
+RUN mkdir -p ./public/uploads
+# 3000 포트 노출
 EXPOSE 3000
+# 프로덕션 모드로 실행
 CMD ["npm", "start"]
