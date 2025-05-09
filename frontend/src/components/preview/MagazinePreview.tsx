@@ -7,6 +7,7 @@ import PersonalInfoVerification, {
   PersonalInfo,
 } from "../PersonalInfoVerification";
 import { usePersonalInfoVerification } from "@/hooks/usePersonalInfoVerification";
+import { extractTitleAndContent } from "@/util/common";
 
 const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   title,
@@ -114,16 +115,15 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
               </div>
 
               <div className='photo-title'>
-                {index === 0
-                  ? "스토리의 시작"
-                  : index === images.length - 1
-                  ? "스토리의 마무리"
-                  : `순간 ${index}`}
+                {extractTitleAndContent(generateStoryDescription(index)).title}
               </div>
 
               {generateStoryDescription(index) && (
                 <div className='photo-description'>
-                  {generateStoryDescription(index)}
+                  {
+                    extractTitleAndContent(generateStoryDescription(index))
+                      .content
+                  }
                 </div>
               )}
 

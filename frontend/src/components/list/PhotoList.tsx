@@ -8,6 +8,7 @@ import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
 import { calc } from "antd/es/theme/internal";
 import { UserData as User } from "@/type/user";
+import { extractTitleAndContent } from "@/util/common";
 
 export default function PhotoList() {
   const [userData, setUserData] = useState<User[]>();
@@ -180,11 +181,11 @@ export default function PhotoList() {
                   </div>
 
                   <div className='photo-title'>
-                    {index === 0
-                      ? "스토리의 시작"
-                      : index === detailUserData.imageUrls.length - 1
-                      ? "스토리의 마무리"
-                      : `순간 ${index}`}
+                    {
+                      extractTitleAndContent(
+                        detailUserData.magazine.analyzedImages[index]?.storyText
+                      ).title
+                    }
                   </div>
 
                   {detailUserData?.magazine?.analyzedImages?.length > 0 &&
@@ -192,8 +193,10 @@ export default function PhotoList() {
                       ?.storyText && (
                       <div className='photo-description'>
                         {
-                          detailUserData.magazine.analyzedImages[index]
-                            .storyText
+                          extractTitleAndContent(
+                            detailUserData.magazine.analyzedImages[index]
+                              ?.storyText
+                          ).content
                         }
                       </div>
                     )}

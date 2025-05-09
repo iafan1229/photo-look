@@ -57,7 +57,7 @@ app.get("/api/health", (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
-const HOST = "0.0.0.0"; // 모든 네트워크 인터페이스에 바인딩
+const HOST = "localhost"; // 모든 네트워크 인터페이스에 바인딩
 
 app.listen(Number(PORT), HOST, () => {
   console.log(`Server is running on ${HOST}:${PORT}`);
