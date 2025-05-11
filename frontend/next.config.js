@@ -25,8 +25,6 @@ const nextConfig = {
         pathname: "/img-upload/**",
       },
     ],
-    loader: "custom",
-    loaderFile: "./my-image-loader.ts",
   },
 };
 
