@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main # 또는 master, 메인 브랜치 이름에 맞게 조정
+      - main
 
 jobs:
   deploy:
@@ -14,6 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Debug Repository Structure
+        run: |
+          echo "프로젝트 루트 디렉토리 내용:"
+          ls -la
+          echo "디렉토리 존재 여부 확인:"
+          if [ -d "frontend" ]; then echo "frontend ✓"; else echo "frontend ✗"; fi
+          if [ -d "server" ]; then echo "server ✓"; else echo "server ✗"; fi
+          if [ -d "nginx" ]; then echo "nginx ✓"; else echo "nginx ✗"; fi
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -21,227 +30,184 @@ jobs:
           chmod 600 ~/.ssh/ec2_key.pem
           echo -e "Host ec2\n\tHostName ${{ secrets.EC2_HOST }}\n\tUser ec2-user\n\tIdentityFile ~/.ssh/ec2_key.pem\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
-      - name: Deploy to EC2
+      - name: Create Remote Directories
         run: |
-          # 필요한 디렉토리 생성
-          ssh ec2 "mkdir -p ~/photo-look/{frontend,server,nginx}"
+          ssh ec2 "mkdir -p ~/photo-look/{frontend,server,nginx,nginx/ssl}"
+          echo "원격 디렉토리 생성 완료"
 
-          # 소스 코드 전송
-          scp -r frontend/* ec2:~/photo-look/frontend/
-          scp -r server/* ec2:~/photo-look/server/
+      - name: Upload Project Files
+        run: |
+          # 프론트엔드 코드 전송
+          if [ -d "frontend" ]; then
+            echo "프론트엔드 파일 전송 중..."
+            scp -r frontend/* ec2:~/photo-look/frontend/
+            echo "프론트엔드 파일 전송 완료"
+          else
+            echo "프론트엔드 디렉토리가 없습니다! 전송 실패."
+            exit 1
+          fi
 
-          # Docker Compose 파일 생성
-          ssh ec2 "cat > ~/photo-look/docker-compose.yml << 'EOL'
-          version: '3'
+          # 서버 코드 전송
+          if [ -d "server" ]; then
+            echo "서버 파일 전송 중..."
+            scp -r server/* ec2:~/photo-look/server/
+            echo "서버 파일 전송 완료"
+          else
+            echo "서버 디렉토리가 없습니다! 전송 실패."
+            exit 1
+          fi
 
-          services:
-            nginx:
-              build:
-                context: ./nginx
-                dockerfile: Dockerfile
-              ports:
-                - \"80:80\"
-                - \"443:443\"
-              depends_on:
-                - frontend
-                - backend
-              restart: always
-              networks:
-                - app-network
-              volumes:
-                - ./nginx/ssl:/etc/nginx/ssl
+          # Nginx 설정 파일 전송
+          if [ -d "nginx" ]; then
+            echo "Nginx 설정 파일 전송 중..."
+            scp -r nginx/* ec2:~/photo-look/nginx/
+            echo "Nginx 설정 파일 전송 완료"
+          else
+            echo "Nginx 디렉토리가 없습니다! 기본 Nginx 설정을 생성합니다."
+            
+            # Nginx Dockerfile 생성
+            ssh ec2 "cat > ~/photo-look/nginx/Dockerfile << 'EOL'
+            FROM nginx:1.25-alpine
+            RUN rm /etc/nginx/conf.d/default.conf
+            COPY nginx.conf /etc/nginx/conf.d/
+            RUN mkdir -p /etc/nginx/ssl
+            RUN sed -i 's/# server_tokens off/server_tokens off/' /etc/nginx/nginx.conf
+            EXPOSE 80
+            EXPOSE 443
+            CMD [\"nginx\", \"-g\", \"daemon off;\"]
+            EOL"
+            
+            # Nginx 설정 파일 생성
+            ssh ec2 "cat > ~/photo-look/nginx/nginx.conf << 'EOL'
+            server {
+                listen 80;
+                server_name _;
+                
+                # 프론트엔드 서비스 프록시
+                location / {
+                    proxy_pass http://frontend:3000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade \$http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host \$host;
+                    proxy_cache_bypass \$http_upgrade;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                }
+                
+                # 백엔드 API 프록시
+                location /api {
+                    proxy_pass http://backend:8080;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade \$http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host \$host;
+                    proxy_cache_bypass \$http_upgrade;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                }
+                
+                # 정적 파일 캐싱
+                location ~* \\.(jpg|jpeg|png|gif|ico|css|js)$ {
+                    proxy_pass http://frontend:3000;
+                    expires 30d;
+                    access_log off;
+                    add_header Cache-Control \"public\";
+                }
+                
+                # 최대 요청 크기 설정
+                client_max_body_size 10M;
+            }
+            EOL"
+            
+            echo "Nginx 기본 설정 생성 완료"
+          fi
 
-            frontend:
-              build:
-                context: ./frontend
-                dockerfile: Dockerfile
-              environment:
-                - NODE_ENV=production
-                - NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY=\${NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY}
-                - NEXT_PUBLIC_GEMINI_API_KEY=\${NEXT_PUBLIC_GEMINI_API_KEY}
-                - NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN=\${NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}
-                - NEXT_PUBLIC_S3_ACCESS_KEY_ID=\${NEXT_PUBLIC_S3_ACCESS_KEY_ID}
-                - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=\${NEXT_PUBLIC_S3_SECRET_ACCESS_KEY}
-              restart: always
-              networks:
-                - app-network
-              volumes:
-                - frontend_uploads:/app/public/uploads
-              deploy:
-                resources:
-                  limits:
-                    memory: 384M
+          # Docker Compose 파일 전송
+          echo "Docker Compose 파일 전송 중..."
+          scp docker-compose.yml ec2:~/photo-look/
+          echo "Docker Compose 파일 전송 완료"
 
-            backend:
-              build:
-                context: ./server
-                dockerfile: Dockerfile
-              environment:
-                - NODE_ENV=production
-                - DB_PASS=\${DB_PASS}
-                - PORT=8080
-                - TS_NODE_PROJECT=tsconfig.json
-                - AWS_REGION=\${AWS_REGION:-ap-northeast-2}
-              restart: always
-              networks:
-                - app-network
-              deploy:
-                resources:
-                  limits:
-                    memory: 192M
-
-          networks:
-            app-network:
-              driver: bridge
-              
-          volumes:
-            frontend_uploads:
-          EOL"
-
-          # Nginx 설정 파일 생성
-          ssh ec2 "mkdir -p ~/photo-look/nginx"
-          ssh ec2 "cat > ~/photo-look/nginx/Dockerfile << 'EOL'
-          FROM nginx:1.25-alpine
-          RUN rm /etc/nginx/conf.d/default.conf
-          COPY nginx.conf /etc/nginx/conf.d/
-          EXPOSE 80
-          EXPOSE 443
-          CMD [\"nginx\", \"-g\", \"daemon off;\"]
-          EOL"
-
-          ssh ec2 "cat > ~/photo-look/nginx/nginx.conf << 'EOL'
-          server {
-              listen 80;
-              server_name _;
-              
-              # HTTP를 HTTPS로 리다이렉트 (SSL 인증서 설정 후 주석 해제)
-              # return 301 https://\$host\$request_uri;
-
-              # 프론트엔드 서비스 프록시
-              location / {
-                  proxy_pass http://frontend:3000;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
-                  proxy_set_header Connection 'upgrade';
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
-                  proxy_set_header X-Real-IP \$remote_addr;
-                  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto \$scheme;
-              }
-
-              # 백엔드 API 프록시
-              location /api {
-                  proxy_pass http://backend:8080;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
-                  proxy_set_header Connection 'upgrade';
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
-                  proxy_set_header X-Real-IP \$remote_addr;
-                  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto \$scheme;
-              }
-
-              # 정적 파일 캐싱
-              location ~* \\.(jpg|jpeg|png|gif|ico|css|js)$ {
-                  proxy_pass http://frontend:3000;
-                  expires 30d;
-                  access_log off;
-                  add_header Cache-Control \"public\";
-              }
-
-              # 최대 요청 크기 설정
-              client_max_body_size 10M;
-          }
-
-          # HTTPS 서버 설정 (SSL 인증서 설정 후 주석 해제)
-          # server {
-          #     listen 443 ssl;
-          #     server_name _;
-          #     
-          #     ssl_certificate /etc/nginx/ssl/fullchain.pem;
-          #     ssl_certificate_key /etc/nginx/ssl/privkey.pem;
-          #     ssl_protocols TLSv1.2 TLSv1.3;
-          #     ssl_prefer_server_ciphers off;
-          #     
-          #     # 프론트엔드 서비스 프록시
-          #     location / {
-          #         proxy_pass http://frontend:3000;
-          #         proxy_http_version 1.1;
-          #         proxy_set_header Upgrade \$http_upgrade;
-          #         proxy_set_header Connection 'upgrade';
-          #         proxy_set_header Host \$host;
-          #         proxy_cache_bypass \$http_upgrade;
-          #         proxy_set_header X-Real-IP \$remote_addr;
-          #         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-          #         proxy_set_header X-Forwarded-Proto \$scheme;
-          #     }
-          #     
-          #     # 백엔드 API 프록시
-          #     location /api {
-          #         proxy_pass http://backend:8080;
-          #         proxy_http_version 1.1;
-          #         proxy_set_header Upgrade \$http_upgrade;
-          #         proxy_set_header Connection 'upgrade';
-          #         proxy_set_header Host \$host;
-          #         proxy_cache_bypass \$http_upgrade;
-          #         proxy_set_header X-Real-IP \$remote_addr;
-          #         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-          #         proxy_set_header X-Forwarded-Proto \$scheme;
-          #     }
-          #     
-          #     # 정적 파일 캐싱
-          #     location ~* \\.(jpg|jpeg|png|gif|ico|css|js)$ {
-          #         proxy_pass http://frontend:3000;
-          #         expires 30d;
-          #         access_log off;
-          #         add_header Cache-Control \"public\";
-          #     }
-          #     
-          #     # 최대 요청 크기 설정
-          #     client_max_body_size 10M;
-          # }
-          EOL"
-
-          # SSL 인증서 디렉토리 생성
-          ssh ec2 "mkdir -p ~/photo-look/nginx/ssl"
-
-          # 환경 변수 파일 생성
-          ssh ec2 "cat > ~/photo-look/.env << 'EOL'
-          # 프론트엔드 환경 변수
-          NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY }}
-          NEXT_PUBLIC_GEMINI_API_KEY=${{ secrets.NEXT_PUBLIC_GEMINI_API_KEY }}
-          NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN=${{ secrets.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN }}
-          NEXT_PUBLIC_S3_ACCESS_KEY_ID=${{ secrets.NEXT_PUBLIC_S3_ACCESS_KEY_ID }}
-          NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=${{ secrets.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY }}
-
-          # 백엔드 환경 변수
-          DB_PASS=${{ secrets.DB_PASS }}
-
-          # AWS 리전 설정
-          AWS_REGION=ap-northeast-2
-          EOL"
-
-          # Docker, Docker Compose 설치 및 스왑 설정 (처음 한 번만 필요)
+      - name: Install Docker and Docker Compose
+        run: |
           ssh ec2 "if ! command -v docker &> /dev/null; then
-            sudo yum update -y &&
-            sudo yum install -y docker &&
-            sudo systemctl start docker &&
-            sudo systemctl enable docker &&
-            sudo usermod -aG docker \$(whoami) &&
-            sudo curl -L \"https://github.com/docker/compose/releases/latest/download/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose &&
-            sudo chmod +x /usr/local/bin/docker-compose &&
-            if [ ! -f /swapfile ]; then
-              sudo dd if=/dev/zero of=/swapfile bs=128M count=8 &&
-              sudo chmod 600 /swapfile &&
-              sudo mkswap /swapfile &&
-              sudo swapon /swapfile &&
-              echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-            fi
+            echo '도커 설치 중...'
+            sudo yum update -y
+            sudo yum install -y docker
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker \$(whoami)
+            echo '도커 설치 완료'
+          else
+            echo '도커가 이미 설치되어 있습니다.'
+          fi
+
+          if ! command -v docker-compose &> /dev/null; then
+            echo '도커 컴포즈 설치 중...'
+            sudo curl -L \"https://github.com/docker/compose/releases/latest/download/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            echo '도커 컴포즈 설치 완료'
+          else
+            echo '도커 컴포즈가 이미 설치되어 있습니다.'
           fi"
 
-          # 애플리케이션 빌드 및 실행
-          ssh ec2 "cd ~/photo-look && sudo docker-compose up -d --build"
+      - name: Setup Swap Space
+        run: |
+          ssh ec2 "if [ ! -f /swapfile ]; then
+            echo '스왑 설정 중...'
+            sudo dd if=/dev/zero of=/swapfile bs=128M count=8
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+            echo '스왑 설정 완료'
+          else
+            echo '스왑이 이미 설정되어 있습니다.'
+          fi"
 
-          echo "배포 완료!"
+      - name: Deploy Application
+        # 환경 변수를 직접 전달
+        env:
+          NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY }}
+          NEXT_PUBLIC_GEMINI_API_KEY: ${{ secrets.NEXT_PUBLIC_GEMINI_API_KEY }}
+          NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN }}
+          NEXT_PUBLIC_S3_ACCESS_KEY_ID: ${{ secrets.NEXT_PUBLIC_S3_ACCESS_KEY_ID }}
+          NEXT_PUBLIC_S3_SECRET_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          AWS_REGION: "ap-northeast-2"
+        run: |
+          echo "현재 실행 중인 컨테이너 확인:"
+          ssh ec2 "cd ~/photo-look && docker ps || echo '실행 중인 컨테이너 없음'"
+
+          echo "기존 컨테이너 중지 중..."
+          ssh ec2 "cd ~/photo-look && docker-compose down || echo '중지할 컨테이너 없음'"
+
+          echo "새 애플리케이션 배포 중..."
+          # GitHub Actions에서 환경 변수를 EC2 SSH 세션으로 전달
+          ssh ec2 "cd ~/photo-look && \
+                   NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY='$NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY' \
+                   NEXT_PUBLIC_GEMINI_API_KEY='$NEXT_PUBLIC_GEMINI_API_KEY' \
+                   NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN='$NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN' \
+                   NEXT_PUBLIC_S3_ACCESS_KEY_ID='$NEXT_PUBLIC_S3_ACCESS_KEY_ID' \
+                   NEXT_PUBLIC_S3_SECRET_ACCESS_KEY='$NEXT_PUBLIC_S3_SECRET_ACCESS_KEY' \
+                   DB_PASS='$DB_PASS' \
+                   AWS_REGION='$AWS_REGION' \
+                   docker-compose up -d --build"
+
+          echo "배포 상태 확인 중..."
+          ssh ec2 "cd ~/photo-look && docker-compose ps"
+
+          echo "컨테이너 로그 확인:"
+          ssh ec2 "cd ~/photo-look && docker-compose logs --tail=10"
+
+      - name: Deployment Summary
+        run: |
+          echo "===== 배포 요약 ====="
+          echo "배포 시간: $(date)"
+          echo "배포 대상: ${{ secrets.EC2_HOST }}"
+          echo "배포 서비스: 프론트엔드, 백엔드, Nginx"
+          echo "실행 중인 컨테이너:"
+          ssh ec2 "cd ~/photo-look && docker-compose ps"
+          echo "======================"

@@ -1,5 +1,4 @@
-cat > ~/app/docker-compose.yml << 'EOL'
-version: '3'
+version: "3"
 
 services:
   nginx:
@@ -11,7 +10,7 @@ services:
       - "443:443"
     depends_on:
       - frontend
-      - backend
+      - server
     restart: always
     networks:
       - app-network
@@ -24,11 +23,12 @@ services:
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY=${NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY}
-      - NEXT_PUBLIC_GEMINI_API_KEY=${NEXT_PUBLIC_GEMINI_API_KEY}
-      - NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN=${NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}
-      - NEXT_PUBLIC_S3_ACCESS_KEY_ID=${NEXT_PUBLIC_S3_ACCESS_KEY_ID}
-      - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=${NEXT_PUBLIC_S3_SECRET_ACCESS_KEY}
+      # 환경 변수를 직접 참조 (GitHub Actions에서 설정)
+      - NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY
+      - NEXT_PUBLIC_GEMINI_API_KEY
+      - NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN
+      - NEXT_PUBLIC_S3_ACCESS_KEY_ID
+      - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY
     restart: always
     networks:
       - app-network
@@ -39,16 +39,17 @@ services:
         limits:
           memory: 384M
 
-  backend:
+  server:
     build:
       context: ./server
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      - DB_PASS=${DB_PASS}
+      # 환경 변수를 직접 참조 (GitHub Actions에서 설정)
+      - DB_PASS
       - PORT=8080
       - TS_NODE_PROJECT=tsconfig.json
-      - AWS_REGION=${AWS_REGION:-ap-northeast-2}
+      - AWS_REGION
     restart: always
     networks:
       - app-network
@@ -60,7 +61,7 @@ services:
 networks:
   app-network:
     driver: bridge
-    
+
 volumes:
   frontend_uploads:
-EOL
+    driver: local
