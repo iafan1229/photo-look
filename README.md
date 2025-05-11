@@ -21,3 +21,4 @@ AI - Google Vision AI (이미지 라벨링) / Google Gemini (라벨링 바탕으
 CI/CD - Github Actions
 
 Cloud - AWS EC2 + Nginx
+
