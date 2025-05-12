@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "@/styles/components/admin.scss";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
 export default function VerificationPage() {
   const [id, setId] = useState<string>("");
   const [token, setToken] = useState<string>("");
@@ -55,7 +53,7 @@ export default function VerificationPage() {
   const fetchUserData = async (userId: string, verificationToken: string) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/verification/details?id=${userId}&token=${verificationToken}`
+        `/api/verification/details?id=${userId}&token=${verificationToken}`
       );
 
       if (response.data.status === "success") {
@@ -82,7 +80,7 @@ export default function VerificationPage() {
   const handleApprove = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/api/verification/approve`, {
+      const response = await axios.post(`/api/verification/approve`, {
         id,
         token,
       });
@@ -125,7 +123,7 @@ export default function VerificationPage() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/api/verification/reject`, {
+      const response = await axios.post(`/api/verification/reject`, {
         id,
         token,
         reason: rejectionReason || "관리자에 의해 거절되었습니다.",

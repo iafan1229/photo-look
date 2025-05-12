@@ -6,8 +6,6 @@ import pako from "pako";
 import "@/styles/components/admin.scss";
 import { UserData } from "@/type/user";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
 // 압축 해제 함수
 const decompressData = (compressedBase64: string): any => {
   try {
@@ -88,7 +86,7 @@ export default function AdminVerification({
   const handleApprove = async () => {
     setLoading(true);
     try {
-      const response = await axios.put(`${API_URL}/api/verification/approve`, {
+      const response = await axios.put(`/api/verification/approve`, {
         token,
       });
 
@@ -124,7 +122,7 @@ export default function AdminVerification({
 
     setLoading(true);
     try {
-      const response = await axios.put(`${API_URL}/api/verification/reject`, {
+      const response = await axios.put(`/api/verification/reject`, {
         token,
         reason: rejectionReason || "관리자에 의해 거절되었습니다.",
       });
