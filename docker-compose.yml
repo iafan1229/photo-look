@@ -23,12 +23,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      # 환경 변수를 직접 참조 (GitHub Actions에서 설정)
-      - NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY
-      - NEXT_PUBLIC_GEMINI_API_KEY
-      - NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN
-      - NEXT_PUBLIC_S3_ACCESS_KEY_ID
-      - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY
+    env_file:
+      - ./frontend/.env
     restart: always
     networks:
       - app-network
@@ -45,19 +41,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      # 환경 변수를 직접 참조 (GitHub Actions에서 설정)
       - TS_NODE_PROJECT=tsconfig.json
-      - AWS_REGION
-      - AWS_S3_BUCKET_NAME
-      - AWS_SECRET_ACCESS_KEY
-      - DB_PASS
-      - EC2_HOST
-      - EC2_SSH_KEY
-      - EMAIL_PASSWORD
-      - EMAIL_USER
-      - HOST
-      - PORT
-      - SITE_URL
+    env_file:
+      - ./server/.env
     restart: always
     networks:
       - app-network
