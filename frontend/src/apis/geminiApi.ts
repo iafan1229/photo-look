@@ -32,7 +32,8 @@ export const generateGeminiApi = async ({
                 다음 이미지 라벨을 기반으로 자연스러운 ${theme} 테마의 짧은 매거진 제목과 내용을 생성해 주세요.    
                 전체 ${totalImages}장 중 ${imageIndex + 1}번째 이미지입니다. 
                 스토리가 자연스럽게 흘러가도록 제목을 만들어 주세요. 한국어로 작성해 주세요. 
-                제목과 내용을 간결하게 작성해 주세요. (제목 20자 이내, 내용 100자 이내) 제목은 aiTitle이라는 key에 value로 저장하고, 내용은 aiContent라는 key에 value로 저장해 주세요.
+                키워드, 제목 그리고 내용을 간결하게 작성해 주세요. (제목 20자 이내, 내용 100자 이내). 
+                키워드는 aiCommonTheme이라는 key에 value로 저장하고, 제목은 aiTitle이라는 key에 value로 저장하고, 내용은 aiContent라는 key에 value로 저장해 주세요.
                 
                 이미지 라벨: ${imageLabels.join(", ")}`,
               },

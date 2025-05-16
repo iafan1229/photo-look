@@ -1,51 +1,72 @@
-import { Select, Space } from "antd";
+import { Button, Input, Select, Space } from "antd";
 import Slider from "../Slider";
+import { useState } from "react";
 
-export default function TopList() {
+export default function TopList({
+  filterValue,
+  searchValue,
+  setFilterValue,
+  setSearchValue,
+}: {
+  filterValue: string | undefined;
+  searchValue: string;
+  setFilterValue: (value: string) => void;
+  setSearchValue: (value: string) => void;
+}) {
+  const [filter, setFilter] = useState("total");
+  const [value, setValue] = useState("");
+
   const options = [
+    { label: "전체", value: "total" },
     {
-      label: "최신등록 순",
-      value: "china",
-      emoji: "🇨🇳",
-      desc: "China (中国)",
+      label: "이름",
+      value: "name",
     },
     {
-      label: "좋아요 합산순",
-      value: "usa",
-      emoji: "🇺🇸",
-      desc: "USA (美国)",
+      label: "sns 아이디",
+      value: "sns",
     },
     {
-      label: "팔로워 순",
-      value: "japan",
-      emoji: "🇯🇵",
-      desc: "Japan (日本)",
+      label: "앨범 제목",
+      value: "title",
     },
   ];
-  const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
+  const handleChange = (value: string) => {
+    setFilter(value);
+    setValue("");
+  };
+
+  const handleFilter = () => {
+    setFilterValue(filter);
+    setSearchValue(value);
+    console.log(filter, value);
   };
   return (
     <>
       <section className='filter-section'>
         <div className='filter'>
-          <Select
-            className='select-filter'
-            mode='multiple'
-            style={{ width: "100%" }}
-            placeholder='select one country'
-            defaultValue={["china"]}
-            onChange={handleChange}
-            options={options}
-            optionRender={(option) => (
-              <Space>
-                <span role='img' aria-label={option.data.label}>
-                  {option.data.emoji}
-                </span>
-                {option.data.desc}
-              </Space>
-            )}
-          />
+          <div className='filter-select'>
+            <Select
+              className='select-filter'
+              style={{ width: "100%" }}
+              onChange={handleChange}
+              defaultValue={"total"}
+              options={options}
+              optionRender={(option) => <Space>{option.data.label}</Space>}
+            />
+          </div>
+          <div className='filter-input'>
+            <Input
+              value={value}
+              disabled={filter === "total" ? true : false}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </div>
+          <div className='filter-button'>
+            <Button type='primary' onClick={handleFilter}>
+              검색
+            </Button>
+          </div>
         </div>
       </section>
       <section>
@@ -57,7 +78,7 @@ export default function TopList() {
           제작해드립니다.
         </p>
         <div>
-          <Slider />
+          <Slider filterValue={filterValue} searchValue={searchValue} />
         </div>
       </section>
     </>

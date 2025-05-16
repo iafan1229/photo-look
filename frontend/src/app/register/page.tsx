@@ -292,7 +292,7 @@ const Main: React.FC = () => {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group className='mb-3'>
+              {/* <Form.Group className='mb-3'>
                 <Form.Label>매거진 스타일</Form.Label>
                 <Form.Select
                   value={magazineStyle}
@@ -305,7 +305,7 @@ const Main: React.FC = () => {
                   <option value='minimalist'>미니멀리스트</option>
                   <option value='vibrant'>비비드</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
             </Card.Body>
           </Card>
 

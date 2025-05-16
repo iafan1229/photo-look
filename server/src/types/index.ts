@@ -1,8 +1,17 @@
 // server/src/types/index.ts
+
+export interface RequestData {
+  name?: string;
+  sns?: string;
+  title?: string;
+}
+
 export interface ResponseData {
   message: string;
   data?: any;
   status?: string;
+  query?: string;
+  total?: number;
 }
 
 export interface AnalyzedImage {

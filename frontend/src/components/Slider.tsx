@@ -3,29 +3,43 @@ import { useState, useEffect } from "react";
 import "swiper/css";
 import axios from "axios";
 import { UserData } from "@/type/user";
-export default function Slider() {
+import "swiper/css/scrollbar";
+import { Scrollbar } from "swiper/modules";
+
+export default function Slider({
+  filterValue,
+  searchValue,
+}: {
+  filterValue: string | undefined;
+  searchValue: string;
+}) {
   const [userData, setUserData] = useState<UserData[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [listResponse] = await Promise.all([
-          axios.get("/api/main/list"),
-          // axios.get("/api/main/list-slider"),
-        ]);
-
-        console.log("List Data:", listResponse);
+        const listResponse = await axios.get(
+          `/api/main/list?${filterValue}=${searchValue}`
+        );
         setUserData(listResponse.data.data);
-        // console.log("Detail Data:", detailResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [filterValue, searchValue]);
   return (
     <div className='top-list'>
-      <Swiper spaceBetween={20} slidesPerView={5} loop className='mySwiper'>
+      <Swiper
+        scrollbar={{
+          hide: true,
+        }}
+        modules={[Scrollbar]}
+        spaceBetween={20}
+        slidesPerView={5}
+        loop
+        className='mySwiper'
+      >
         {userData?.length &&
           userData
             ?.filter((el) => el.status === "approved")

@@ -9,8 +9,15 @@ import Icon, { CloseOutlined } from "@ant-design/icons";
 import { calc } from "antd/es/theme/internal";
 import { UserData as User } from "@/type/user";
 import { extractTitleAndContent } from "@/util/common";
+import { pbkdf2 } from "crypto";
 
-export default function PhotoList() {
+export default function PhotoList({
+  filterValue,
+  searchValue,
+}: {
+  filterValue: string | undefined;
+  searchValue: string;
+}) {
   const [userData, setUserData] = useState<User[]>();
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailUserData, setDetailUserData] = useState<User | null>(null);
@@ -18,7 +25,9 @@ export default function PhotoList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [listResponse] = await Promise.all([axios.get("/api/main/list")]);
+        const listResponse = await axios.get(
+          `/api/main/list?${filterValue}=${searchValue}`
+        );
 
         console.log("List Data:", listResponse);
         setUserData(listResponse.data.data);
@@ -28,7 +37,7 @@ export default function PhotoList() {
     };
 
     fetchData();
-  }, []);
+  }, [filterValue, searchValue]);
 
   const handleDetail = (el: User) => {
     setDetailOpen(!detailOpen);
@@ -113,8 +122,15 @@ export default function PhotoList() {
             >
               <div className='album-cover-inner'>
                 <h1>{detailUserData?.magazine.title || "나의 포토카드"}</h1>
+                <div className='album-subtitle'>
+                  {
+                    extractTitleAndContent(
+                      detailUserData?.magazine.analyzedImages?.[0]?.storyText
+                    ).theme
+                  }
+                </div>
                 <div className='date'>
-                  <p>
+                  <p style={{ paddingBottom: 10 }}>
                     {new Date(
                       detailUserData?.magazine.createdAt || Date.now()
                     ).toLocaleDateString()}
