@@ -231,34 +231,38 @@
   .values-section {
     background: linear-gradient(135deg, #f6f9fc 0%, #e9ecef 100%);
 
-    .value-card {
-      height: 100%;
-      border-radius: $border-radius;
-      overflow: hidden;
-      border: none;
-      box-shadow: $box-shadow;
-      padding: 2rem;
-      text-align: center;
-      @include hover-lift;
+    .card-guide {
+      .value-card {
+        height: 100%;
+        border-radius: $border-radius;
+        overflow: hidden;
+        border: none;
+        box-shadow: $box-shadow;
+        padding: 2rem;
+        text-align: center;
+        @include hover-lift;
 
-      .value-icon {
-        font-size: 3rem;
-        margin-bottom: 1.5rem;
-        color: $primary-color;
-
-        svg {
-          filter: drop-shadow(0 5px 10px rgba($primary-color, 0.2));
+        .card-img {
+          height: 200px;
+          background-color: rgb(241, 246, 247);
+          padding: 12px;
+          img {
+            height: 100%;
+            object-fit: contain;
+          }
         }
-      }
+        h4 {
+          padding-top: 20px;
+          font-size: 1.2rem;
+          margin-bottom: 1rem;
+        }
 
-      h3 {
-        font-size: 1.4rem;
-        margin-bottom: 1rem;
-      }
-
-      p {
-        color: $text-light;
-        margin-bottom: 0;
+        p {
+          color: $text-light;
+          margin-bottom: 0;
+          line-height: 1.5;
+          font-size: 0.9rem;
+        }
       }
     }
   }
@@ -297,7 +301,6 @@
 
       .member-bio {
         color: $text-light;
-        max-width: 300px;
         margin: 0 auto;
       }
     }

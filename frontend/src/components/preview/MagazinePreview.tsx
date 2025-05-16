@@ -89,13 +89,20 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
             </div>
 
             {images.length > 0 && (
-              <div className='cover-photo-container'>
-                <Image
-                  src={images[0].dataUrl}
-                  alt='Cover'
-                  width={500}
-                  height={500}
-                />
+              <div className='cover-photo-wrapper'>
+                <div className='cover-photo-container'>
+                  <Image
+                    src={images[0].dataUrl}
+                    alt='Cover'
+                    width={500}
+                    height={500}
+                  />
+                </div>
+                <div className='cover-photo-title'>
+                  {images.map((el) => (
+                    <p>- {extractTitleAndContent(el.storyText).title}</p>
+                  ))}
+                </div>
               </div>
             )}
           </div>
