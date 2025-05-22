@@ -136,3 +136,71 @@ a {
   color: #000;
   text-decoration: none;
 }
+
+/* MasonryGrid.css */
+
+.masonry-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Masonry 그리드 컨테이너 */
+.my-masonry-grid {
+  display: flex;
+  margin-left: -20px; /* 컬럼 간격 조정 */
+  width: auto;
+}
+
+/* 각 컬럼 스타일 */
+.my-masonry-grid_column {
+  padding-left: 20px; /* 컬럼 간격 */
+  background-clip: padding-box;
+}
+
+/* 각 아이템 스타일 */
+.masonry-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.masonry-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.masonry-item h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.masonry-item p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 반응형 추가 조정 */
+@media (max-width: 500px) {
+  .masonry-container {
+    padding: 10px;
+  }
+
+  .my-masonry-grid {
+    margin-left: -10px;
+  }
+
+  .my-masonry-grid_column {
+    padding-left: 10px;
+  }
+
+  .masonry-item {
+    margin-bottom: 15px;
+  }
+}

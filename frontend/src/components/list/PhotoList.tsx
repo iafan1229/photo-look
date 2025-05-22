@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Masonry from "react-responsive-masonry";
-import ResponsiveMasonry from "react-responsive-masonry";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Divider } from "antd";
@@ -9,7 +7,7 @@ import Icon, { CloseOutlined } from "@ant-design/icons";
 import { calc } from "antd/es/theme/internal";
 import { UserData as User } from "@/type/user";
 import { extractTitleAndContent } from "@/util/common";
-import { pbkdf2 } from "crypto";
+import Masonry from "react-masonry-css";
 
 export default function PhotoList({
   filterValue,
@@ -44,7 +42,13 @@ export default function PhotoList({
     setDetailUserData(el);
   };
 
-  // 테마 설명 매핑
+  // 반응형 브레이크포인트 설정
+  const breakpointColumnsObj = {
+    default: 4, // 기본 4열
+    1100: 3, // 1100px 이하에서 3열
+    700: 2, // 700px 이하에서 2열
+    500: 1, // 500px 이하에서 1열
+  };
 
   // PDF 다운로드 기능
   const downloadPDF = () => {
@@ -69,28 +73,34 @@ export default function PhotoList({
                 className='masonry-wrap'
                 style={{ display: "flex", flexWrap: "wrap", gap: 30 }}
               >
-                {userData
-                  ?.filter((el) => el.status === "approved")
-                  .map((el: User) => (
-                    <div
-                      key={Math.random().toString()}
-                      className='photo-wrap'
-                      onClick={() => handleDetail(el)}
-                      style={{ flexBasis: "calc(100%/3 - 30px)" }}
-                    >
-                      <div className='photo'>
-                        <Image
-                          src={el?.imageUrls?.[0]}
-                          alt=''
-                          width={500}
-                          height={500}
-                        />
+                <Masonry
+                  breakpointCols={breakpointColumnsObj}
+                  className='my-masonry-grid'
+                  columnClassName='my-masonry-grid_column'
+                >
+                  {userData
+                    ?.filter((el) => el.status === "approved")
+                    .map((el: User) => (
+                      <div
+                        key={Math.random().toString()}
+                        className='photo-wrap'
+                        onClick={() => handleDetail(el)}
+                        style={{ flexBasis: "calc(100%/3 - 30px)" }}
+                      >
+                        <div className='photo'>
+                          <Image
+                            src={el?.imageUrls?.[0]}
+                            alt=''
+                            width={500}
+                            height={500}
+                          />
+                        </div>
+                        <div className='text'>
+                          <div className='des'>{el?.magazine?.title}</div>
+                        </div>
                       </div>
-                      <div className='text'>
-                        <div className='des'>{el?.magazine?.title}</div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                </Masonry>
               </div>
             </div>
           </div>
