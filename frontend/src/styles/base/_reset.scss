@@ -204,3 +204,17 @@ a {
     margin-bottom: 15px;
   }
 }
+
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

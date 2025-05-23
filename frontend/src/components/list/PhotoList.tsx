@@ -8,6 +8,8 @@ import { calc } from "antd/es/theme/internal";
 import { UserData as User } from "@/type/user";
 import { extractTitleAndContent } from "@/util/common";
 import Masonry from "react-masonry-css";
+import html2pdf from "html2pdf.js";
+import { applyPDFStyles, removePDFStyles } from "@/type/pdf";
 
 export default function PhotoList({
   filterValue,
@@ -50,14 +52,227 @@ export default function PhotoList({
     500: 1, // 500px 이하에서 1열
   };
 
-  // PDF 다운로드 기능
+  // PDF 미리보기 기능 (새 탭에서 열기)
+  const previewPDF = () => {
+    const element = document.getElementById("photo-detail-album");
+    if (!element) {
+      console.error("PDF로 변환할 요소를 찾을 수 없습니다.");
+      return;
+    }
+
+    // PDF 생성 전 스타일 강제 적용
+    applyPDFStyles(element);
+
+    // 이미지 로딩 대기
+    const images = element.querySelectorAll("img");
+    const imagePromises = Array.from(images).map((img: Element) => {
+      const imgElement = img as HTMLImageElement;
+      if (imgElement.complete) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        imgElement.onload = resolve;
+        imgElement.onerror = resolve;
+      });
+    });
+
+    Promise.all(imagePromises).then(() => {
+      const A4_WIDTH_PX = 794;
+      const A4_HEIGHT_PX = 1123;
+
+      const options = {
+        margin: [10, 10, 10, 10],
+        filename: "photo-album-preview.pdf",
+        image: {
+          type: "jpeg",
+          quality: 0.92,
+        },
+        html2canvas: {
+          scale: 1.2,
+          useCORS: true,
+          allowTaint: true,
+          width: A4_WIDTH_PX,
+          height: A4_HEIGHT_PX,
+          windowWidth: A4_WIDTH_PX,
+          backgroundColor: "#ffffff",
+          logging: false,
+          imageTimeout: 15000,
+          removeContainer: true,
+        },
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait",
+        },
+      };
+
+      // PDF 생성 후 새 탭에서 미리보기
+      html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get("pdf")
+        .then((pdf) => {
+          // 새 탭에서 PDF 열기
+          window.open(pdf.output("bloburl"), "_blank");
+          console.log("PDF 미리보기가 새 탭에서 열렸습니다.");
+          // 스타일 원복
+          removePDFStyles(element);
+        })
+        .catch((error) => {
+          console.error("PDF 미리보기 중 오류가 발생했습니다:", error);
+          alert("PDF 미리보기 중 오류가 발생했습니다. 다시 시도해주세요.");
+          removePDFStyles(element);
+        });
+    });
+  };
+
+  // PDF 다운로드 기능 (html2pdf.js 사용)
   const downloadPDF = () => {
-    // const element = document.getElementById("photo-detail-album");
-    // if (!element) return;
-    // console.log("PDF 다운로드 기능 (실제 구현 필요)");
-    // alert(
-    //   "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
-    // );
+    const element = document.getElementById("photo-detail-album");
+    if (!element) {
+      console.error("PDF로 변환할 요소를 찾을 수 없습니다.");
+      return;
+    }
+
+    // PDF 생성 전 스타일 강제 적용 (SCSS 문제 해결)
+    applyPDFStyles(element);
+
+    // 이미지 로딩 대기
+    const images = element.querySelectorAll("img");
+    const imagePromises = Array.from(images).map((img: Element) => {
+      const imgElement = img as HTMLImageElement;
+      if (imgElement.complete) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        imgElement.onload = resolve;
+        imgElement.onerror = resolve; // 에러 시에도 진행
+      });
+    });
+
+    Promise.all(imagePromises).then(() => {
+      // A4 크기 고정 옵션 설정
+      const A4_WIDTH_MM = 210;
+      const A4_HEIGHT_MM = 297;
+      const A4_WIDTH_PX = A4_WIDTH_MM * 3.78; // 794px
+      const A4_HEIGHT_PX = A4_HEIGHT_MM * 3.78; // 1123px
+
+      const options = {
+        margin: [10, 10, 10, 10], // 여백 (mm)
+        filename: "photo-album.pdf", // 파일명
+        image: {
+          type: "jpeg",
+          quality: 0.92, // 이미지 품질 조정
+        },
+        html2canvas: {
+          scale: 1.2, // 스케일 약간 증가 (해상도 개선)
+          useCORS: true, // CORS 이슈 해결
+          allowTaint: true, // 외부 이미지 허용
+          width: A4_WIDTH_PX, // A4 너비로 고정 (794px)
+          height: A4_HEIGHT_PX, // A4 높이로 고정 (1123px)
+          windowWidth: A4_WIDTH_PX, // 윈도우 너비
+          backgroundColor: "#ffffff", // 배경색
+          logging: false, // 로깅 비활성화
+          imageTimeout: 15000, // 이미지 타임아웃 15초
+          removeContainer: true, // 컨테이너 제거로 성능 향상
+        },
+        jsPDF: {
+          unit: "mm", // 단위
+          format: "a4", // A4 크기
+          orientation: "portrait", // 세로 방향
+        },
+      };
+
+      // PDF 생성 및 다운로드
+      html2pdf()
+        .set(options)
+        .from(element)
+        .save()
+        .then(() => {
+          console.log("PDF 다운로드가 완료되었습니다.");
+          // 스타일 원복
+          removePDFStyles(element);
+        })
+        .catch((error) => {
+          console.error("PDF 생성 중 오류가 발생했습니다:", error);
+          alert("PDF 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
+          // 스타일 원복
+          removePDFStyles(element);
+        });
+    });
+  };
+
+  // HTML 미리보기 모드 (CSS 개발자 도구로 확인 가능)
+  const previewHTMLForPDF = () => {
+    const element = document.getElementById("photo-detail-album");
+    if (!element) {
+      console.error("미리보기할 요소를 찾을 수 없습니다.");
+      return;
+    }
+
+    // PDF용 스타일 적용
+    applyPDFStyles(element);
+
+    // 미리보기 모드 클래스 추가
+    element.classList.add("pdf-preview-mode");
+
+    // A4 크기로 페이지 스타일 조정
+    const A4_WIDTH_PX = 794;
+    const originalStyle = document.body.style.cssText;
+
+    document.body.style.cssText = `
+    margin: 0;
+    padding: 20px;
+    background-color: #gray;
+    font-family: Arial, sans-serif;
+  `;
+
+    // A4 크기 시뮬레이션을 위한 컨테이너 스타일
+    element.style.cssText += `
+    width: ${A4_WIDTH_PX}px;
+    min-height: 1123px;
+    background-color: white;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    position: relative;
+  `;
+
+    // 미리보기 종료 버튼 추가
+    const exitButton = document.createElement("button");
+    exitButton.innerHTML = "❌ 미리보기 종료";
+    exitButton.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 9999;
+    font-size: 14px;
+    font-weight: bold;
+  `;
+
+    exitButton.onclick = () => {
+      // 미리보기 모드 종료
+      element.classList.remove("pdf-preview-mode");
+      removePDFStyles(element);
+      document.body.style.cssText = originalStyle;
+      exitButton.remove();
+      console.log("미리보기 모드를 종료했습니다.");
+    };
+
+    document.body.appendChild(exitButton);
+
+    console.log("🎯 미리보기 모드 활성화!");
+    console.log(
+      "📖 개발자 도구를 열어서 .album-container, .polaroid 등의 CSS를 확인하세요."
+    );
+    console.log("🔧 스타일을 실시간으로 수정하여 테스트할 수 있습니다.");
+    console.log("❌ 우측 상단 버튼을 클릭하여 미리보기를 종료하세요.");
   };
 
   return (
@@ -245,6 +460,10 @@ export default function PhotoList({
             >
               포토카드 PDF로 다운로드
             </Button>
+            <button onClick={previewPDF}>PDF 미리보기</button>
+            <button onClick={previewHTMLForPDF}>
+              🔍 HTML 미리보기 (CSS 확인용)
+            </button>
           </div>
         </div>
       )}
