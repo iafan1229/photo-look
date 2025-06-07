@@ -47,16 +47,16 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     }
   };
 
-  const downloadPDF = () => {
-    const element = document.getElementById("album-container");
-    if (!element) return;
+  // const downloadPDF = () => {
+  //   const element = document.getElementById("album-container");
+  //   if (!element) return;
 
-    // 실제 구현에서는 html2pdf 라이브러리 사용
-    console.log("PDF 다운로드 기능 (실제 구현 필요)");
-    alert(
-      "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
-    );
-  };
+  //   // 실제 구현에서는 html2pdf 라이브러리 사용
+  //   console.log("PDF 다운로드 기능 (실제 구현 필요)");
+  //   alert(
+  //     "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
+  //   );
+  // };
 
   // 이미지 분석을 기반으로 스토리 설명 생성
   const generateStoryDescription = (imageIndex: number): string => {
@@ -89,7 +89,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 </div>
                 <div className='cover-photo-title'>
                   {images.map((el) => (
-                    <p>- {extractTitleAndContent(el.storyText).title}</p>
+                    <p>- {extractTitleAndContent(el.storyText).photoTitle}</p>
                   ))}
                 </div>
               </div>
@@ -111,14 +111,17 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
               </div>
 
               <div className='photo-title'>
-                {extractTitleAndContent(generateStoryDescription(index)).title}
+                {
+                  extractTitleAndContent(generateStoryDescription(index))
+                    .photoTitle
+                }
               </div>
 
               {generateStoryDescription(index) && (
                 <div className='photo-description'>
                   {
                     extractTitleAndContent(generateStoryDescription(index))
-                      .content
+                      .photoContent
                   }
                 </div>
               )}
@@ -140,11 +143,11 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
       </div>
       {images.length > 0 && (
         <>
-          {/* <div className='album-footer'>
+          <div className='album-footer'>
             <div className='album-buttons'>
-              <Button variant='light' onClick={downloadPDF}>
+              {/* <Button variant='light' onClick={downloadPDF}>
                 포토카드 PDF로 다운로드
-              </Button>
+              </Button> */}
               <Button
                 variant='light'
                 onClick={() => setShowVerification(!showVerification)}
@@ -153,7 +156,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 홈페이지에 등록 신청하기
               </Button>
             </div>
-          </div> */}
+          </div>
 
           {showVerification && (
             <div className='verification-dropdown'>

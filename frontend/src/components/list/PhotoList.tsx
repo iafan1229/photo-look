@@ -386,7 +386,9 @@ export default function PhotoList({
                       </div>
                       <div className='cover-photo-title'>
                         {detailUserData.magazine.analyzedImages.map((el) => (
-                          <p>- {extractTitleAndContent(el.storyText).title}</p>
+                          <p>
+                            - {extractTitleAndContent(el.storyText).photoTitle}
+                          </p>
                         ))}
                       </div>
                     </div>
@@ -411,7 +413,7 @@ export default function PhotoList({
                     {
                       extractTitleAndContent(
                         detailUserData.magazine.analyzedImages[index]?.storyText
-                      ).title
+                      ).photoTitle
                     }
                   </div>
 
@@ -423,7 +425,7 @@ export default function PhotoList({
                           extractTitleAndContent(
                             detailUserData.magazine.analyzedImages[index]
                               ?.storyText
-                          ).content
+                          ).photoContent
                         }
                       </div>
                     )}
