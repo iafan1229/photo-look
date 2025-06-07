@@ -47,27 +47,16 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
     }
   };
 
-  const downloadPDF = () => {
-    const element = document.getElementById("album-container");
-    if (!element) return;
+  // const downloadPDF = () => {
+  //   const element = document.getElementById("album-container");
+  //   if (!element) return;
 
-    // 실제 구현에서는 html2pdf 라이브러리 사용
-    console.log("PDF 다운로드 기능 (실제 구현 필요)");
-    alert(
-      "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
-    );
-  };
-
-  // 테마 설명 매핑
-  const themeDescriptions: Record<ThemeType, string> = {
-    travel: "특별한 여행 순간을 담은",
-    family: "소중한 가족과의 시간을 담은",
-    food: "맛있는 순간을 담은",
-    nature: "아름다운 자연을 담은",
-    city: "도시의 매력을 담은",
-    event: "특별한 이벤트를 담은",
-    auto: "특별한 순간을 담은",
-  };
+  //   // 실제 구현에서는 html2pdf 라이브러리 사용
+  //   console.log("PDF 다운로드 기능 (실제 구현 필요)");
+  //   alert(
+  //     "PDF 다운로드 기능은 실제 구현 시 html2pdf.js 라이브러리를 사용해야 합니다."
+  //   );
+  // };
 
   // 이미지 분석을 기반으로 스토리 설명 생성
   const generateStoryDescription = (imageIndex: number): string => {
@@ -85,17 +74,24 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
             <h1>{title || "나의 포토카드"}</h1>
 
             <div className='album-subtitle'>
-              {themeDescriptions[theme]} 이야기
+              {extractTitleAndContent(images[0]?.storyText).theme}
             </div>
 
             {images.length > 0 && (
-              <div className='cover-photo-container'>
-                <Image
-                  src={images[0].dataUrl}
-                  alt='Cover'
-                  width={500}
-                  height={500}
-                />
+              <div className='cover-photo-wrapper'>
+                <div className='cover-photo-container'>
+                  <Image
+                    src={images[0].dataUrl}
+                    alt='Cover'
+                    width={500}
+                    height={500}
+                  />
+                </div>
+                <div className='cover-photo-title'>
+                  {images.map((el) => (
+                    <p>- {extractTitleAndContent(el.storyText).photoTitle}</p>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -115,14 +111,17 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
               </div>
 
               <div className='photo-title'>
-                {extractTitleAndContent(generateStoryDescription(index)).title}
+                {
+                  extractTitleAndContent(generateStoryDescription(index))
+                    .photoTitle
+                }
               </div>
 
               {generateStoryDescription(index) && (
                 <div className='photo-description'>
                   {
                     extractTitleAndContent(generateStoryDescription(index))
-                      .content
+                      .photoContent
                   }
                 </div>
               )}
@@ -146,9 +145,9 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
         <>
           <div className='album-footer'>
             <div className='album-buttons'>
-              <Button variant='light' onClick={downloadPDF}>
+              {/* <Button variant='light' onClick={downloadPDF}>
                 포토카드 PDF로 다운로드
-              </Button>
+              </Button> */}
               <Button
                 variant='light'
                 onClick={() => setShowVerification(!showVerification)}

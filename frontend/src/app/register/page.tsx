@@ -40,9 +40,31 @@ const Main: React.FC = () => {
   const [progressMessage, setProgressMessage] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<AIModelType>("gemini");
 
+  const ALLOWED_EXTENSIONS = ["jpeg", "jpg", "gif", "png"];
+
+  // 파일 유효성 검사 함수
+  const isValidImageFile = (file: File | null): boolean => {
+    if (!file) return false;
+
+    // 파일 확장자 추출 함수
+    const getFileExtension = (fileName: string): string => {
+      return fileName.split(".").pop()?.toLowerCase() || "";
+    };
+    // 파일 확장자 검사
+    const extension = getFileExtension(file.name);
+
+    return ALLOWED_EXTENSIONS.includes(extension);
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
 
+    const files = Array.from(e.target.files);
+    const hasInvalidFile = files.some((file) => !isValidImageFile(file));
+
+    if (hasInvalidFile) {
+      setError("jpeg, jpg, gif, png 형식의 이미지 파일만 업로드 가능합니다.");
+      return;
+    }
     const fileList = Array.from(e.target.files);
 
     const imagePromises = fileList.map((file) => {
@@ -203,7 +225,7 @@ const Main: React.FC = () => {
             <Card.Header>사진 업로드</Card.Header>
             <Card.Body>
               <Form.Group controlId='formFileMultiple' className='mb-3'>
-                <Form.Label>여러 장의 사진을 선택하세요</Form.Label>
+                <Form.Label>한 번에 여러 장의 사진을 선택하세요</Form.Label>
                 <Form.Control
                   type='file'
                   multiple
@@ -270,7 +292,7 @@ const Main: React.FC = () => {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group className='mb-3'>
+              {/* <Form.Group className='mb-3'>
                 <Form.Label>매거진 스타일</Form.Label>
                 <Form.Select
                   value={magazineStyle}
@@ -283,7 +305,7 @@ const Main: React.FC = () => {
                   <option value='minimalist'>미니멀리스트</option>
                   <option value='vibrant'>비비드</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
             </Card.Body>
           </Card>
 

@@ -67,41 +67,58 @@ const AboutPage = () => {
       {/* 핵심 가치 섹션 */}
       <section className='values-section'>
         <div className='container'>
-          <h2 className='section-title'>핵심 가치</h2>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} md={8}>
-              <Card className='value-card'>
-                <div className='value-icon'>
-                  <HeartOutlined />
+          <h2 className='section-title'>사용 가이드</h2>
+          <p style={{ textAlign: "center", paddingBottom: 10 }}>
+            클릭시에 가이드 예시 이미지가 뜹니다.
+          </p>
+          <Row gutter={[20, 0]}>
+            <Col xs={24} sm={24} md={8} lg={8} className='card-guide'>
+              <Card className='value-card' style={{ padding: 0 }}>
+                <div className='card-img'>
+                  <Link href='/img/guide-1.png' target='_blank'>
+                    <img src='/img/guide-1.png' alt='' />
+                  </Link>
                 </div>
-                <h3>감성을 담습니다</h3>
-                <p>
-                  단순한 사진이 아닌, 이야기와 감정이 담긴 포토카드를 만듭니다.
-                </p>
+                <div className='card-content'>
+                  <h4>이미지를 업로드하세요.</h4>
+                  <p>
+                    단순한 사진이 아닌, 이야기와 감정이 담긴
+                    <br /> 포토카드 및 앨범을 만들어냅니다.
+                  </p>
+                </div>
               </Card>
             </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card className='value-card'>
-                <div className='value-icon'>
-                  <RocketOutlined />
+            <Col xs={24} sm={24} md={8} lg={8} className='card-guide'>
+              <Card className='value-card' style={{ padding: 0 }}>
+                <div className='card-img'>
+                  <Link href='/img/guide-2.png' target='_blank'>
+                    <img src='/img/guide-2.png' alt='' />
+                  </Link>
                 </div>
-                <h3>혁신을 추구합니다</h3>
-                <p>
-                  최신 AI 기술을 활용하여 사용자 경험을 개선합니다. 디지털
-                  시대의 새로운 추억 보관 방식을 제시합니다.
-                </p>
+                <div className='card-congtent'>
+                  <h4>포토 앨범을 등록 신청하세요.</h4>
+                  <p>
+                    신청한 포토 카드를 관리자의 검수를 거쳐 <br /> Photo-look
+                    사이트에 등록합니다.
+                  </p>
+                </div>
               </Card>
             </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card className='value-card'>
-                <div className='value-icon'>
-                  <LockOutlined />
+            <Col xs={24} sm={24} md={8} lg={8} className='card-guide'>
+              <Card className='value-card' style={{ padding: 0 }}>
+                <div className='card-img'>
+                  <Link href='/img/guide-3.png' target='_blank'>
+                    <img src='/img/guide-3.png' alt='' />
+                  </Link>
                 </div>
-                <h3>편리함의 최적화</h3>
-                <p>
-                  추억을 쉽고 빠르게 저장할 수 있도록 돕습니다. 의미 있는 추억을
-                  온라인으로 더 오래 간직할 수 있도록 돕습니다.
-                </p>
+                <div className='card-content'>
+                  <h4>사이트에서 앨범을 확인해 보세요</h4>
+                  <p>
+                    의미 있는 추억을 사이트 위에서 확인하고
+                    <br />
+                    사용자와 경험을 공유해보세요
+                  </p>
+                </div>
               </Card>
             </Col>
           </Row>
@@ -126,8 +143,8 @@ const AboutPage = () => {
                 <h3>이하영</h3>
                 <p className='member-role'>Web Developer</p>
                 <p className='member-bio'>
-                  Photo Look 프로젝트에서 기획 / 디자인 <br />
-                  그리고 풀스택 개발을 진행했습니다.
+                  포토 카드를 생성하는 Photo Look 프로젝트의 <br />
+                  기획 / 디자인 그리고 풀스택 개발을 진행했습니다.
                 </p>
               </div>
             </Col>

@@ -28,11 +28,24 @@ export const generateGeminiApi = async ({
           {
             parts: [
               {
-                text: `당신은 사진을 보고 매거진 기사를 작성하는 작가입니다. 전체 사진의 목차를 작성하고 있습니다.
-                다음 이미지 라벨을 기반으로 자연스러운 ${theme} 테마의 짧은 매거진 제목과 내용을 생성해 주세요.    
-                전체 ${totalImages}장 중 ${imageIndex + 1}번째 이미지입니다. 
-                스토리가 자연스럽게 흘러가도록 제목을 만들어 주세요. 한국어로 작성해 주세요. 
-                제목과 내용을 간결하게 작성해 주세요. (제목 20자 이내, 내용 100자 이내) 제목은 aiTitle이라는 key에 value로 저장하고, 내용은 aiContent라는 key에 value로 저장해 주세요.
+                text: `당신은 감성적이고 창의적인 포토 카드 텍스트를 작성하는 작가입니다.
+                다음 이미지 라벨을 기반으로 ${theme} 테마에 맞는 포토 카드용 텍스트를 생성해 주세요.
+                
+                포토 카드 텍스트 작성 가이드:
+                - 감성적이고 시적인 표현 사용
+                - 한 눈에 들어오는 짧고 임팩트 있는 문구
+                - 보는 사람의 마음에 울림을 주는 내용
+                - SNS에서 공유하고 싶어지는 매력적인 표현
+                
+                전체 ${totalImages}장 중 ${imageIndex + 1}번째 포토 카드입니다.
+                각 카드가 독립적이면서도 전체적으로 조화를 이루도록 작성해 주세요.
+                
+                한국어로 작성하며, 다음 형식으로 답변해 주세요:
+                - 메인 텍스트: 10-15자 이내의 핵심 메시지 (photoTitle)
+                - 서브 텍스트: 50-60자 이내의 감성적 설명 (photoContent)
+                - 포토 카드 테마: ${theme}
+                
+                JSON 형식으로 photoTitle과 photoContent를 key로 하여 응답해 주세요.
                 
                 이미지 라벨: ${imageLabels.join(", ")}`,
               },
@@ -40,8 +53,8 @@ export const generateGeminiApi = async ({
           },
         ],
         generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 250,
+          temperature: 0.8,
+          maxOutputTokens: 200,
         },
       }
     );
@@ -51,7 +64,7 @@ export const generateGeminiApi = async ({
       return response.data.candidates[0].content.parts[0].text;
     }
 
-    return "이미지에 대한 이야기를 생성할 수 없습니다.";
+    return "포토 카드 텍스트를 생성할 수 없습니다.";
   } catch (error) {
     console.error("Google Gemini API 호출 중 오류:", error);
     if (axios.isAxiosError(error) && error.response) {
@@ -61,6 +74,6 @@ export const generateGeminiApi = async ({
         )}`
       );
     }
-    throw new Error("텍스트 생성 중 오류가 발생했습니다.");
+    throw new Error("포토 카드 텍스트 생성 중 오류가 발생했습니다.");
   }
 };
