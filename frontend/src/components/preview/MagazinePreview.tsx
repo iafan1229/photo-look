@@ -80,7 +80,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
             {images.length > 0 && (
               <div className='cover-photo-wrapper'>
                 <div className='cover-photo-container'>
-                  <Image
+                  <img
                     src={images[0].dataUrl}
                     alt='Cover'
                     width={500}
@@ -102,7 +102,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
           {images.map((image, index) => (
             <div key={index} className='polaroid'>
               <div className='photo-container'>
-                <Image
+                <img
                   src={image.dataUrl}
                   alt={`Album image ${index + 1}`}
                   width={500}

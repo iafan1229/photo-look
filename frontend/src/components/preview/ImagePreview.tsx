@@ -15,7 +15,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
         (image: { dataUrl: string | StaticImport }, index: number) => (
           <div key={index}>
             <div className='image-wrap'>
-              <Image
+              <img
                 src={image.dataUrl}
                 alt={`Preview ${index + 1}`}
                 className='img-preview'

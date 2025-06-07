@@ -28,6 +28,7 @@ export default function Slider({
 
     fetchData();
   }, [filterValue, searchValue]);
+
   return (
     <div className='top-list'>
       <Swiper
