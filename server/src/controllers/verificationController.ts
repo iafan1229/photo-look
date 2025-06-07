@@ -64,7 +64,7 @@ const uploadToS3AndNotify = async (
       const fileName = `${imageId}.${fileExtension}`;
 
       const uploadParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME || "your-bucket-name",
+        Bucket: process.env.AWS_S3_BUCKET_NAME || "photo-look-bucket",
         Key: `magazine-images/${fileName}`,
         Body: buffer,
         ContentType: `image/${fileExtension}`,
