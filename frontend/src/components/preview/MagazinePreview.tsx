@@ -140,7 +140,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
       </div>
       {images.length > 0 && (
         <>
-          <div className='album-footer'>
+          {/* <div className='album-footer'>
             <div className='album-buttons'>
               <Button variant='light' onClick={downloadPDF}>
                 포토카드 PDF로 다운로드
@@ -153,7 +153,7 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 홈페이지에 등록 신청하기
               </Button>
             </div>
-          </div>
+          </div> */}
 
           {showVerification && (
             <div className='verification-dropdown'>
