@@ -21,13 +21,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "photolookbucket.s3.ap-northeast-2.amazonaws.com",
-        port: "",
-        pathname: "/**", // 모든 경로 허용으로 변경
-      },
-      {
-        protocol: "https",
-        hostname: "photolookbucket1.s3.ap-northeast-2.amazonaws.com",
+        hostname: "photo-look-bucket.s3.ap-northeast-2.amazonaws.com",
         port: "",
         pathname: "/**", // 모든 경로 허용으로 변경
       },
