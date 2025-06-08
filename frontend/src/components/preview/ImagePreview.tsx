@@ -1,7 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Image from "next/image";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { ImagePreviewProps } from "@/type/preview";
 
 const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
@@ -11,21 +10,19 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
 
   return (
     <Row className='image-preview-container'>
-      {images.map(
-        (image: { dataUrl: string | StaticImport }, index: number) => (
-          <div key={index}>
-            <div className='image-wrap'>
-              <img
-                src={image.dataUrl}
-                alt={`Preview ${index + 1}`}
-                className='img-preview'
-                width={300}
-                height={300}
-              />
-            </div>
+      {images.map((image: { dataUrl: string | undefined }, index: number) => (
+        <div key={index}>
+          <div className='image-wrap'>
+            <img
+              src={image.dataUrl}
+              alt={`Preview ${index + 1}`}
+              className='img-preview'
+              width={300}
+              height={300}
+            />
           </div>
-        )
-      )}
+        </div>
+      ))}
     </Row>
   );
 };
