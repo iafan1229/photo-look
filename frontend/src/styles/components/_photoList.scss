@@ -19,6 +19,22 @@ section {
       max-width: 80%;
       margin: 0 auto;
       .masonry-wrap {
+        .photo-wrap {
+          border: 8px solid rgb(230, 226, 226);
+          overflow: hidden;
+          .photo,
+          .text {
+            overflow: hidden;
+          }
+          .photo {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+          }
+          .text {
+            border-bottom-left-radius: 1px solid gray;
+            border-bottom-right-radius: 1px solid gray;
+          }
+        }
         > div {
           &:nth-of-type(2n) {
             .photo-wrap {
@@ -26,21 +42,21 @@ section {
               display: flex;
               flex-direction: column-reverse;
               .text {
-                background-color: rgb(232, 203, 255);
+                background-color: #fbfcdb;
               }
             }
           }
           &:nth-of-type(2n + 1) {
             .photo-wrap {
               .text {
-                background-color: #c4daff;
+                background-color: #fbfcdb;
               }
             }
           }
         }
       }
       .photo-wrap {
-        border-radius: 16px;
+        border-radius: 8px;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
           rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 
