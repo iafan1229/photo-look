@@ -42,29 +42,66 @@ const Main: React.FC = () => {
 
   const ALLOWED_EXTENSIONS = ["jpeg", "jpg", "gif", "png"];
 
-  // 파일 유효성 검사 함수
-  const isValidImageFile = (file: File | null): boolean => {
-    if (!file) return false;
+  // 파일 유효성 검사 함수 (확장자 + 크기 통합 검증)
+  const isValidImageFile = (
+    file: File | null
+  ): { isValid: boolean; error?: string } => {
+    if (!file) return { isValid: false, error: "파일이 선택되지 않았습니다." };
 
-    // 파일 확장자 추출 함수
+    // 파일 확장자 검사
     const getFileExtension = (fileName: string): string => {
       return fileName.split(".").pop()?.toLowerCase() || "";
     };
-    // 파일 확장자 검사
-    const extension = getFileExtension(file.name);
 
-    return ALLOWED_EXTENSIONS.includes(extension);
+    const extension = getFileExtension(file.name);
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      return {
+        isValid: false,
+        error: "jpeg, jpg, gif, png 형식의 이미지 파일만 업로드 가능합니다.",
+      };
+    }
+
+    // 개별 파일 크기 검사 (10MB)
+    const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSizeInBytes) {
+      const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+      return {
+        isValid: false,
+        error: `파일 크기가 너무 큽니다. ${file.name} (${fileSizeMB}MB) - 최대 10MB까지 가능합니다.`,
+      };
+    }
+
+    return { isValid: true };
   };
+
+  // handleFileChange 함수 (통합된 검증 로직)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
 
     const files = Array.from(e.target.files);
-    const hasInvalidFile = files.some((file) => !isValidImageFile(file));
 
-    if (hasInvalidFile) {
-      setError("jpeg, jpg, gif, png 형식의 이미지 파일만 업로드 가능합니다.");
+    // 개별 파일 검증 (확장자 + 크기)
+    for (const file of files) {
+      const validation = isValidImageFile(file);
+      if (!validation.isValid) {
+        setError(validation.error || "파일 검증 중 오류가 발생했습니다.");
+        return;
+      }
+    }
+
+    // 전체 파일 크기 검증 (10MB)
+    const totalSize = files.reduce((total, file) => total + file.size, 0);
+    const maxTotalSizeInBytes = 10 * 1024 * 1024; // 10MB
+
+    if (totalSize > maxTotalSizeInBytes) {
+      const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2);
+      setError(
+        `전체 파일 크기가 10MB를 초과합니다. 현재 크기: ${totalSizeMB}MB`
+      );
       return;
     }
+
+    // 모든 검증 통과 시 기존 파일 처리 로직 실행
     const fileList = Array.from(e.target.files);
 
     const imagePromises = fileList.map((file) => {
