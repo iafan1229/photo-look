@@ -1,0 +1,218 @@
+// Footer Styles with modern design
+
+// Footer Styles
+.site-footer {
+  margin-top: 80px;
+  background-color: rgb(64, 47, 117);
+  color: rgba(255, 255, 255, 0.8);
+
+  position: relative;
+
+  .footer-container {
+    padding-top: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  // Footer Sections
+  .footer-section {
+    h3 {
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.8rem;
+      font-weight: 600;
+
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(to right, $primary-color, $secondary-color);
+        border-radius: 10px;
+      }
+    }
+  }
+
+  // Logo and Description
+  .footer-logo {
+    margin-bottom: 1.5rem;
+    width: 300px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .footer-description {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+
+  // Footer Links
+  .footer-links {
+    list-style: none;
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 15px;
+
+    li {
+      position: relative;
+
+      a {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        transition: $transition;
+        padding-left: 15px;
+        display: block;
+        position: relative;
+        text-decoration: none !important;
+
+        &:before {
+          content: "›";
+          position: absolute;
+          left: 0;
+          color: $primary-color;
+          font-size: 1.2rem;
+          line-height: 1;
+          transition: $transition;
+          opacity: 0.8;
+        }
+
+        &:hover {
+          color: white;
+          padding-left: 20px;
+
+          &:before {
+            opacity: 1;
+            left: 5px;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Contact Info
+  .contact-info {
+    margin-top: 1.5rem;
+
+    p {
+      margin-bottom: 8px;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+  }
+
+  // Footer Bottom
+  .footer-bottom {
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .copyright {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+
+      a {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        transition: $transition;
+
+        &:hover {
+          color: white;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+
+      .copyright {
+        order: 2;
+      }
+
+      .footer-bottom-links {
+        order: 1;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 992px) {
+    padding: 60px 0 0;
+
+    .footer-section {
+      h3 {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-section {
+      text-align: center;
+
+      h3:after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    .social-links {
+      justify-content: center;
+    }
+
+    .footer-links {
+      display: block;
+      text-align: center;
+
+      li {
+        margin-bottom: 10px;
+
+        a {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+// Animation for social icons
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba($primary-color, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0);
+  }
+}
+
+.site-footer .social-links a:hover {
+  animation: pulse 1.5s infinite;
+}

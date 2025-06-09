@@ -1,0 +1,151 @@
+.img-preview {
+  width: 100%;
+  // height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.magazine-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.magazine-page {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 30px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cover-page {
+  text-align: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.modern .cover-page {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+}
+
+.classic .cover-page {
+  background-color: #f8f9fa;
+  border: 10px solid #343a40;
+  color: #343a40;
+}
+
+.minimalist .cover-page {
+  background-color: #ffffff;
+  color: #212529;
+  border: 1px solid #dee2e6;
+}
+
+.vibrant .cover-page {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: #212529;
+}
+
+.magazine-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.magazine-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.cover-image-container {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.cover-image {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content-page {
+  position: relative;
+}
+
+.modern .content-page {
+  border-top: 4px solid #6e8efb;
+}
+
+.classic .content-page {
+  border: 1px solid #343a40;
+  background-color: #f8f9fa;
+}
+
+.minimalist .content-page {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.vibrant .content-page {
+  border-radius: 10px;
+  background-color: #fff;
+  border-bottom: 4px solid #ff9a9e;
+}
+
+.page-title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.image-container {
+  margin-bottom: 1.5rem;
+}
+
+.story-image {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.image-caption {
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 1rem;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.tag {
+  background-color: #e9ecef;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.text-extract {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 4px;
+  border-left: 3px solid #6c757d;
+}
+
+.image-preview-container {
+  gap: 10px;
+  > div {
+    width: calc(100% / 3 - 10px);
+    height: 100px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+  }
+}

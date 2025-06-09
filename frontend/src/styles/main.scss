@@ -1,0 +1,84 @@
+//base
+@import "./base/reset";
+@import "./base/font";
+@import "./base/color";
+@import "./base/mixin";
+
+//components
+@import "./components/about";
+@import "./components/photoList";
+@import "./components/topList";
+@import "./components/slider";
+@import "./components/form";
+@import "./components/preview";
+
+//layout
+@import "./layout/header";
+@import "./layout/footer";
+
+@import "./responsive";
+h1 {
+  font-family: "SBAggroB", sans-serif;
+}
+
+section {
+  &.filter-section {
+    margin: 0 auto;
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: 5px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 15px;
+    .filter {
+      padding: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      > .filter-select {
+        flex: 1;
+        max-width: 140px;
+        .ant-select {
+          border-radius: 3px;
+        }
+      }
+      > .filter-input {
+        flex: 1;
+        width: 100%;
+        input {
+          width: 100%;
+          background-color: rgb(252, 242, 255);
+          font-size: 13px;
+        }
+      }
+      > .select-filter {
+        max-width: 20%;
+      }
+    }
+  }
+
+  .title {
+    padding: 30px 10px;
+    h1 {
+      font-size: 35px;
+      padding-bottom: 10px;
+    }
+    > p {
+      padding-left: 5px;
+    }
+    @include flex;
+    flex-direction: column;
+  }
+}
+.image-wrap {
+  position: relative;
+  width: 100%;
+  img {
+    object-fit: cover;
+  }
+}
+img {
+  object-fit: contain;
+}

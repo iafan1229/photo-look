@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - server
+    restart: always
+    networks:
+      - app-network
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./frontend/.env
+    restart: always
+    networks:
+      - app-network
+    volumes:
+      - frontend_uploads:/app/public/uploads
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - TS_NODE_PROJECT=tsconfig.json
+    env_file:
+      - ./server/.env
+    restart: always
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 192M
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  frontend_uploads:
+    driver: local

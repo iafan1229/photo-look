@@ -1,0 +1,337 @@
+section {
+  .main-description {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 720px;
+    margin: 1rem auto 1rem;
+    color: #333;
+    text-align: center;
+    position: relative;
+    padding: 2rem 0;
+
+    strong {
+      font-weight: 500;
+      color: #3a86ff;
+    }
+  }
+  .list {
+    &.photos {
+      max-width: 80%;
+      margin: 0 auto;
+      .masonry-wrap {
+        .photo-wrap {
+          border: 1px solid #c2b3ef;
+          overflow: hidden;
+          .photo,
+          .text {
+            overflow: hidden;
+          }
+          .photo {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+          }
+          .text {
+            border-bottom-left-radius: 1px solid #c2b3ef;
+            border-bottom-right-radius: 1px solid #c2b3ef;
+          }
+        }
+        > div {
+          &:nth-of-type(2n) {
+            .photo-wrap {
+              position: relative;
+              display: flex;
+              flex-direction: column-reverse;
+              .text {
+                border-top: 2px solid #c2b3ef;
+                background-color: rgb(107, 77, 138);
+                font-family: "CookieRun-Regular";
+              }
+            }
+          }
+          &:nth-of-type(2n + 1) {
+            .photo-wrap {
+              .text {
+                border-top: 2px solid #c2b3ef;
+                background-color: rgb(245, 239, 251);
+                .des {
+                  font-family: "CookieRun-Regular";
+                }
+              }
+            }
+          }
+        }
+      }
+      .photo-wrap {
+        border-radius: 8px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+        @include image;
+        cursor: pointer;
+        .text {
+          padding: 20px;
+          .artist {
+            font-weight: bold;
+            font-size: 22px;
+            padding-bottom: 10px;
+          }
+          .des {
+            line-height: 1.2;
+          }
+        }
+      }
+    }
+  }
+}
+:where(.css-dev-only-do-not-override-p0fwez).ant-image-preview-root
+  .ant-image-preview-img {
+  max-width: 60vw;
+  object-fit: contain;
+}
+
+// 포토카드 스타일 변수 - 그레이 & 화이트 톤
+$album-bg-color: #f9f9f9; // 밝은 회색빛 배경
+$album-dark-brown: #3c3c3c; // 다크 그레이 (기존의 다크 브라운 대체)
+$album-gold: #b0b0b0; // 중간 톤의 그레이 (기존 골드 대체)
+$album-light-gold: #d0d0d0; // 밝은 그레이 (기존 라이트 골드 대체)
+$album-cream: #e8e8e8; // 매우 밝은 그레이 (기존 크림 대체)
+$album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대체)
+// 포토 디테일 모달
+.photo-detail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+
+  .close-button {
+    margin-top: 10px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: white;
+    background-color: transparent;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1010;
+  }
+
+  // 포토카드 컨테이너
+  .album-container {
+    font-family: "Ownglyph_corncorn-Rg";
+    max-height: 90vh;
+    overflow-y: auto;
+    background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    padding: 30px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    // 포토카드 표지
+    .album-cover {
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      background-color: white;
+      .album-cover-inner {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .date {
+          text-align: left;
+        }
+        h1 {
+          font-size: 28px;
+          margin-bottom: 10px;
+          text-align: center;
+        }
+
+        h1.index {
+          font-family: "SBAggroB", sans-serif;
+        }
+        .album-subtitle {
+          margin-bottom: 15px;
+          text-align: center;
+          font-size: 16px;
+          color: black;
+        }
+
+        .album-info {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          font-size: 14px;
+        }
+
+        .cover-photo-wrapper {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          gap: 30px;
+          padding: 30px;
+          background-image: linear-gradient(120deg, #fdfbfb 0%, #f3f3f4 100%);
+          .cover-photo-container {
+            padding: 10px;
+            background-color: #fff;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 10px 0 15px;
+
+            img {
+              width: 100%;
+              height: auto;
+              display: block;
+            }
+          }
+          .cover-photo-title {
+            height: 100%;
+            font-family: "Ownglyph_corncorn-Rg";
+            line-height: 1.5;
+          }
+        }
+      }
+    }
+
+    // 포토카드 페이지 내용
+    .album-pages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      justify-content: center;
+      padding: 10px;
+
+      .polaroid {
+        background-color: white;
+        box-shadow: "0 4px 10px rgba(0, 0, 0, 0.15)";
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        max-width: 300px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        .photo-container {
+          padding-top: 10px;
+          margin-bottom: 12px;
+          height: 300px;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+          }
+        }
+
+        .photo-title {
+          font-size: 16px;
+          font-family: "CookieRun-Regular";
+          line-height: 1.5;
+          padding-bottom: 5px;
+        }
+
+        .photo-description {
+          background-color: #fbfcdb;
+          // background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+          padding: 5px 10px;
+          font-size: 14px;
+          box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          font-family: "Ownglyph_corncorn-Rg";
+          line-height: 1.5;
+        }
+
+        .photo-tags {
+          padding-top: 20px;
+          display: flex;
+          gap: 5px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+
+          .tag {
+            background-color: #6a4c3b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+        }
+      }
+    }
+  }
+
+  // 포토카드 푸터
+  .album-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+
+    button {
+      background-color: $album-dark-brown;
+      border: transparent;
+      color: white;
+      font-weight: bold;
+    }
+  }
+  &.preview {
+    position: relative;
+    background-color: white;
+    max-height: none;
+    height: auto;
+    .album-container {
+      max-height: none;
+      height: auto;
+    }
+  }
+
+  // 모바일 반응형
+  @media (max-width: 768px) {
+    .photo-detail {
+      .album-container {
+        padding: 15px;
+
+        .album-pages {
+          gap: 30px;
+
+          .polaroid {
+            width: 100%;
+            max-width: none;
+          }
+        }
+      }
+
+      .album-footer {
+        .album-buttons {
+          flex-direction: column;
+
+          button {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+}
