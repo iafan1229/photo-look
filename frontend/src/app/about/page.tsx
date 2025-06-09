@@ -71,7 +71,7 @@ const AboutPage = () => {
           <p style={{ textAlign: "center", paddingBottom: 10 }}>
             클릭시에 가이드 예시 이미지가 뜹니다.
           </p>
-          <Row gutter={[20, 0]}>
+          <Row gutter={[20, 20]}>
             <Col xs={24} sm={24} md={8} lg={8} className='card-guide'>
               <Card className='value-card' style={{ padding: 0 }}>
                 <div className='card-img'>
@@ -134,7 +134,7 @@ const AboutPage = () => {
               <div className='team-member'>
                 <div className='member-photo'>
                   <Image
-                    src='/img/creator.png'
+                    src='/img/admin.jpeg'
                     alt='팀원 사진'
                     width={200}
                     height={200}

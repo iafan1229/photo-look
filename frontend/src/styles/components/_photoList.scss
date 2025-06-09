@@ -101,14 +101,12 @@ $album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대
   position: fixed;
   top: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   .close-button {
     margin-top: 10px;
@@ -179,10 +177,12 @@ $album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대
         }
 
         .cover-photo-wrapper {
+          width: 100%;
           display: flex;
+          justify-content: center;
           align-items: center;
           height: 100%;
-          gap: 10px;
+          gap: 30px;
           padding: 30px;
           background-image: linear-gradient(120deg, #fdfbfb 0%, #f3f3f4 100%);
           .cover-photo-container {

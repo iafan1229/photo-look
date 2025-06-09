@@ -12,11 +12,10 @@ const Footer = () => {
           <Col xs={24} sm={24} md={8} lg={8}>
             <div className='footer-section'>
               <div className='footer-logo'>
-                <Image
-                  src='/img/photo-look-logo-dark-bg.svg'
+                <img
+                  src='/img/logo-dark-png.png'
                   alt='Photo Look 로고'
                   width={150}
-                  height={40}
                 />
               </div>
             </div>

@@ -40,6 +40,22 @@ export default function Slider({
         slidesPerView={5}
         loop
         className='mySwiper'
+        breakpoints={{
+          370: {
+            slidesPerView: 1,
+            centeredSlides: true,
+            spaceBetween: 10,
+          },
+          // 큰 모바일 (480px 이상)
+          500: {
+            slidesPerView: 1.2,
+            centeredSlides: true,
+          },
+          // 태블릿 (768px 이상)
+          768: {
+            slidesPerView: 2,
+          },
+        }}
       >
         {userData?.length &&
           userData

@@ -75,7 +75,6 @@ export default function PhotoList({
                         key={i}
                         className='photo-wrap'
                         onClick={() => handleDetail(el)}
-                        style={{ flexBasis: "calc(100%/3 - 30px)" }}
                       >
                         <div className='photo'>
                           <img

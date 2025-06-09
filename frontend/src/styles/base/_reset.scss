@@ -185,36 +185,3 @@ a {
   color: #666;
   line-height: 1.5;
 }
-
-/* 반응형 추가 조정 */
-@media (max-width: 500px) {
-  .masonry-container {
-    padding: 10px;
-  }
-
-  .my-masonry-grid {
-    margin-left: -10px;
-  }
-
-  .my-masonry-grid_column {
-    padding-left: 10px;
-  }
-
-  .masonry-item {
-    margin-bottom: 15px;
-  }
-}
-
-.page-break-before {
-  page-break-before: always;
-}
-
-.page-break-after {
-  page-break-after: always;
-}
-
-@media print {
-  .no-print {
-    display: none !important;
-  }
-}

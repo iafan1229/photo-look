@@ -1,0 +1,99 @@
+@media screen and (max-width: 768px) {
+  .photo-detail {
+    .album-container {
+      .album-cover {
+        .cover-photo-wrapper {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+  .site-footer {
+    overflow: hidden;
+    margin-top: 30px;
+    padding: 0;
+    position: relative;
+    .ant-row {
+      row-gap: 0 !important;
+      display: flex;
+      > div:firtst-child {
+        max-width: auto !important;
+      }
+      .footer-section {
+        .footer-logo {
+          width: 30vw;
+          position: absolute;
+          top: 10px;
+          right: 20px;
+        }
+        .footer-links {
+          padding: 20px;
+          * {
+            text-align: left;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 500px) {
+  .photo-detail {
+    .album-container {
+      max-height: 80vh;
+      margin-top: 20px;
+    }
+  }
+  header {
+    margin-top: 10px;
+  }
+  header > div {
+    padding: 0;
+
+    flex-direction: column;
+    padding-bottom: 30px;
+  }
+  .my-masonry-grid_column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  .main-description {
+    font-size: 14px !important;
+    padding: 0 10px !important;
+  }
+
+  .swiper {
+    .swiper-wrapper {
+      width: auto;
+      height: 300px;
+
+      .swiper-slide {
+        width: 100%;
+        border: 10px solid white;
+        padding: 0;
+      }
+    }
+  }
+  .about-page .cta-section {
+    h2 {
+      font-size: 1.8rem;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+/* 반응형 추가 조정 */
+@media (max-width: 370px) {
+  .album-cover-inner {
+    h1 {
+      line-height: 1.4;
+    }
+    .album-subtitle + .date > p {
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+}

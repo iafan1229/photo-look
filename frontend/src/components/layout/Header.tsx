@@ -12,8 +12,8 @@ export default function Header() {
           <h1>
             <Link href='/photo' style={{ color: "white" }}>
               <div className='header-logo'>
-                <Image
-                  src='/img/photo-look-logo.svg'
+                <img
+                  src='/img/logo-png.png'
                   alt='Photo Look 로고'
                   width={300}
                   height={100}
