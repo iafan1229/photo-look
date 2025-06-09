@@ -20,7 +20,7 @@ section {
       margin: 0 auto;
       .masonry-wrap {
         .photo-wrap {
-          border: 8px solid rgb(230, 226, 226);
+          border: 1px solid #c2b3ef;
           overflow: hidden;
           .photo,
           .text {
@@ -31,8 +31,8 @@ section {
             border-top-right-radius: 6px;
           }
           .text {
-            border-bottom-left-radius: 1px solid gray;
-            border-bottom-right-radius: 1px solid gray;
+            border-bottom-left-radius: 1px solid #c2b3ef;
+            border-bottom-right-radius: 1px solid #c2b3ef;
           }
         }
         > div {
@@ -42,14 +42,20 @@ section {
               display: flex;
               flex-direction: column-reverse;
               .text {
-                background-color: #fbfcdb;
+                border-top: 2px solid #c2b3ef;
+                background-color: rgb(107, 77, 138);
+                font-family: "CookieRun-Regular";
               }
             }
           }
           &:nth-of-type(2n + 1) {
             .photo-wrap {
               .text {
-                background-color: #fbfcdb;
+                border-top: 2px solid #c2b3ef;
+                background-color: rgb(245, 239, 251);
+                .des {
+                  font-family: "CookieRun-Regular";
+                }
               }
             }
           }
@@ -247,7 +253,7 @@ $album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대
           background-color: #fbfcdb;
           // background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
           padding: 5px 10px;
-          font-size: 12px;
+          font-size: 14px;
           box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px;
           display: flex;
           align-items: flex-end;
@@ -268,7 +274,7 @@ $album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대
             color: white;
             padding: 3px 8px;
             border-radius: 10px;
-            font-size: 10px;
+            font-size: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
         }

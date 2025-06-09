@@ -7,6 +7,35 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { v4: uuidv4 } = require("uuid");
 const crypto = require("crypto");
 
+interface PhotoData {
+  name: string;
+  analysis: {
+    labels: string[];
+    mainTheme: string;
+    emotion: string;
+    dominantColors: {
+      color: string;
+      percentage?: number;
+      hex?: string;
+      rgb?: {
+        r: number;
+        g: number;
+        b: number;
+      };
+    }[];
+    landmark: string;
+    text: string;
+    faces: {
+      x?: number;
+      y?: number;
+      width?: number;
+      height?: number;
+      confidence?: number;
+    }[];
+  };
+  storyText: string;
+}
+
 // S3 클라이언트 초기화
 const s3Client = new S3Client({
   region: process.env.AWS_REGION || "ap-northeast-2",
@@ -44,6 +73,7 @@ const uploadToS3AndNotify = async (
     const { images, personalInfo, magazineTitle, storyTheme, magazineStyle } =
       req.body;
 
+    console.log(images);
     if (!images || !personalInfo || !magazineTitle) {
       return res.status(400).json({
         status: "error",
@@ -92,15 +122,9 @@ const uploadToS3AndNotify = async (
         title: magazineTitle,
         theme: storyTheme,
         style: magazineStyle,
-        analyzedImages: images.map((img: any) => ({
+        analyzedImages: images.map((img: PhotoData) => ({
           name: img.name || "",
-          analysis: img.analysis?.labels?.map((el: { description: any }) => {
-            return {
-              description: el.description,
-            };
-          }) || {
-            labels: [],
-          },
+          labels: img?.analysis?.labels || [],
           storyText: img.storyText || "",
         })),
         createdAt: new Date().toISOString(),

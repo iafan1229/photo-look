@@ -18,13 +18,11 @@ const MagazineSchema = new mongooseModule.Schema({
   analyzedImages: [
     {
       name: String,
-      analysis: {
-        labels: [
-          {
-            description: String,
-          },
-        ],
-      },
+      labels: [
+        {
+          description: String,
+        },
+      ],
       storyText: String,
     },
   ],

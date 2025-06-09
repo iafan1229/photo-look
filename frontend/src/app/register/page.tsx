@@ -18,8 +18,8 @@ import {
   visionAnalyzedImage,
   geminiAnalyzedImage,
 } from "@/type/preview";
-import ImagePreview from "@/components/preview/ImagePreview";
-import MagazinePreview from "@/components/preview/MagazinePreview";
+import CardPreview from "@/components/preview/CardPreview";
+import WrapperPreview from "@/components/preview/WrapperPreview";
 import ModelSettings, {
   AIModelType,
 } from "@/components/settings/ModelSettings";
@@ -271,7 +271,7 @@ const Main: React.FC = () => {
                 />
               </Form.Group>
 
-              <ImagePreview images={images} />
+              <CardPreview images={images} />
 
               <Button
                 variant='primary'
@@ -355,7 +355,7 @@ const Main: React.FC = () => {
       </Row>
 
       {showMagazine && (
-        <MagazinePreview
+        <WrapperPreview
           title={magazineTitle || "나의 스토리"}
           images={analyzedImages}
           theme={storyTheme}

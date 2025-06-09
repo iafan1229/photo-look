@@ -1,9 +1,9 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Image from "next/image";
-import { ImagePreviewProps } from "@/type/preview";
+import { PhotoCardPreviewProps } from "@/type/preview";
 
-const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
+const CardPreview: React.FC<PhotoCardPreviewProps> = ({ images }) => {
   if (images.length === 0) {
     return <p className='text-muted'>업로드된 이미지가 없습니다.</p>;
   }
@@ -27,4 +27,4 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ images }) => {
   );
 };
 
-export default ImagePreview;
+export default CardPreview;

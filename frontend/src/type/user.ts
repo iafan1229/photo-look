@@ -8,9 +8,7 @@ interface AnalysisLabel {
 // 분석된 이미지 인터페이스
 interface AnalyzedImage {
   name: string;
-  analysis: {
-    labels: AnalysisLabel[];
-  };
+  labels: AnalysisLabel[];
   storyText: string;
 }
 

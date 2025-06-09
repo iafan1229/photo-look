@@ -1,4 +1,3 @@
-// frontend/src/components/PersonalInfoVerification.tsx
 import React, { useState } from "react";
 import { Form, Input, Button, Alert, Space } from "antd";
 

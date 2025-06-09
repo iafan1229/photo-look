@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { notification } from "antd";
 import { geminiAnalyzedImage, ThemeType, StyleType } from "@/type/preview";
-import { PersonalInfo } from "@/components/PersonalInfoVerification";
+import { PersonalInfo } from "@/components/verification/PersonalInfoVerification";
 
 interface UsePersonalInfoVerificationProps {
   images: geminiAnalyzedImage[];

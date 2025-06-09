@@ -1,15 +1,14 @@
-// frontend/src/components/preview/MagazinePreview.tsx
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import Image from "next/image";
-import { MagazinePreviewProps, ThemeType } from "@/type/preview";
-import PersonalInfoVerification, {
-  PersonalInfo,
-} from "../PersonalInfoVerification";
+import { WrapperPreviewProps, ThemeType } from "@/type/preview";
 import { usePersonalInfoVerification } from "@/hooks/usePersonalInfoVerification";
 import { extractTitleAndContent } from "@/util/common";
+import PersonalInfoVerification, {
+  PersonalInfo,
+} from "../verification/PersonalInfoVerification";
 
-const MagazinePreview: React.FC<MagazinePreviewProps> = ({
+const WrapperPreview: React.FC<WrapperPreviewProps> = ({
   title,
   images,
   theme,
@@ -88,8 +87,10 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                   />
                 </div>
                 <div className='cover-photo-title'>
-                  {images.map((el) => (
-                    <p>- {extractTitleAndContent(el.storyText).photoTitle}</p>
+                  {images.map((el, i) => (
+                    <p key={i}>
+                      - {extractTitleAndContent(el.storyText).photoTitle}
+                    </p>
                   ))}
                 </div>
               </div>
@@ -126,17 +127,15 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
                 </div>
               )}
 
-              {image.analysis &&
-                image.analysis.labels &&
-                image.analysis.labels.length > 0 && (
-                  <div className='photo-tags'>
-                    {image.analysis.labels.slice(0, 2).map((label, idx) => (
-                      <span key={idx} className='tag'>
-                        {label.description}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              {image?.analysis?.labels?.length > 0 && (
+                <div className='photo-tags'>
+                  {image.analysis.labels.slice(0, 3).map((label, idx) => (
+                    <span key={idx} className='tag'>
+                      {label.description}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -172,4 +171,4 @@ const MagazinePreview: React.FC<MagazinePreviewProps> = ({
   );
 };
 
-export default MagazinePreview;
+export default WrapperPreview;

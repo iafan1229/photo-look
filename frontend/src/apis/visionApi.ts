@@ -162,7 +162,7 @@ const extractDominantColors = (
   }
 
   return imageProperties.dominantColors.colors
-    .slice(0, 3) // 상위 3개만 추출
+    .slice(0, 5) // 상위 5개만 추출
     .map((color) => {
       const { red, green, blue } = color.color;
       return `rgb(${red}, ${green}, ${blue})`;

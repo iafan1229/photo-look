@@ -44,8 +44,8 @@ export default function Slider({
         {userData?.length &&
           userData
             ?.filter((el) => el.status === "approved")
-            .map((el) => (
-              <SwiperSlide>
+            .map((el, i) => (
+              <SwiperSlide key={i}>
                 <img src={`${el?.imageUrls[0]}`} />
               </SwiperSlide>
             ))}

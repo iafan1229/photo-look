@@ -70,9 +70,9 @@ export default function PhotoList({
                 >
                   {userData
                     ?.filter((el) => el.status === "approved")
-                    .map((el: User) => (
+                    .map((el: User, i) => (
                       <div
-                        key={Math.random().toString()}
+                        key={i}
                         className='photo-wrap'
                         onClick={() => handleDetail(el)}
                         style={{ flexBasis: "calc(100%/3 - 30px)" }}
@@ -205,13 +205,11 @@ export default function PhotoList({
                       </div>
                     )}
 
-                  {detailUserData.magazine?.analyzedImages?.[index]?.analysis
-                    ?.labels?.length > 0 && (
+                  {detailUserData?.magazine?.analyzedImages?.[index]?.labels
+                    ?.length > 0 && (
                     <div className='photo-tags'>
-                      {detailUserData.magazine.analyzedImages[
-                        index
-                      ].analysis.labels
-                        .slice(0, 2)
+                      {detailUserData.magazine.analyzedImages[index].labels
+                        .slice(0, 3)
                         .map((label: any, idx: number) => (
                           <span key={idx} className='tag'>
                             {label.description}

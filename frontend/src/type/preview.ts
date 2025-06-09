@@ -46,13 +46,13 @@ export interface geminiAnalyzedImage {
   analysis: ImageAnalysis;
 }
 
-export interface MagazinePreviewProps {
+export interface WrapperPreviewProps {
   title: string;
   images: geminiAnalyzedImage[];
   theme: ThemeType;
   style: StyleType;
 }
 
-export interface ImagePreviewProps {
+export interface PhotoCardPreviewProps {
   images: ImageData[];
 }
