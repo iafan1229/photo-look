@@ -5,7 +5,7 @@ import { Button, Card, Divider } from "antd";
 import { ThemeType } from "@/type/preview";
 import Icon, { CloseOutlined } from "@ant-design/icons";
 import { calc } from "antd/es/theme/internal";
-import { UserData as User } from "@/type/user";
+import { FetchUser, UserData as User } from "@/type/user";
 import { extractTitleAndContent } from "@/util/common";
 import Masonry from "react-masonry-css";
 import html2pdf from "html2pdf.js";
@@ -18,9 +18,9 @@ export default function PhotoList({
   filterValue: string | undefined;
   searchValue: string;
 }) {
-  const [userData, setUserData] = useState<User[]>();
+  const [userData, setUserData] = useState<FetchUser[]>();
   const [detailOpen, setDetailOpen] = useState(false);
-  const [detailUserData, setDetailUserData] = useState<User | null>(null);
+  const [detailUserData, setDetailUserData] = useState<FetchUser | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +37,7 @@ export default function PhotoList({
     fetchData();
   }, [filterValue, searchValue]);
 
-  const handleDetail = (el: User) => {
+  const handleDetail = (el: FetchUser) => {
     setDetailOpen(!detailOpen);
     setDetailUserData(el);
   };
@@ -70,7 +70,7 @@ export default function PhotoList({
                 >
                   {userData
                     ?.filter((el) => el.status === "approved")
-                    .map((el: User, i) => (
+                    .map((el: FetchUser, i) => (
                       <div
                         key={i}
                         className='photo-wrap'
@@ -136,11 +136,14 @@ export default function PhotoList({
                     일에 생성된 포토카드 입니다
                   </p>
 
-                  <p>
-                    Instagram :{" "}
-                    {detailUserData?.personalInfo?.snsId
-                      ? "@" + detailUserData?.personalInfo?.snsId
-                      : "미입력"}
+                  <p style={{ paddingBottom: "10px 0" }}>
+                    이름 :{" "}
+                    {detailUserData?.name ? detailUserData?.name : "미입력"}
+                  </p>
+                  <p style={{ paddingTop: 5 }}>
+                    {detailUserData?.snsId
+                      ? "Instagram : @" + detailUserData?.snsId
+                      : ""}
                   </p>
                 </div>
                 <Divider style={{ height: 3 }} />

@@ -29,7 +29,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+frontend/.env
+server/.env
 
 # vercel
 .vercel
@@ -38,8 +39,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-
-# flask
-/frontend/flask/venv
-app.log
-/frontend/.env

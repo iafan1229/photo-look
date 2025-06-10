@@ -37,4 +37,35 @@ interface UserData {
   status: string;
 }
 
-export type { AnalysisLabel, AnalyzedImage, Magazine, PersonalInfo, UserData };
+interface FetchUser {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  snsId: string;
+  status: "approved" | "pending" | "rejected";
+  imageUrls: string[];
+  magazine: {
+    title: string;
+    theme: string;
+    style: string;
+    analyzedImages: {
+      name: string;
+      labels: {
+        description: string;
+      }[];
+      storyText: string;
+    }[];
+    createdAt: string;
+  };
+  updatedAt: string;
+}
+
+export type {
+  AnalysisLabel,
+  AnalyzedImage,
+  Magazine,
+  PersonalInfo,
+  UserData,
+  FetchUser,
+};

@@ -49,7 +49,14 @@ const Footer = () => {
 
           <div className='footer-bottom'>
             <div className='copyright'>
-              &copy; {new Date().getFullYear()} Photo Look. All rights reserved.
+              <p style={{ marginBottom: "0.7rem" }}>
+                &copy; {new Date().getFullYear()} Photo Look. All rights
+                reserved.
+              </p>
+              <p style={{ marginBottom: "0.7rem" }}>
+                {" "}
+                문의사항은 관리자(home124@naver.com)에게 문의바랍니다.
+              </p>
             </div>
             {/* <div className='footer-bottom-links'>
             <Link href='/terms'>이용약관</Link>
