@@ -20,6 +20,24 @@ export const generateGeminiApi = async ({
     throw new Error("Google Gemini API 키가 설정되지 않았습니다.");
   }
 
+  // API 코드에서 사용
+  const generatePhotoCardText = (
+    theme: string,
+    totalImages: number,
+    imageIndex: number,
+    imageLabels: string[]
+  ) => {
+    const promptTemplate = process.env.NEXT_PUBLIC_PROMPT;
+
+    const text = promptTemplate
+      ?.replace("{theme}", theme)
+      .replace("{totalImages}", totalImages.toString())
+      .replace("{imageIndex}", imageIndex.toString())
+      .replace("{imageLabels}", imageLabels.join(", "));
+
+    return text;
+  };
+
   try {
     const response = await axios.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -28,26 +46,12 @@ export const generateGeminiApi = async ({
           {
             parts: [
               {
-                text: `당신은 감성적이고 창의적인 포토 카드 텍스트를 작성하는 작가입니다.
-                다음 이미지 라벨을 기반으로 ${theme} 테마에 맞는 포토 카드용 텍스트를 생성해 주세요.
-                
-                포토 카드 텍스트 작성 가이드:
-                - 감성적이고 시적인 표현 사용
-                - 한 눈에 들어오는 짧고 임팩트 있는 문구
-                - 보는 사람의 마음에 울림을 주는 내용
-                - SNS에서 공유하고 싶어지는 매력적인 표현
-                
-                전체 ${totalImages}장 중 ${imageIndex + 1}번째 포토 카드입니다.
-                각 카드가 독립적이면서도 전체적으로 조화를 이루도록 작성해 주세요.
-                
-                한국어로 작성하며, 다음 형식으로 답변해 주세요:
-                - 메인 텍스트: 10-15자 이내의 핵심 메시지 (photoTitle)
-                - 서브 텍스트: 50-60자 이내의 감성적 설명 (photoContent)
-                - 포토 카드 테마: ${theme}
-                
-                JSON 형식으로 photoTitle과 photoContent를 key로 하여 응답해 주세요.
-                
-                이미지 라벨: ${imageLabels.join(", ")}`,
+                text: `${generatePhotoCardText(
+                  theme,
+                  totalImages,
+                  imageIndex,
+                  imageLabels
+                )}`,
               },
             ],
           },
