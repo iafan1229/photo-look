@@ -27,31 +27,68 @@ export const usePersonalInfoVerification = () => {
     magazineStyle,
   }: UsePersonalInfoVerificationProps) => {
     setIsLoading(true);
+
     try {
-      // 백엔드 API로 모든 정보 전송 (이미지와 개인정보)
-      const response = await axios.post("/api/upload-to-s3-and-notify", {
+      // 1️⃣ S3 업로드
+      const uploadRes = await axios.post("/api/admin/upload", {
         images: analyzedImages,
-        personalInfo,
-        magazineTitle,
-        storyTheme,
-        magazineStyle,
       });
 
-      if (response.data.status === "success") {
-        api.success({
-          message: "인증 요청 성공",
-          description:
-            "등록 요청이 관리자에게 전송되었습니다. 승인 후 이미지가 등록됩니다.",
-        });
-        return true;
-      } else {
+      if (uploadRes.data.status !== "success") {
         api.error({
-          message: "인증 요청 실패",
-          description:
-            response.data.message || "알 수 없는 오류가 발생했습니다.",
+          message: "이미지 업로드 실패",
+          description: uploadRes.data.message || "이미지 업로드 중 오류 발생",
         });
         return false;
       }
+
+      const uploadedImageUrls = uploadRes.data.data;
+
+      // 2️⃣ DB 저장
+      const userRes = await axios.post("/api/admin/user", {
+        personalInfo,
+        magazineInfo: {
+          title: magazineTitle,
+          theme: storyTheme,
+          style: magazineStyle,
+          analyzedImages,
+        },
+        imageUrls: uploadedImageUrls,
+      });
+
+      if (userRes.data.status !== "success") {
+        api.error({
+          message: "DB 저장 실패",
+          description: userRes.data.message || "사용자 정보 저장 중 오류 발생",
+        });
+        return false;
+      }
+
+      const newUser = userRes.data.data;
+      const userId = newUser._id;
+
+      // 3️⃣ 이메일 발송
+      const notifyRes = await axios.post("/api/admin/notify", {
+        userId,
+        uploadedImageUrls,
+      });
+
+      if (notifyRes.data.status !== "success") {
+        api.error({
+          message: "이메일 발송 실패",
+          description: notifyRes.data.message || "관리자 알림 이메일 발송 실패",
+        });
+        return false;
+      }
+
+      // ✅ 모든 단계 성공
+      api.success({
+        message: "인증 요청 성공",
+        description:
+          "등록 요청이 관리자에게 전송되었습니다. 승인 후 이미지가 등록됩니다.",
+      });
+
+      return true;
     } catch (error: any) {
       console.error("인증 요청 처리 중 에러 발생:", error);
       api.error({

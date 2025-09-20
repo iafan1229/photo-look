@@ -53,7 +53,7 @@ export default function VerificationPage() {
   const fetchUserData = async (userId: string, verificationToken: string) => {
     try {
       const response = await axios.get(
-        `/api/verification/details?id=${userId}&token=${verificationToken}`
+        `/api/admin/details?id=${userId}&token=${verificationToken}`
       );
 
       if (response.data.status === "success") {
@@ -80,7 +80,7 @@ export default function VerificationPage() {
   const handleApprove = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`/api/verification/approve`, {
+      const response = await axios.post(`/api/admin/approve`, {
         id,
         token,
       });
@@ -123,7 +123,7 @@ export default function VerificationPage() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`/api/verification/reject`, {
+      const response = await axios.post(`/api/admin/reject`, {
         id,
         token,
         reason: rejectionReason || "관리자에 의해 거절되었습니다.",
