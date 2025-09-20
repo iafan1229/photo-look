@@ -16,37 +16,19 @@ const s3Client = new S3Client({
   },
 });
 
-// 보안 토큰 생성
-const generateVerificationToken = (userId: string): string => {
-  return crypto
-    .createHmac("sha256", process.env.SECRET_KEY || "magazine-secret-key")
-    .update(userId)
-    .digest("hex");
-};
-
-// S3에 이미지 업로드 및 이메일 발송 핸들러
-const uploadToS3AndNotify = async (
-  req: Request,
-  res: Response<ResponseData>
-) => {
+// -------------------- API 1️⃣ S3 업로드 --------------------
+const uploadImages = async (req: Request, res: Response<ResponseData>) => {
   try {
-    const { images, personalInfo, magazineTitle, storyTheme, magazineStyle } =
-      req.body;
-
-    if (!images || !personalInfo || !magazineTitle) {
-      return res.status(400).json({
-        status: "error",
-        message: "필수 정보가 누락되었습니다.",
-      });
+    const { images } = req.body;
+    if (!images || !images.length) {
+      return res.status(400).json({ status: "error", message: "이미지 없음" });
     }
 
-    // 이미지 업로드 로직 (기존과 동일)
     const uploadedImageUrls: string[] = [];
     for (const image of images) {
       const imageId = uuidv4();
       const base64Data = image.dataUrl.replace(/^data:image\/\w+;base64,/, "");
       const buffer = Buffer.from(base64Data, "base64");
-
       const fileExtension = image.dataUrl.split(";")[0].split("/")[1];
       const fileName = `${imageId}.${fileExtension}`;
 
@@ -66,48 +48,85 @@ const uploadToS3AndNotify = async (
       uploadedImageUrls.push(imageUrl);
     }
 
-    // Repository 패턴 사용 - 사용자 데이터 저장
+    return res.status(200).json({
+      status: "success",
+      data: uploadedImageUrls,
+      message: "S3 업로드 성공",
+    });
+  } catch (error) {
+    console.error("Error in uploadImages:", error);
+    return res.status(500).json({ status: "error", message: "S3 업로드 실패" });
+  }
+};
+
+// -------------------- API 2️⃣ MongoDB 저장 --------------------
+const createUser = async (req: Request, res: Response<ResponseData>) => {
+  try {
+    const { personalInfo, magazineInfo, imageUrls } = req.body;
+    if (!personalInfo || !magazineInfo || !imageUrls) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "필수 정보 누락" });
+    }
+
     const newUser = await userRepository.create({
-      name: personalInfo.name,
-      email: personalInfo.email,
-      phoneNumber: personalInfo.phoneNumber,
-      snsId: personalInfo.snsId || "",
+      ...personalInfo,
       status: "pending",
-      imageUrls: uploadedImageUrls,
+      imageUrls,
       magazine: {
-        title: magazineTitle,
-        theme: storyTheme,
-        style: magazineStyle,
-        analyzedImages: images.map((img: any) => ({
-          name: img.name || "",
-          labels: img?.analysis?.labels || [],
-          storyText: img.storyText || "",
-        })),
+        ...magazineInfo,
         createdAt: new Date().toISOString(),
       },
       createdAt: new Date(),
     });
 
-    // Service Layer 사용 - 이메일 발송
-    const userId = newUser._id.toString();
+    return res
+      .status(201)
+      .json({ status: "success", data: newUser, message: "DB 저장 성공" });
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    return res.status(500).json({ status: "error", message: "DB 저장 실패" });
+  }
+};
+
+// -------------------- API 3️⃣ 이메일 발송 --------------------
+const sendNotification = async (req: Request, res: Response<ResponseData>) => {
+  try {
+    const { userId, uploadedImageUrls } = req.body;
+    if (!userId || !uploadedImageUrls) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "필수 정보 누락" });
+    }
+
+    const user = await userRepository.findById(userId);
+    if (!user)
+      return res.status(404).json({ status: "error", message: "사용자 없음" });
+
     const verificationToken = generateVerificationToken(userId);
     await emailService.sendAdminNotification(
-      newUser,
+      user,
       uploadedImageUrls,
       verificationToken
     );
 
-    return res.status(200).json({
-      status: "success",
-      message: "이미지 업로드 및 인증 요청 이메일이 성공적으로 전송되었습니다.",
-    });
+    return res
+      .status(200)
+      .json({ status: "success", message: "이메일 발송 완료" });
   } catch (error) {
-    console.error("Error in uploadToS3AndNotify:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "서버 오류가 발생했습니다.",
-    });
+    console.error("Error in sendNotification:", error);
+    return res
+      .status(500)
+      .json({ status: "error", message: "이메일 발송 실패" });
   }
+};
+
+// 보안 토큰 생성
+const generateVerificationToken = (userId: string): string => {
+  return crypto
+    .createHmac("sha256", process.env.SECRET_KEY || "magazine-secret-key")
+    .update(userId)
+    .digest("hex");
 };
 
 // 관리자 승인 처리 API
@@ -273,7 +292,9 @@ const getUserDetails = async (req: Request, res: Response) => {
 };
 
 module.exports = {
-  uploadToS3AndNotify,
+  uploadImages,
+  createUser,
+  sendNotification,
   getUserDetails,
   approveMagazine,
   rejectMagazine,

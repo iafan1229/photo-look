@@ -31,7 +31,7 @@ app.use(cors());
 
 // Router 패턴 - 라우트를 모듈별로 분리
 app.use("/api/main", mainRoutes);
-app.use("/api/verification", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 // 기본 라우트들
 app.get("/api/health", (req: Request, res: Response) => {
@@ -42,7 +42,7 @@ app.get("/api/health", (req: Request, res: Response) => {
 app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     status: "error",
-    message: "Route not found",
+    message: `Cannot ${req.method} ${req.originalUrl}`, // 요청한 경로와 메서드
   });
 });
 
