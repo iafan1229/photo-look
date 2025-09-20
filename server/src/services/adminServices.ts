@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: process.env.EMAIL_USER || "home124@naver.com",
-    pass: process.env.EMAIL_PASSWORD || "",
+    pass: process.env.EMAIL_PASS || "",
   },
 });
 
@@ -21,11 +21,8 @@ export const emailService = {
     verificationToken: string
   ) {
     const userId = user._id.toString();
-
     const mailOptions = {
-      from: `"매거진 등록 시스템" <${
-        process.env.EMAIL_USER || "home124@naver.com"
-      }>`,
+      from: "home124@naver.com",
       to: "home124@naver.com",
       subject: `[매거진 등록 요청] ${user.name}님의 "${user.magazine.title}" 등록 요청`,
       html: `
@@ -78,9 +75,7 @@ export const emailService = {
     if (!user.email) return;
 
     const mailOptions = {
-      from: `"매거진 등록 시스템" <${
-        process.env.EMAIL_USER || "home124@naver.com"
-      }>`,
+      from: "home124@naver.com",
       to: user.email,
       subject: `[매거진 등록 완료] "${user.magazine.title}" 등록이 승인되었습니다`,
       html: `
