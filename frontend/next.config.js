@@ -13,7 +13,7 @@ const nextConfig = {
         destination:
           process.env.NODE_ENV === "production"
             ? "http://server:8080/api/:path*"
-            : "http://localhost:8080/api/:path*",
+            : "http://0.0.0.0:8080/api/:path*",
       },
     ];
   },
