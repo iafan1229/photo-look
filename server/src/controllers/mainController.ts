@@ -3,22 +3,11 @@ import { RequestData, ResponseData, User } from "../types";
 const nodemailer = require("nodemailer");
 const UserModel = require("../models/User");
 
-const slider = async (_: never, res: Response<ResponseData>) => {
-  // try {
-  //   const getList = await UserModel.find({}).then((data: User[]) => {
-  //     return data.map((el) => el.upload[1]);
-  //   });
-  //   res.status(201).json({ data: getList });
-  // } catch (err) {
-  //   console.log(err);
-  // }
-};
-
 const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
   try {
     // 검색 파라미터 추출
     const { total, name, sns, title } = req.query;
-    console.log(req.query);
+
     if (total) {
       const allData = await UserModel.find({});
       return res.status(200).json({
@@ -64,4 +53,4 @@ const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
   }
 };
 
-module.exports = { slider, list };
+module.exports = { list };
