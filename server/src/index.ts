@@ -1,18 +1,21 @@
-// server/src/index.ts
+//이 프로젝트에는 실제 사용되는 api가 5개 있음.
+
 require("dotenv").config();
-import express, { Request, Response, RequestHandler } from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { rejectForm } from "./utils/htmlString";
-const { connectDB } = require("./utils/db");
-const app = express();
-const authController = require("./controllers/authController");
-const mainController = require("./controllers/mainController");
-const verificationController = require("./controllers/verificationController");
+const { connectDB } = require("./utils/mongodb");
 
+// Router 파일들 import
+const mainRoutes = require("./routes/mainRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+const app = express();
+
+// MongoDB 연결
 const connectToMongoDB = async () => {
   try {
-    await connectDB(); // DB 연결
+    await connectDB();
     console.log("MongoDB connection successful");
   } catch (error) {
     console.error("MongoDB connection failed", error);
@@ -21,29 +24,35 @@ const connectToMongoDB = async () => {
 
 connectToMongoDB();
 
-app.use(bodyParser.json({ limit: "50mb" })); // 이미지 업로드를 위해 용량 제한 증가
+// 미들웨어 설정
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cors());
 
-// 리스트
-app.get("/api/main/list", mainController.list);
+// Router 패턴 - 라우트를 모듈별로 분리
+app.use("/api/main", mainRoutes);
+app.use("/api/verification", adminRoutes);
 
-// 이미지를 s3에 저장
-app.post(
-  "/api/upload-to-s3-and-notify",
-  verificationController.uploadToS3AndNotify
-);
-
-// admin - 사용자 이미지 조회
-app.get("/api/verification/details", verificationController.getUserDetails);
-
-// admin - 이미지 업로드 승인 & 거절
-app.post("/api/verification/approve", verificationController.approveMagazine);
-app.post("/api/verification/reject", verificationController.rejectMagazine);
-
-// 상태 확인 엔드포인트
-app.get("/api/health", (req, res) => {
+// 기본 라우트들
+app.get("/api/health", (req: Request, res: Response) => {
   res.status(200).json({ status: "healthy" });
+});
+
+// 404 에러 핸들링
+app.use("*", (req: Request, res: Response) => {
+  res.status(404).json({
+    status: "error",
+    message: "Route not found",
+  });
+});
+
+// 전역 에러 핸들링
+app.use((err: Error, req: Request, res: Response, next: any) => {
+  console.error(err.stack);
+  res.status(500).json({
+    status: "error",
+    message: "Internal server error",
+  });
 });
 
 const PORT = process.env.PORT || 8080;
@@ -53,3 +62,5 @@ app.listen(Number(PORT), HOST, () => {
   console.log(`Server is running on ${HOST}:${PORT}`);
   console.log(`Health check endpoint: http://${HOST}:${PORT}/api/health`);
 });
+
+export default app;

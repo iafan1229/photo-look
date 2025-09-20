@@ -1,49 +1,33 @@
+// server/src/controllers/mainController.ts - 간단한 리팩토링 버전
 import { Request, Response } from "express";
-import { RequestData, ResponseData, User } from "../types";
-const nodemailer = require("nodemailer");
-const UserModel = require("../models/User");
+import { RequestData, ResponseData } from "../types";
+import { mainService } from "../services/mainServices";
 
 const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
   try {
-    // 검색 파라미터 추출
     const { total, name, sns, title } = req.query;
 
     if (total) {
-      const allData = await UserModel.find({});
+      // Service Layer 사용 - 전체 매거진 조회
+      const result = await mainService.getAllMagazines();
       return res.status(200).json({
-        data: allData,
+        data: result.magazines,
         message: "success",
-        total: allData.length,
+        total: result.total,
       });
     }
 
-    // 검색 조건 객체 생성
-    let searchQuery: any = {};
-
-    // 이름 검색 필터 추가
-    if (name) {
-      searchQuery.name = { $regex: name, $options: "i" }; // 대소문자 구분 없이 부분 일치 검색
-    }
-
-    // SNS 아이디 검색 필터 추가
-    if (sns) {
-      searchQuery.sns = { $regex: sns, $options: "i" };
-    }
-
-    // 앨범 제목 검색 필터 추가
-    if (title) {
-      searchQuery["magazine.title"] = { $regex: title, $options: "i" };
-    }
-
-    // 검색 쿼리 실행
-    const getList = await UserModel.find(searchQuery).then((data: User[]) => {
-      return data;
-    });
+    const searchParams = {
+      name: name as string | undefined,
+      sns: sns as string | undefined,
+      title: title as string | undefined,
+    };
+    const result = await mainService.searchMagazines(searchParams);
 
     res.status(200).json({
-      data: getList,
+      data: result.magazines,
       message: "success",
-      total: getList.length,
+      total: result.total,
     });
   } catch (err) {
     console.error("Error fetching list:", err);
@@ -52,5 +36,21 @@ const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
     });
   }
 };
+
+// const slider = async (_: never, res: Response<ResponseData>) => {
+//   try {
+//     // Service Layer 사용 - 슬라이더 데이터 조회
+//     const sliderData = await mainService.getAllMagazines();
+//     res.status(200).json({
+//       data: sliderData,
+//       message: "success",
+//     });
+//   } catch (err) {
+//     console.error("Error fetching slider data:", err);
+//     res.status(500).json({
+//       message: "슬라이더 데이터를 불러오는 중 오류가 발생했습니다.",
+//     });
+//   }
+// };
 
 module.exports = { list };
