@@ -183,7 +183,7 @@ jobs:
           AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           HOST: ${{ secrets.HOST }}
           PORT: ${{ secrets.PORT }}
@@ -207,7 +207,7 @@ jobs:
           AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME
           AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID 
           AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-          EMAIL_PASSWORD=$EMAIL_PASSWORD
+          EMAIL_PASS=$EMAIL_PASS
           EMAIL_USER=$EMAIL_USER
           HOST=$HOST
           PORT=$PORT
