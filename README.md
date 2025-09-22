@@ -1,12 +1,16 @@
 # 개발자 이하영 포트폴리오 - Photo Look
 
-## 🌐 서비스 바로가기 
+## 🌐 서비스 바로가기
 
 **[링크](http://ec2-13-124-209-182.ap-northeast-2.compute.amazonaws.com/)**
 
 ## 📸 프로젝트 개요
 
 **Photo Look**은 사용자가 업로드한 사진을 AI가 분석하여 자동으로 스토리텔링 형식의 카드 매거진으로 변환하는 서비스입니다.
+
+## 아키텍쳐 (이미지 업로드 프로세스)
+
+![아키텍쳐](https://photo-look-bucket.s3.ap-northeast-2.amazonaws.com/magazine-images/09a28683-5a8c-42a5-837d-1f7e651bdcae.png)
 
 ## 🎯 핵심기능 요약
 
@@ -23,7 +27,8 @@
 
 ### 백엔드 & AI Integration
 
-- **Node.js**: 확장 가능한 서버 아키텍처
+- **아키텍처**: Layered Architecture
+- **디자인 패턴**: Repository Pattern + Service Layer Pattern
 - **Google Vision AI**: 정확한 이미지 라벨링 및 객체 인식
 - **Google Gemini**: 창의적이고 자연스러운 스토리텔링 텍스트 자동 생성
 
