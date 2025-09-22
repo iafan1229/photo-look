@@ -8,7 +8,7 @@
 
 **Photo Look**은 사용자가 업로드한 사진을 AI가 분석하여 자동으로 스토리텔링 형식의 카드 매거진으로 변환하는 서비스입니다.
 
-## 아키텍쳐 (이미지 업로드 프로세스)
+## 🚀 아키텍쳐 (이미지 업로드 프로세스)
 
 ![아키텍쳐](https://photo-look-bucket.s3.ap-northeast-2.amazonaws.com/magazine-images/09a28683-5a8c-42a5-837d-1f7e651bdcae.png)
 
