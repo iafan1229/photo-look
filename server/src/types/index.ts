@@ -6,12 +6,20 @@ export interface RequestData {
   title?: string;
 }
 
+export interface PaginationInfo {
+  currentPage: number;
+  limit: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
 export interface ResponseData {
   message: string;
   data?: any;
   status?: string;
   query?: string;
   total?: number;
+  pagination?: PaginationInfo;
 }
 
 export interface AnalyzedImage {

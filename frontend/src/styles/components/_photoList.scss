@@ -45,7 +45,9 @@ section {
               .text {
                 border-top: 2px solid #c2b3ef;
                 background-color: rgb(107, 77, 138);
-                font-family: "CookieRun-Regular";
+                font-family: "Cafe24Dongdong";
+                font-weight: bold;
+                font-size: 20px;
               }
             }
           }
@@ -55,7 +57,9 @@ section {
                 border-top: 2px solid #c2b3ef;
                 background-color: rgb(245, 239, 251);
                 .des {
-                  font-family: "CookieRun-Regular";
+                  font-family: "Cafe24Dongdong";
+                  font-weight: bold;
+                  font-size: 20px;
                 }
               }
             }
@@ -245,7 +249,7 @@ $album-note-yellow: #ffffff; // 순수한 화이트 (기존 노트 옐로우 대
 
         .photo-title {
           font-size: 16px;
-          font-family: "CookieRun-Regular";
+          font-family: "Cafe24Dongdong";
           line-height: 1.5;
           padding-bottom: 5px;
         }

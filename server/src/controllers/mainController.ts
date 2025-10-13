@@ -5,15 +5,24 @@ import { mainService } from "../services/mainServices";
 
 const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
   try {
-    const { total, name, sns, title } = req.query;
+    const { total, name, sns, title, page, limit } = req.query;
+
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 20;
 
     if (total) {
-      // Service Layer 사용 - 전체 매거진 조회
-      const result = await mainService.getAllMagazines();
+      // Service Layer 사용 - 전체 매거진 조회 (페이지네이션)
+      const result = await mainService.getAllMagazines(pageNum, limitNum);
       return res.status(200).json({
         data: result.magazines,
         message: "success",
         total: result.total,
+        pagination: {
+          currentPage: pageNum,
+          limit: limitNum,
+          totalPages: Math.ceil(result.total / limitNum),
+          hasMore: pageNum * limitNum < result.total,
+        },
       });
     }
 
@@ -22,12 +31,18 @@ const list = async (req: Request<RequestData>, res: Response<ResponseData>) => {
       sns: sns as string | undefined,
       title: title as string | undefined,
     };
-    const result = await mainService.searchMagazines(searchParams);
+    const result = await mainService.searchMagazines(searchParams, pageNum, limitNum);
 
     res.status(200).json({
       data: result.magazines,
       message: "success",
       total: result.total,
+      pagination: {
+        currentPage: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(result.total / limitNum),
+        hasMore: pageNum * limitNum < result.total,
+      },
     });
   } catch (err) {
     console.error("Error fetching list:", err);
