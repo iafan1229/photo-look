@@ -22,7 +22,7 @@ export const generateGeminiApi = async ({
 
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         contents: [
           {
@@ -54,10 +54,12 @@ export const generateGeminiApi = async ({
         ],
         generationConfig: {
           temperature: 0.8,
-          maxOutputTokens: 200,
+          maxOutputTokens: 8192,
         },
       }
     );
+
+    console.log(response);
 
     // Gemini 응답 구조에서 텍스트 추출
     if (response?.data?.candidates?.[0]?.content?.parts?.[0]) {
