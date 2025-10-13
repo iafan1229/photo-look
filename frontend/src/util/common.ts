@@ -1,15 +1,10 @@
-interface AIResponse {
-  theme?: string;
-  photoTitle?: string;
-  photoContent?: string;
-}
-
 export function extractTitleAndContent(jsonResponse: string | undefined): {
   theme: string;
   photoTitle: string;
   photoContent: string;
 } {
   try {
+    console.log(jsonResponse);
     if (jsonResponse === undefined) {
       return { theme: "", photoTitle: "", photoContent: "" };
     }
