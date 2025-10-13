@@ -2,29 +2,34 @@
 import { userRepository } from "../repositories/userRepository";
 
 export const mainService = {
-  // 전체 매거진 목록 조회 비즈니스 로직
-  async getAllMagazines() {
-    const allData = await userRepository.findAll();
+  // 전체 매거진 목록 조회 비즈니스 로직 (페이지네이션)
+  async getAllMagazines(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+    const allData = await userRepository.findAll(skip, limit);
+    const total = await userRepository.countAll();
+    
     return {
       magazines: allData,
-      total: allData.length,
+      total: total,
     };
   },
 
-  // 검색 조건에 따른 매거진 조회 비즈니스 로직
+  // 검색 조건에 따른 매거진 조회 비즈니스 로직 (페이지네이션)
   async searchMagazines(searchParams: {
     name?: string;
     sns?: string;
     title?: string;
-  }) {
+  }, page: number = 1, limit: number = 20) {
     // 검색 쿼리 생성 로직 (비즈니스 로직)
     const searchQuery = buildSearchQuery(searchParams);
+    const skip = (page - 1) * limit;
 
-    const results = await userRepository.findByQuery(searchQuery);
+    const results = await userRepository.findByQuery(searchQuery, skip, limit);
+    const total = await userRepository.countByQuery(searchQuery);
 
     return {
       magazines: results,
-      total: results.length,
+      total: total,
       searchCriteria: searchParams,
     };
   },

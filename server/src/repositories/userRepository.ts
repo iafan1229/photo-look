@@ -13,14 +13,24 @@ export const userRepository = {
     return await UserModel.findById(id);
   },
 
-  // 조건으로 사용자 조회
-  async findByQuery(query: any) {
-    return await UserModel.find(query);
+  // 조건으로 사용자 조회 (페이지네이션)
+  async findByQuery(query: any, skip: number = 0, limit: number = 20) {
+    return await UserModel.find(query).skip(skip).limit(limit);
   },
 
-  // 모든 사용자 조회
-  async findAll() {
-    return await UserModel.find({});
+  // 조건으로 사용자 개수 조회
+  async countByQuery(query: any) {
+    return await UserModel.countDocuments(query);
+  },
+
+  // 모든 사용자 조회 (페이지네이션)
+  async findAll(skip: number = 0, limit: number = 20) {
+    return await UserModel.find({}).skip(skip).limit(limit);
+  },
+
+  // 전체 사용자 개수 조회
+  async countAll() {
+    return await UserModel.countDocuments({});
   },
 
   // 사용자 정보 업데이트

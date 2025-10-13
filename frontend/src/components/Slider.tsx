@@ -17,8 +17,18 @@ export default function Slider({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const params = new URLSearchParams({
+          limit: "1000", // 충분히 큰 값으로 설정하여 모든 데이터 가져오기
+        });
+        
+        if (filterValue && searchValue) {
+          params.append(filterValue, searchValue);
+        } else {
+          params.append("total", "true");
+        }
+
         const listResponse = await axios.get(
-          `/api/main/list?${filterValue}=${searchValue}`
+          `/api/main/list?${params.toString()}`
         );
         setUserData(listResponse.data.data);
       } catch (error) {
@@ -29,6 +39,7 @@ export default function Slider({
     fetchData();
   }, [filterValue, searchValue]);
 
+  console.log(userData?.filter((el) => el.status === "approved"));
   return (
     <div className='top-list'>
       <Swiper
@@ -37,7 +48,6 @@ export default function Slider({
         }}
         modules={[Scrollbar]}
         spaceBetween={20}
-        slidesPerView={5}
         loop
         className='mySwiper'
         breakpoints={{
@@ -54,6 +64,10 @@ export default function Slider({
           // 태블릿 (768px 이상)
           768: {
             slidesPerView: 2,
+          },
+          // 데스크톱 (1200px 이상)
+          1200: {
+            slidesPerView: 5,
           },
         }}
       >
